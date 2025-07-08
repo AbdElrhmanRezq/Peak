@@ -43,3 +43,15 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Exclude native platform folders
+android/
+ios/
+macos/
+windows/
+linux/
+
+# Optional: Web build artifacts
+web/.dart_tool/
+web/build/
+

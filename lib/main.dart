@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:repx/core/theme/app_theme.dart';
+import 'package:repx/views/initial_screen.dart';
+import 'package:repx/views/splash/splash_screen.dart';
 
 void main() {
   runApp(const Repx());
@@ -11,13 +14,13 @@ class Repx extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Repx',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Repx')),
-        body: Center(
-          child: Text('Welcome to Repx!', style: TextStyle(fontSize: 24)),
-        ),
-      ),
+      theme: appTheme,
+      initialRoute: SplashScreen.id,
+      routes: {
+        SplashScreen.id: (context) => const SplashScreen(),
+        InitialScreen.id: (context) => const InitialScreen(),
+      },
+      debugShowCheckedModeBanner: false,
     );
   }
 }
