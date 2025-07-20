@@ -56,4 +56,8 @@ class AuthRepository {
               '',
         )
       : null;
+
+  Future<void> createUser(UserModel user) async {
+    await _supabaseService.createUser(user);
+  }
 }

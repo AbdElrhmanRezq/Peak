@@ -1,3 +1,4 @@
+import 'package:repx/data/models/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseService {
@@ -18,5 +19,12 @@ class SupabaseService {
   Future<User?> get currentUser async {
     final session = supabase.auth.currentSession;
     return session?.user;
+  }
+
+  Future<void> createUser(UserModel user) async {
+    // Implement user creation logic if needed
+    await supabase.from('users').insert([
+      {'email': user.email, 'username': user.name, 'gender': user.gender},
+    ]);
   }
 }

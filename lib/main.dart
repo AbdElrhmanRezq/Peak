@@ -3,6 +3,7 @@ import 'package:repx/core/theme/app_theme.dart';
 import 'package:repx/presentation/views/auth/login_screen.dart';
 import 'package:repx/presentation/views/auth/on_board_screen.dart';
 import 'package:repx/presentation/views/auth/signup_screen.dart';
+import 'package:repx/presentation/views/auth/user_data_screen.dart';
 import 'package:repx/presentation/views/gateway/auth_gate.dart';
 import 'package:repx/presentation/views/home/home_screen.dart';
 import 'package:repx/presentation/views/initial_screen.dart';
@@ -39,6 +40,7 @@ class Repx extends StatelessWidget {
         HomeScreen.id: (context) => const HomeScreen(),
         GateWay.id: (context) => const GateWay(),
         OnBoardScreen.id: (context) => const OnBoardScreen(),
+        UserDataScreen.id: (context) => const UserDataScreen(),
       },
       debugShowCheckedModeBanner: false,
     );
