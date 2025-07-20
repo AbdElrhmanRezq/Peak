@@ -39,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     // Navigate after delay
     Timer(const Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, 'initial_screen');
+      Navigator.pushReplacementNamed(context, 'gateway_screen');
     });
   }
 
@@ -54,7 +54,7 @@ class _SplashScreenState extends State<SplashScreen>
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Center(
         child: AnimatedBuilder(
           animation: _controller,

@@ -55,3 +55,4 @@ linux/
 web/.dart_tool/
 web/build/
 
+.env

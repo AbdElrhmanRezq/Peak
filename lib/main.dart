@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:repx/core/theme/app_theme.dart';
-import 'package:repx/views/initial_screen.dart';
-import 'package:repx/views/splash/splash_screen.dart';
+import 'package:repx/presentation/views/auth/login_screen.dart';
+import 'package:repx/presentation/views/auth/on_board_screen.dart';
+import 'package:repx/presentation/views/auth/signup_screen.dart';
+import 'package:repx/presentation/views/gateway/auth_gate.dart';
+import 'package:repx/presentation/views/home/home_screen.dart';
+import 'package:repx/presentation/views/initial_screen.dart';
+import 'package:repx/presentation/views/splash/splash_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   //Supabase connection
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   await Supabase.initialize(
-    url: 'https://onbmyrlmcowiyyedntuw.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9uYm15cmxtY293aXl5ZWRudHV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5NDk2OTIsImV4cCI6MjA2NzUyNTY5Mn0.1GHsU3ZgV0zqPAl-drskh8_rnLJAM3SHogqgkkAEP6M',
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
-  runApp(const Repx());
+  runApp(const ProviderScope(child: Repx()));
 }
 
 class Repx extends StatelessWidget {
@@ -27,6 +34,11 @@ class Repx extends StatelessWidget {
       routes: {
         SplashScreen.id: (context) => const SplashScreen(),
         InitialScreen.id: (context) => const InitialScreen(),
+        LoginScreen.id: (context) => const LoginScreen(),
+        SignupScreen.id: (context) => const SignupScreen(),
+        HomeScreen.id: (context) => const HomeScreen(),
+        GateWay.id: (context) => const GateWay(),
+        OnBoardScreen.id: (context) => const OnBoardScreen(),
       },
       debugShowCheckedModeBanner: false,
     );

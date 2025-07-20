@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:repx/widgets/custom_circular_button.dart';
+import 'package:repx/presentation/widgets/custom_circular_button.dart';
+import 'package:repx/presentation/widgets/custom_wide_button.dart';
 
 class InitialScreen extends StatelessWidget {
   static const String id = 'initial_screen';
@@ -57,35 +58,24 @@ class InitialScreen extends StatelessWidget {
                       style: Theme.of(context).textTheme.labelSmall,
                     ),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(25.0),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: width * 0.005,
+                      vertical: height * 0.015,
                     ),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: width * 0.01,
-                        vertical: height * 0.015,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          AppButton(
-                            text: "SIGN IN",
-                            onPressed: () {},
-                            backgroundColor: Colors.grey.withOpacity(0.4),
-                            textColor: Colors.white,
-                            height: height * 0.06,
-                          ),
-                          AppButton(
-                            text: "SIGN UP",
-                            onPressed: () {},
-                            backgroundColor: Theme.of(context).primaryColor,
-                            textColor: Colors.black,
-                            height: height * 0.06,
-                          ),
-                        ],
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomWideButton(
+                          text: "Get Started",
+                          onPressed: () {
+                            Navigator.of(context).pushNamed('login_screen');
+                          },
+                          backgroundColor: Theme.of(context).primaryColor,
+                          textColor: Colors.black,
+                          isFilled: true,
+                        ),
+                      ],
                     ),
                   ),
                 ],
