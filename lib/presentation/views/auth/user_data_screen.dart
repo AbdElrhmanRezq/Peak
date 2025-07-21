@@ -29,12 +29,12 @@ class _UserDataScreenState extends ConsumerState<UserDataScreen> {
       await auth.createUser(
         UserModel(
           email: auth.currentUser?.email ?? '',
-          name: name,
+          username: name,
           gender: gender,
-          id: '',
+          id: auth.currentUser?.id ?? '',
         ),
       );
-      Navigator.of(context).pushReplacementNamed('home_screen');
+      Navigator.of(context).pushReplacementNamed('nav_menu');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

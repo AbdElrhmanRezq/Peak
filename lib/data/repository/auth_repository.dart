@@ -15,7 +15,7 @@ class AuthRepository {
     return UserModel(
       id: user.id,
       email: user.email ?? '',
-      name: user.userMetadata?['name'] ?? '',
+      username: user.userMetadata?['name'] ?? '',
     );
   }
 
@@ -32,11 +32,11 @@ class AuthRepository {
     final user = response.user;
 
     if (user == null) return null;
-
+    print('User signed up: ${user.id}');
     return UserModel(
       id: user.id,
       email: user.email ?? '',
-      name: user.userMetadata?['name'] ?? '',
+      username: user.userMetadata?['name'] ?? '',
     );
   }
 
@@ -47,7 +47,7 @@ class AuthRepository {
       ? UserModel(
           id: _supabaseService.supabase.auth.currentUser!.id,
           email: _supabaseService.supabase.auth.currentUser!.email ?? '',
-          name:
+          username:
               _supabaseService
                   .supabase
                   .auth

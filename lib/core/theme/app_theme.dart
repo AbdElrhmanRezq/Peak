@@ -4,6 +4,11 @@ import 'app_fonts.dart';
 final ThemeData appTheme = ThemeData(
   fontFamily: 'Viga',
   primaryColor: const Color(0xFFd1fc3e),
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: const Color(0xFFd1fc3e),
+    primary: const Color(0xFFd1fc3e),
+    secondary: const Color(0xFF2d2c2f),
+  ),
   scaffoldBackgroundColor: const Color(0xFF1d1d1e),
   textSelectionTheme: const TextSelectionThemeData(
     cursorColor: Color(0xFFd1fc3e),
@@ -31,5 +36,6 @@ final ThemeData appTheme = ThemeData(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
     ),
   ),
+  iconTheme: IconThemeData(color: Color(0xFF505050)),
   useMaterial3: true,
 );

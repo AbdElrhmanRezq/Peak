@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:repx/presentation/views/home/home_screen.dart';
+import 'package:repx/presentation/views/home/nav_menu.dart';
 import 'package:repx/presentation/views/initial_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -24,7 +24,7 @@ class GateWay extends ConsumerWidget {
         if (user?.session == null) {
           return const InitialScreen();
         }
-        return const HomeScreen();
+        return const NavMenu();
       },
     );
   }

@@ -6,6 +6,8 @@ import 'package:repx/presentation/views/auth/signup_screen.dart';
 import 'package:repx/presentation/views/auth/user_data_screen.dart';
 import 'package:repx/presentation/views/gateway/auth_gate.dart';
 import 'package:repx/presentation/views/home/home_screen.dart';
+import 'package:repx/presentation/views/home/nav_menu.dart';
+import 'package:repx/presentation/views/home/profile_screen.dart';
 import 'package:repx/presentation/views/initial_screen.dart';
 import 'package:repx/presentation/views/splash/splash_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -31,7 +33,7 @@ class Repx extends StatelessWidget {
     return MaterialApp(
       title: 'Repx',
       theme: appTheme,
-      initialRoute: SplashScreen.id,
+      initialRoute: GateWay.id,
       routes: {
         SplashScreen.id: (context) => const SplashScreen(),
         InitialScreen.id: (context) => const InitialScreen(),
@@ -41,6 +43,8 @@ class Repx extends StatelessWidget {
         GateWay.id: (context) => const GateWay(),
         OnBoardScreen.id: (context) => const OnBoardScreen(),
         UserDataScreen.id: (context) => const UserDataScreen(),
+        NavMenu.id: (context) => const NavMenu(),
+        ProfileScreen.id: (context) => const ProfileScreen(),
       },
       debugShowCheckedModeBanner: false,
     );

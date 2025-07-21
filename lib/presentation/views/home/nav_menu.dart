@@ -1,0 +1,65 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:repx/data/providers/nav_provider.dart';
+import 'package:repx/presentation/views/home/home_screen.dart';
+import 'package:repx/presentation/views/home/profile_screen.dart';
+
+class NavMenu extends ConsumerWidget {
+  static const String id = 'nav_menu';
+  const NavMenu({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final screenIndex = ref.watch(screenProvider);
+
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+
+    final screens = [
+      const HomeScreen(),
+      const Center(child: Text('Workouts Screen')),
+      const Center(child: Text('Explore Screen')),
+      const ProfileScreen(),
+      const Center(child: Text('Notifications Screen')),
+    ];
+
+    Widget navDest(IconData icon, int index) {
+      return NavigationDestination(
+        icon: AnimatedSwitcher(
+          duration: Duration(milliseconds: 300),
+          child: Icon(
+            icon,
+            key: ValueKey<bool>(screenIndex == index),
+            color: screenIndex == index
+                ? Colors.white
+                : Theme.of(context).iconTheme.color,
+          ),
+        ),
+        label: '',
+      );
+    }
+
+    return Scaffold(
+      bottomNavigationBar: NavigationBar(
+        shadowColor: Theme.of(context).primaryColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        indicatorColor: Theme.of(context).scaffoldBackgroundColor,
+        height: height * 0.09,
+        elevation: 0.5,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+        selectedIndex: screenIndex,
+        onDestinationSelected: (value) {
+          ref.read(screenProvider.notifier).state = value;
+        },
+        destinations: [
+          navDest(Icons.home_rounded, 0),
+          navDest(Icons.bar_chart, 1),
+          navDest(Icons.explore_rounded, 2),
+          navDest(Icons.person_rounded, 3),
+          navDest(Icons.notifications_rounded, 4),
+        ],
+      ),
+      body: screens[screenIndex],
+    );
+  }
+}
