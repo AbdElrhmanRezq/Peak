@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repx/data/providers/auth_providers.dart';
+import 'package:repx/data/providers/user_data_provider.dart';
 import 'package:repx/presentation/widgets/custom_wide_button.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -31,6 +32,7 @@ class HomeScreen extends ConsumerWidget {
 
               text: "Logout",
               onPressed: () {
+                ref.invalidate(userDataProvider); // Add this
                 auth.logout();
               },
             ),

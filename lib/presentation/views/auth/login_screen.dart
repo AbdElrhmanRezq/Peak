@@ -45,7 +45,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     try {
       final user = await auth.login(email, password);
-      Navigator.of(context).pushReplacementNamed('home_screen');
+      Navigator.of(context).pushReplacementNamed('nav_menu');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

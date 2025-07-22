@@ -69,6 +69,7 @@ flutter:
     - assets/images/logo.png
     - assets/images/people/initial_screen.png
     - assets/images/people/
+    - assets/images/start.gif
     - .env
     - assets/images/people/black_man.png
     - assets/images/profile/pro4.jpeg

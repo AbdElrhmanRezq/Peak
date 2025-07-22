@@ -31,3 +31,17 @@ final userRepositoryProvider = Provider<SupabaseUserRepository>((ref) {
   //final supabaseService = ref.watch(supabaseServiceProvider);
   return SupabaseUserRepository();
 });
+
+final publicUserProvider = FutureProvider.family<UserModel, String>((
+  ref,
+  userId,
+) async {
+  final userRepo = ref.watch(userRepositoryProvider);
+  final user = await userRepo.getUserById(userId);
+
+  if (user == null) {
+    throw Exception('User not found');
+  }
+
+  return user;
+});

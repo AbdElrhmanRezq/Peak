@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repx/data/providers/nav_provider.dart';
 import 'package:repx/presentation/views/home/home_screen.dart';
-import 'package:repx/presentation/views/home/profile_screen.dart';
+import 'package:repx/presentation/views/home/profile/profile_screen.dart';
 
 class NavMenu extends ConsumerWidget {
   static const String id = 'nav_menu';
