@@ -148,12 +148,19 @@ class ProfileScreen extends ConsumerWidget {
                         ),
                       ],
                     ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: height * 0.02),
+                      child: CustomWideButton(
+                        backgroundColor: Theme.of(context).primaryColor,
+                        text: "Edit profile",
+                        onPressed: () {
+                          Navigator.of(
+                            context,
+                          ).pushNamed("edit_profile_screen");
+                        },
+                      ),
+                    ),
                   ],
-                ),
-                CustomWideButton(
-                  text: "Edit Profile",
-                  onPressed: () {},
-                  backgroundColor: Theme.of(context).primaryColor,
                 ),
               ),
             ],

@@ -34,4 +34,23 @@ class SupabaseUserRepository {
       return null;
     }
   }
+
+  Future<void> updateUser(UserModel user) async {
+    print('Updating user: ${user.toJson()}============================');
+    try {
+      final updatedUser = await supabase
+          .from('users')
+          .update(user.toJson())
+          .eq('email', user.email as String)
+          .select();
+
+      print('Updated user: $updatedUser');
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
 }

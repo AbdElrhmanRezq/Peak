@@ -39,4 +39,44 @@ class UserModel {
       age: json['age'],
     );
   }
+
+  UserModel copyWith({
+    String? email,
+    String? username,
+    String? gender,
+    int? streak,
+    int? exp,
+    DateTime? createdAt,
+    int? weight,
+    int? height,
+    int? age,
+  }) {
+    return UserModel(
+      id: id, // ID is required and unchanged
+      email: email ?? this.email,
+      username: username ?? this.username,
+      gender: gender ?? this.gender,
+      streak: streak ?? this.streak,
+      exp: exp ?? this.exp,
+      createdAt: createdAt ?? this.createdAt,
+      weight: weight ?? this.weight,
+      height: height ?? this.height,
+      age: age ?? this.age,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'email': email,
+      'username': username,
+      'gender': gender,
+      'streak': streak,
+      'exp': exp,
+      'created_at': createdAt?.toIso8601String(),
+      'weight': weight,
+      'height': height,
+      'age': age,
+    };
+  }
 }

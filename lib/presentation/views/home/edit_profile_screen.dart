@@ -1,0 +1,175 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:repx/data/providers/user_data_provider.dart';
+
+GlobalKey<FormState> _key = GlobalKey<FormState>();
+
+class EditProfileScreen extends ConsumerWidget {
+  static const String id = 'edit_profile_screen';
+  const EditProfileScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userDataProvider);
+    final isLoading = ref.watch(isLoadingProvider);
+    final userRepo = ref.watch(userRepositoryProvider);
+
+    final userNameController = TextEditingController();
+    final weightController = TextEditingController();
+    final heightController = TextEditingController();
+    final ageController = TextEditingController();
+    final genderController = TextEditingController();
+
+    Future<void> updateData() async {
+      ref.read(isLoadingProvider.notifier).state = true;
+      print(
+        'Updating user data... ${userNameController.text}=============================',
+      );
+      try {
+        final currentUser = user.value;
+        if (currentUser == null) throw Exception('User data not loaded');
+
+        // Create updated user using copyWith
+        final updatedUser = currentUser.copyWith(
+          username: userNameController.text.isNotEmpty
+              ? userNameController.text
+              : null,
+          weight: int.tryParse(weightController.text),
+          height: int.tryParse(heightController.text),
+          age: int.tryParse(ageController.text),
+          gender: genderController.text.isNotEmpty
+              ? genderController.text
+              : null,
+        );
+
+        // Save updated user
+        await userRepo.updateUser(updatedUser);
+
+        ref.read(isLoadingProvider.notifier).state = false;
+        ref.invalidate(userDataProvider);
+
+        Navigator.pop(context);
+      } catch (e) {
+        ref.read(isLoadingProvider.notifier).state = false;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error updating profile: $e')));
+      }
+    }
+
+    return user.when(
+      data: (userData) {
+        userNameController.text = userData.username ?? '';
+        weightController.text = userData.weight?.toString() ?? '';
+        heightController.text = userData.height?.toString() ?? '';
+        ageController.text = userData.age?.toString() ?? '';
+        genderController.text = userData.gender ?? '';
+
+        return Form(
+          key: _key,
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(
+                'Edit Profile',
+                style: TextStyle(color: Colors.white),
+              ),
+              backgroundColor: Colors.transparent,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
+            body: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextFormField(
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    decoration: InputDecoration(
+                      labelText: 'Username',
+                      fillColor: Colors.white,
+                    ),
+                    controller: userNameController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your username';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 16),
+                  CustomTextField(
+                    labelText: 'Weight (kg)',
+                    controller: weightController,
+                  ),
+                  SizedBox(height: 16),
+                  CustomTextField(
+                    labelText: 'Height (cm)',
+                    controller: heightController,
+                  ),
+                  SizedBox(height: 16),
+                  CustomTextField(labelText: 'Age', controller: ageController),
+                  SizedBox(height: 16),
+                  isLoading
+                      ? Center(
+                          child: CircularProgressIndicator(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        )
+                      : ElevatedButton(
+                          onPressed: () {
+                            if (_key.currentState?.validate() ?? false) {
+                              updateData();
+                            }
+                          },
+                          child: Text('Save Changes'),
+                        ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+      loading: () => Center(
+        child: CircularProgressIndicator(color: Theme.of(context).primaryColor),
+      ),
+      error: (error, stack) => Text('Error: $error'),
+    );
+  }
+}
+
+class CustomTextField extends StatelessWidget {
+  final String? labelText;
+  final TextEditingController? controller;
+
+  const CustomTextField({super.key, this.labelText, this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      style: Theme.of(context).textTheme.bodyMedium,
+      decoration: InputDecoration(
+        labelText: labelText,
+        fillColor: Colors.transparent,
+        filled: true, // Needed to apply fillColor
+        border: const OutlineInputBorder(
+          borderRadius: BorderRadius.zero, // sharp edges
+        ),
+        enabledBorder: const OutlineInputBorder(
+          borderRadius: BorderRadius.zero,
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.zero,
+          borderSide: BorderSide(
+            color: Theme.of(context).primaryColor,
+            width: 2.0,
+          ),
+        ),
+      ),
+      controller: controller,
+      keyboardType: TextInputType.number,
+    );
+  }
+}

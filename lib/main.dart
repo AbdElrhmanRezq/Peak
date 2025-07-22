@@ -5,6 +5,7 @@ import 'package:repx/presentation/views/auth/on_board_screen.dart';
 import 'package:repx/presentation/views/auth/signup_screen.dart';
 import 'package:repx/presentation/views/auth/user_data_screen.dart';
 import 'package:repx/presentation/views/gateway/auth_gate.dart';
+import 'package:repx/presentation/views/home/edit_profile_screen.dart';
 import 'package:repx/presentation/views/home/home_screen.dart';
 import 'package:repx/presentation/views/home/nav_menu.dart';
 import 'package:repx/presentation/views/home/profile_screen.dart';
@@ -45,6 +46,7 @@ class Repx extends StatelessWidget {
         UserDataScreen.id: (context) => const UserDataScreen(),
         NavMenu.id: (context) => const NavMenu(),
         ProfileScreen.id: (context) => const ProfileScreen(),
+        EditProfileScreen.id: (context) => const EditProfileScreen(),
       },
       debugShowCheckedModeBanner: false,
     );

@@ -24,3 +24,10 @@ final userDataProvider = FutureProvider<UserModel>((ref) async {
 
   return user;
 });
+
+final isLoadingProvider = StateProvider<bool>((ref) => false);
+
+final userRepositoryProvider = Provider<SupabaseUserRepository>((ref) {
+  //final supabaseService = ref.watch(supabaseServiceProvider);
+  return SupabaseUserRepository();
+});
