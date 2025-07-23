@@ -8,70 +8,83 @@ class FriendsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    final arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final String userId = arguments['userId'];
 
-    final user = ref.watch(userDataProvider);
     final userRepo = ref.watch(userRepositoryProvider);
 
-    return user.when(
-      data: (userData) {
-        final followers = userRepo.getUserFollowers(userData.id);
-        final followings = userRepo.getUserFollowings(userData.id);
-        return DefaultTabController(
-          length: 2,
-          child: Scaffold(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            appBar: AppBar(
-              title: Text('Friends', style: TextStyle(color: Colors.white)),
-              backgroundColor: Colors.transparent,
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.white),
-                onPressed: () => Navigator.pop(context),
-              ),
-              bottom: TabBar(
-                labelPadding: EdgeInsets.symmetric(vertical: height * 0.02),
-                labelStyle: Theme.of(context).textTheme.bodyMedium,
-                indicatorColor: Colors.white,
-                overlayColor: MaterialStateProperty.all(Colors.transparent),
-                tabs: [Text("Followers"), Text("Following")],
-              ),
-            ),
-            body: TabBarView(
-              children: [
-                FutureBuilder(
-                  future: followers,
-                  builder: (context, snapshot) {
-                    return PeopleList(snapshot: snapshot);
-                  },
-                ),
-                FutureBuilder(
-                  future: followings,
-                  builder: (context, snapshot) {
-                    return PeopleList(snapshot: snapshot);
-                  },
-                ),
-              ],
-            ),
+    final followersFuture = userRepo.getUserFollowers(userId);
+    final followingsFuture = userRepo.getUserFollowings(userId);
+
+    double height = MediaQuery.of(context).size.height;
+
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        appBar: AppBar(
+          title: const Text('Friends', style: TextStyle(color: Colors.white)),
+          backgroundColor: Colors.transparent,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
           ),
-        );
-      },
-      loading: () => Center(
-        child: CircularProgressIndicator(color: Theme.of(context).primaryColor),
+          bottom: TabBar(
+            labelPadding: EdgeInsets.symmetric(vertical: height * 0.02),
+            labelStyle: Theme.of(context).textTheme.bodyMedium,
+            indicatorColor: Colors.white,
+            overlayColor: MaterialStateProperty.all(Colors.transparent),
+            tabs: const [Text("Followers"), Text("Following")],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            FutureBuilder(
+              future: followersFuture,
+              builder: (context, snapshot) => PeopleList(snapshot: snapshot),
+            ),
+            FutureBuilder(
+              future: followingsFuture,
+              builder: (context, snapshot) => PeopleList(snapshot: snapshot),
+            ),
+          ],
+        ),
       ),
-      error: (error, stack) => Text('Error: $error'),
     );
   }
 }
 
 class PeopleList extends StatelessWidget {
-  final snapshot;
-  const PeopleList({required this.snapshot});
+  final AsyncSnapshot snapshot;
+  const PeopleList({super.key, required this.snapshot});
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
+
+    if (snapshot.connectionState != ConnectionState.done) {
+      return Center(
+        child: CircularProgressIndicator(color: Theme.of(context).primaryColor),
+      );
+    }
+
+    if (snapshot.hasError) {
+      return Center(child: Text('Error: ${snapshot.error}'));
+    }
+
+    final users = snapshot.data ?? [];
+
+    if (users.isEmpty) {
+      return Center(
+        child: Text(
+          "No users found",
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      );
+    }
+
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: width * 0.05,
@@ -83,9 +96,9 @@ class PeopleList extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         child: ListView.builder(
-          itemCount: snapshot.data?.length ?? 0,
+          itemCount: users.length,
           itemBuilder: (context, index) {
-            final follower = snapshot.data![index];
+            final follower = users[index];
             return GestureDetector(
               onTap: () {
                 Navigator.of(context).pushNamed(
@@ -95,10 +108,13 @@ class PeopleList extends StatelessWidget {
               },
               child: ListTile(
                 leading: ClipRRect(
-                  borderRadius: BorderRadiusGeometry.circular(100),
+                  borderRadius: BorderRadius.circular(100),
                   child: Image.asset(
                     follower.profilePictureUrl ??
                         'assets/images/profile/pro4.jpeg',
+                    fit: BoxFit.cover,
+                    width: 40,
+                    height: 40,
                   ),
                 ),
                 title: Text(

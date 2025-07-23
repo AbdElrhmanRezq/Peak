@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repx/data/models/user_model.dart';
 import 'package:repx/data/providers/user_data_provider.dart';
+import 'package:repx/presentation/widgets/custom_icon_button.dart';
 import 'package:repx/presentation/widgets/custom_wide_button.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -45,21 +46,32 @@ class ProfileScreen extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      userData.username ?? 'N/A',
-                      style: Theme.of(context).textTheme.headlineLarge,
-                    ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          userData.email ?? 'N/A',
-                          style: Theme.of(context).textTheme.bodyMedium,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              userData.username ?? 'N/A',
+                              style: Theme.of(context).textTheme.headlineLarge,
+                            ),
+                            Text(
+                              'Joined at: ${userData.createdAt?.year ?? 'N/A'}/${userData.createdAt?.month ?? 'N/A'}/${userData.createdAt?.day ?? 'N/A'}',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ],
                         ),
-                        Text(" - "),
-                        Text(
-                          'Joined at: ${userData.createdAt?.year ?? 'N/A'}/${userData.createdAt?.month ?? 'N/A'}/${userData.createdAt?.day ?? 'N/A'}',
-                          style: Theme.of(context).textTheme.bodyMedium,
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(
+                              context,
+                            ).pushNamed('add_friends_screen');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).primaryColor,
+                          ),
+                          child: Text("Add Friends"),
                         ),
                       ],
                     ),
@@ -73,7 +85,10 @@ class ProfileScreen extends ConsumerWidget {
                         ),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.of(context).pushNamed("friends_screen");
+                            Navigator.of(context).pushNamed(
+                              "friends_screen",
+                              arguments: {'userId': userData.id},
+                            );
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

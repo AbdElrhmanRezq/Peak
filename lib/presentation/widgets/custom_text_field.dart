@@ -1,37 +1,36 @@
 import 'package:flutter/material.dart';
 
-class CustomTextField extends StatefulWidget {
+class CustomTextField extends StatelessWidget {
   final String? labelText;
   final TextEditingController? controller;
-  final String? Function(String?)? validator;
-  const CustomTextField({
-    required this.labelText,
-    required this.controller,
-    required this.validator,
-    super.key,
-  });
 
-  @override
-  State<CustomTextField> createState() => _CustomTextFieldState();
-}
+  const CustomTextField({super.key, this.labelText, this.controller});
 
-class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      child: TextFormField(
-        cursorColor: Theme.of(context).primaryColor,
-        style: Theme.of(context).textTheme.bodyMedium,
-        controller: widget.controller,
-        decoration: InputDecoration(
-          focusColor: Theme.of(context).primaryColor,
-          labelText: widget.labelText,
-          labelStyle: Theme.of(context).textTheme.labelSmall,
-          fillColor: Colors.white,
+    return TextField(
+      style: Theme.of(context).textTheme.bodyMedium,
+      decoration: InputDecoration(
+        labelText: labelText,
+        fillColor: Colors.transparent,
+        filled: true, // Needed to apply fillColor
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8), // sharp edges
         ),
-        validator: widget.validator,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(
+            color: Theme.of(context).primaryColor,
+            width: 2.0,
+          ),
+        ),
       ),
+      controller: controller,
+      keyboardType: TextInputType.number,
     );
   }
 }

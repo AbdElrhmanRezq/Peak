@@ -7,6 +7,13 @@ class AppFonts {
     fontWeight: FontWeight.bold,
     color: Colors.white,
   );
+
+  static const TextStyle headingMedium = TextStyle(
+    fontFamily: 'Viga',
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
+  );
   static const TextStyle headingBlack = TextStyle(
     fontFamily: 'Viga',
     fontSize: 25,

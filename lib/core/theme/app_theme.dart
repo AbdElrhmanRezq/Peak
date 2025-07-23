@@ -20,6 +20,7 @@ final ThemeData appTheme = ThemeData(
     titleLarge: AppFonts.headingBlack,
     bodyMedium: AppFonts.body,
     labelSmall: AppFonts.label,
+    headlineMedium: AppFonts.headingMedium,
   ),
   inputDecorationTheme: const InputDecorationTheme(
     enabledBorder: UnderlineInputBorder(

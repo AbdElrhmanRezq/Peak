@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repx/data/models/user_model.dart';
 import 'package:repx/data/providers/auth_providers.dart';
 import 'package:repx/presentation/widgets/custom_circular_button.dart';
-import 'package:repx/presentation/widgets/custom_text_field.dart';
+import 'package:repx/presentation/widgets/custom_text_form_field.dart';
 import 'package:repx/presentation/widgets/custom_wide_button.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -74,14 +74,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text("Repx", style: Theme.of(context).textTheme.headlineLarge),
-                CustomTextField(
+                CustomTextFormField(
                   labelText: 'Email',
                   controller: emailController,
                   validator: (value) => value == null || value.isEmpty
                       ? 'Please enter your email'
                       : null,
                 ),
-                CustomTextField(
+                CustomTextFormField(
                   labelText: 'Password',
                   controller: passwordController,
                   validator: (value) => value == null || value.isEmpty

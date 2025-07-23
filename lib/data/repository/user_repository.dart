@@ -35,6 +35,31 @@ class SupabaseUserRepository {
     }
   }
 
+  Future<UserModel?> getUserByUsernameOrPhone(String text) async {
+    try {
+      final data = await supabase
+          .from('users')
+          .select()
+          .or('username.ilike.$text,phone_number.eq.$text')
+          .limit(1)
+          .maybeSingle();
+
+      if (data != null) {
+        print('Fetched user data: $data');
+        return UserModel.fromJson(data);
+      } else {
+        print('No matching user found.');
+        return null;
+      }
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      return null;
+    } catch (e) {
+      print('Unknown error: $e');
+      return null;
+    }
+  }
+
   Future<void> updateUser(UserModel user) async {
     print('Updating user: ${user.toJson()}============================');
     try {
@@ -100,5 +125,60 @@ class SupabaseUserRepository {
       print('Unknown error: $e');
     }
     return followings;
+  }
+
+  Future<bool> isUserFollowed(String followerId, String followedId) async {
+    try {
+      final data = await supabase
+          .from('follows')
+          .select()
+          .eq('follower_id', followerId)
+          .eq('followed_id', followedId)
+          .maybeSingle();
+
+      print('Fetched follow data: $data');
+
+      return data != null;
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      return false;
+    } catch (e) {
+      print('Unknown error: $e');
+      return false;
+    }
+  }
+
+  Future<void> followUser(String followerId, String followedId) async {
+    try {
+      await supabase.from('follows').insert([
+        {'follower_id': followerId, 'followed_id': followedId},
+      ]);
+
+      print('Inserted User');
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
+
+  Future<void> unfollowUser(String followerId, String followedId) async {
+    try {
+      await supabase
+          .from('follows')
+          .delete()
+          .eq('follower_id', followerId)
+          .eq('followed_id', followedId);
+
+      print('Deleted User');
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
   }
 }

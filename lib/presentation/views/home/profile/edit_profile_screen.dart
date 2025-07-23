@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repx/data/providers/user_data_provider.dart';
+import 'package:repx/presentation/widgets/custom_app_bar.dart';
+import 'package:repx/presentation/widgets/custom_text_field.dart';
 
 GlobalKey<FormState> _key = GlobalKey<FormState>();
 
@@ -19,6 +21,7 @@ class EditProfileScreen extends ConsumerWidget {
     final heightController = TextEditingController();
     final ageController = TextEditingController();
     final genderController = TextEditingController();
+    final phoneNumberController = TextEditingController();
 
     Future<void> updateData() async {
       ref.read(isLoadingProvider.notifier).state = true;
@@ -40,6 +43,7 @@ class EditProfileScreen extends ConsumerWidget {
           gender: genderController.text.isNotEmpty
               ? genderController.text
               : null,
+          phoneNumber: phoneNumberController.text.trim(),
         );
 
         // Save updated user
@@ -64,21 +68,12 @@ class EditProfileScreen extends ConsumerWidget {
         heightController.text = userData.height?.toString() ?? '';
         ageController.text = userData.age?.toString() ?? '';
         genderController.text = userData.gender ?? '';
+        phoneNumberController.text = userData.phoneNumber ?? '';
 
         return Form(
           key: _key,
           child: Scaffold(
-            appBar: AppBar(
-              title: Text(
-                'Edit Profile',
-                style: TextStyle(color: Colors.white),
-              ),
-              backgroundColor: Colors.transparent,
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.white),
-                onPressed: () => Navigator.pop(context),
-              ),
-            ),
+            appBar: CustomAppBar(title: "Edit Profile"),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -111,6 +106,11 @@ class EditProfileScreen extends ConsumerWidget {
                   SizedBox(height: 16),
                   CustomTextField(labelText: 'Age', controller: ageController),
                   SizedBox(height: 16),
+                  CustomTextField(
+                    labelText: 'Phone Number',
+                    controller: phoneNumberController,
+                  ),
+                  SizedBox(height: 16),
                   isLoading
                       ? Center(
                           child: CircularProgressIndicator(
@@ -135,41 +135,6 @@ class EditProfileScreen extends ConsumerWidget {
         child: CircularProgressIndicator(color: Theme.of(context).primaryColor),
       ),
       error: (error, stack) => Text('Error: $error'),
-    );
-  }
-}
-
-class CustomTextField extends StatelessWidget {
-  final String? labelText;
-  final TextEditingController? controller;
-
-  const CustomTextField({super.key, this.labelText, this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      style: Theme.of(context).textTheme.bodyMedium,
-      decoration: InputDecoration(
-        labelText: labelText,
-        fillColor: Colors.transparent,
-        filled: true, // Needed to apply fillColor
-        border: const OutlineInputBorder(
-          borderRadius: BorderRadius.zero, // sharp edges
-        ),
-        enabledBorder: const OutlineInputBorder(
-          borderRadius: BorderRadius.zero,
-          borderSide: BorderSide(color: Colors.grey),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.zero,
-          borderSide: BorderSide(
-            color: Theme.of(context).primaryColor,
-            width: 2.0,
-          ),
-        ),
-      ),
-      controller: controller,
-      keyboardType: TextInputType.number,
     );
   }
 }

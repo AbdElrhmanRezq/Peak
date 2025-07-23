@@ -10,6 +10,7 @@ class UserModel {
   final int? height;
   final int? age;
   final String? profilePictureUrl;
+  final String? phoneNumber;
 
   UserModel({
     required this.id,
@@ -23,6 +24,7 @@ class UserModel {
     this.height,
     this.age,
     this.profilePictureUrl,
+    this.phoneNumber,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -40,6 +42,7 @@ class UserModel {
       height: json['height'],
       age: json['age'],
       profilePictureUrl: json['profile_picture_url'],
+      phoneNumber: json['phone_number'],
     );
   }
 
@@ -53,6 +56,7 @@ class UserModel {
     int? weight,
     int? height,
     int? age,
+    String? phoneNumber,
   }) {
     return UserModel(
       id: id, // ID is required and unchanged
@@ -65,6 +69,7 @@ class UserModel {
       weight: weight ?? this.weight,
       height: height ?? this.height,
       age: age ?? this.age,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
     );
   }
 
@@ -81,6 +86,7 @@ class UserModel {
       'height': height,
       'age': age,
       'profile_picture_url': profilePictureUrl,
+      'phone_number': phoneNumber,
     };
   }
 }

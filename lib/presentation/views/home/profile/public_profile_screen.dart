@@ -79,18 +79,79 @@ class PublicProfileScreen extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          userData.email ?? 'N/A',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        Text(" - "),
-                        Text(
                           'Joined at: ${userData.createdAt?.year ?? 'N/A'}/${userData.createdAt?.month ?? 'N/A'}/${userData.createdAt?.day ?? 'N/A'}',
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
                     ),
 
-                    // Followers & Following
+                    FutureBuilder<bool>(
+                      future: userRepo.isUserFollowed(
+                        currentUser!.id,
+                        userData.id,
+                      ),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+
+                        bool isFollowing = snapshot.data ?? false;
+
+                        return StatefulBuilder(
+                          builder: (context, setState) {
+                            bool isLoading = false;
+
+                            Future<void> _followUser() async {
+                              setState(() => isLoading = true);
+                              await userRepo.followUser(
+                                currentUser.id,
+                                userData.id,
+                              );
+                              setState(() {
+                                isLoading = false;
+                                isFollowing = true;
+                              });
+                            }
+
+                            Future<void> _unfollowUser() async {
+                              setState(() => isLoading = true);
+                              await userRepo.unfollowUser(
+                                currentUser.id,
+                                userData.id,
+                              );
+                              setState(() {
+                                isLoading = false;
+                                isFollowing = false;
+                              });
+                            }
+
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: height * 0.01,
+                              ),
+                              child: currentUser.id == userData.id
+                                  ? SizedBox()
+                                  : isLoading
+                                  ? Center(child: CircularProgressIndicator())
+                                  : CustomWideButton(
+                                      text: isFollowing
+                                          ? "Remove Friend"
+                                          : "Add Friend",
+                                      backgroundColor: Theme.of(
+                                        context,
+                                      ).primaryColor,
+                                      textColor: Colors.black,
+                                      onPressed: isFollowing
+                                          ? _unfollowUser
+                                          : _followUser,
+                                    ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: height * 0.01),
                       child: Container(
@@ -101,7 +162,10 @@ class PublicProfileScreen extends ConsumerWidget {
                         ),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.of(context).pushNamed("friends_screen");
+                            Navigator.of(context).pushNamed(
+                              "friends_screen",
+                              arguments: {'userId': userData.id},
+                            );
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -109,6 +173,7 @@ class PublicProfileScreen extends ConsumerWidget {
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
+                                  //Make here logic
                                   FutureBuilder<List<UserModel>>(
                                     future: followers,
                                     builder: (context, snapshot) {

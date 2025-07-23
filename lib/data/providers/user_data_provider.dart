@@ -45,3 +45,5 @@ final publicUserProvider = FutureProvider.family<UserModel, String>((
 
   return user;
 });
+
+final searchedUserProvider = StateProvider<UserModel?>((ref) => null);
