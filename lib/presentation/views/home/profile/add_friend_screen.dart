@@ -22,7 +22,7 @@ class AddFriendScreen extends ConsumerWidget {
 
     final userRepo = ref.watch(userRepositoryProvider);
     final isLoading = ref.watch(isLoadingProvider);
-    final foundUser = ref.watch(searchedUserProvider);
+    final foundUsers = ref.watch(searchedUserProvider);
     final currentUser = ref.watch(currentUserProvider);
     final currentUserId = currentUser?.id;
 
@@ -30,11 +30,8 @@ class AddFriendScreen extends ConsumerWidget {
       ref.read(isLoadingProvider.notifier).state = true;
 
       try {
-        final foundUser = await userRepo.getUserByUsernameOrPhone(
-          textController.text,
-        );
-        ref.read(searchedUserProvider.notifier).state = foundUser;
-        print(foundUser);
+        final foundUsers = await userRepo.getUsersByName(textController.text);
+        ref.read(searchedUserProvider.notifier).state = foundUsers;
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -65,7 +62,7 @@ class AddFriendScreen extends ConsumerWidget {
               child: Row(
                 children: [
                   Text(
-                    "Search using Phone/Username",
+                    "Search using Username",
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                 ],
@@ -80,7 +77,7 @@ class AddFriendScreen extends ConsumerWidget {
                     width: width * 0.7,
                     child: CustomTextField(
                       controller: textController,
-                      labelText: "Phone/Username",
+                      labelText: "Username",
                     ),
                   ),
                   TextButton(
@@ -104,67 +101,114 @@ class AddFriendScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            foundUser == null
-                ? Text("No user found")
+            foundUsers == []
+                ? Text("No users found")
                 : Padding(
                     padding: EdgeInsets.symmetric(vertical: height * 0.01),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(
-                          'public_profile_screen',
-                          arguments: {'userId': foundUser.id},
-                        );
-                      },
-                      child: ListTile(
-                        leading: ClipRRect(
-                          borderRadius: BorderRadiusGeometry.circular(100),
-                          child: Image.asset(
-                            foundUser.profilePictureUrl ??
-                                'assets/images/profile/pro4.jpeg',
-                          ),
-                        ),
-                        title: Text(
-                          foundUser.username ?? 'N/A',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        trailing: FutureBuilder(
-                          future: userRepo.isUserFollowed(
-                            currentUserId as String,
-                            foundUser.id,
-                          ),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
-                              return CircularProgressIndicator(
-                                color: Theme.of(context).primaryColor,
-                              );
-                            }
+                    child: Container(
+                      height: height * 0.6,
+                      child: ListView.builder(
+                        shrinkWrap: false,
+                        itemCount: foundUsers.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: height * 0.002,
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(),
 
-                            final isFollowed = snapshot.data!;
-                            return (foundUser.id == currentUserId)
-                                ? SizedBox()
-                                : CustomIconButton(
-                                    icon: isFollowed
-                                        ? Icons.person_remove
-                                        : Icons.person_add,
-                                    onPressed: () async {
-                                      if (isFollowed) {
-                                        await userRepo.unfollowUser(
-                                          currentUserId,
-                                          foundUser.id,
-                                        );
-                                      } else {
-                                        await userRepo.followUser(
-                                          currentUserId,
-                                          foundUser.id,
-                                        );
-                                      }
+                                borderRadius: BorderRadius.circular(12),
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                              child: ListTile(
+                                leading: ClipRRect(
+                                  borderRadius: BorderRadiusGeometry.circular(
+                                    100,
+                                  ),
+                                  child: Image.asset(
+                                    foundUsers[index]?.profilePictureUrl ??
+                                        'assets/images/profile/pro4.jpeg',
+                                  ),
+                                ),
+                                title: Text(
+                                  foundUsers[index]?.name ?? 'N/A',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                                subtitle: Text(
+                                  foundUsers[index]?.username ?? 'N/A',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                                trailing: FutureBuilder(
+                                  future: userRepo.isUserFollowed(
+                                    currentUserId as String,
+                                    foundUsers[index]?.id as String,
+                                  ),
+                                  builder: (context, snapshot) {
+                                    if (!snapshot.hasData) {
+                                      return CircularProgressIndicator(
+                                        color: Theme.of(context).primaryColor,
+                                      );
+                                    }
 
-                                      // Refresh the state to show the new status
-                                      ref.invalidate(searchedUserProvider);
-                                    },
-                                  );
-                          },
-                        ),
+                                    final isFollowed = ref.watch(
+                                      followStatusProvider(
+                                        foundUsers[index]!.id,
+                                      ),
+                                    );
+                                    return (foundUsers[index]?.id ==
+                                            currentUserId)
+                                        ? SizedBox()
+                                        : IconButton(
+                                            icon: Icon(
+                                              isFollowed
+                                                  ? Icons.done_outline_sharp
+                                                  : Icons.group_add_outlined,
+                                              color: Theme.of(
+                                                context,
+                                              ).primaryColor,
+                                            ),
+                                            onPressed: () async {
+                                              if (isFollowed) {
+                                                await userRepo.unfollowUser(
+                                                  currentUserId,
+                                                  foundUsers[index]?.id
+                                                      as String,
+                                                );
+                                                ref
+                                                        .read(
+                                                          followStatusProvider(
+                                                            foundUsers[index]!
+                                                                .id,
+                                                          ).notifier,
+                                                        )
+                                                        .state =
+                                                    false; // or false
+                                              } else {
+                                                await userRepo.followUser(
+                                                  currentUserId,
+                                                  foundUsers[index]?.id
+                                                      as String,
+                                                );
+                                                ref
+                                                        .read(
+                                                          followStatusProvider(
+                                                            foundUsers[index]!
+                                                                .id,
+                                                          ).notifier,
+                                                        )
+                                                        .state =
+                                                    true; // or false
+                                              }
+                                            },
+                                          );
+                                  },
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),

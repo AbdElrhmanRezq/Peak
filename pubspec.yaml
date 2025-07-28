@@ -41,6 +41,7 @@ dependencies:
   flutter_dotenv: ^5.2.1
   smooth_page_indicator: ^1.2.1
   flutter_heatmap_calendar: ^1.0.5
+  http: ^1.4.0
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +76,7 @@ flutter:
     - assets/images/profile/pro4.jpeg
     - assets/icons/burn.png
     - assets/icons/flash.png
+    - assets/icons/flash2.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

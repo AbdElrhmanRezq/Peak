@@ -51,15 +51,33 @@ class PublicProfileScreen extends ConsumerWidget {
           body: ListView(
             children: [
               // Cover image
-              Container(
-                height: height * 0.4,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/profile/pro4.jpeg'),
-                    fit: BoxFit.cover,
-                    alignment: Alignment.topCenter,
+              Stack(
+                children: [
+                  Container(
+                    height: height * 0.4,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/profile/pro4.jpeg'),
+                        fit: BoxFit.cover,
+                        alignment: Alignment.topCenter,
+                      ),
+                    ),
                   ),
-                ),
+                  Positioned(
+                    top: 16, // spacing from top
+                    left: 16, // spacing from right
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      icon: Icon(
+                        Icons.arrow_back,
+                        size: 36,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
               ),
 
               // User Info
@@ -75,9 +93,18 @@ class PublicProfileScreen extends ConsumerWidget {
                       userData.username ?? 'N/A',
                       style: Theme.of(context).textTheme.headlineLarge,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                    Wrap(
+                      spacing: 4.0, // space between items
+                      runSpacing: 4.0, // space between lines
                       children: [
+                        Text(
+                          userData.username ?? '',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        Text(
+                          '•',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
                         Text(
                           'Joined at: ${userData.createdAt?.year ?? 'N/A'}/${userData.createdAt?.month ?? 'N/A'}/${userData.createdAt?.day ?? 'N/A'}',
                           style: Theme.of(context).textTheme.bodyMedium,

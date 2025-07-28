@@ -1,6 +1,6 @@
 class UserModel {
   final String id;
-  final String? email;
+  final String email;
   final String? username;
   final String? gender;
   final int streak;
@@ -11,10 +11,11 @@ class UserModel {
   final int? age;
   final String? profilePictureUrl;
   final String? phoneNumber;
+  final String? name;
 
   UserModel({
     required this.id,
-    this.email,
+    required this.email,
     this.username,
     this.gender,
     this.streak = 0,
@@ -25,6 +26,7 @@ class UserModel {
     this.age,
     this.profilePictureUrl,
     this.phoneNumber,
+    this.name,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -43,6 +45,7 @@ class UserModel {
       age: json['age'],
       profilePictureUrl: json['profile_picture_url'],
       phoneNumber: json['phone_number'],
+      name: json['name'],
     );
   }
 
@@ -57,6 +60,7 @@ class UserModel {
     int? height,
     int? age,
     String? phoneNumber,
+    String? name,
   }) {
     return UserModel(
       id: id, // ID is required and unchanged
@@ -70,6 +74,7 @@ class UserModel {
       height: height ?? this.height,
       age: age ?? this.age,
       phoneNumber: phoneNumber ?? this.phoneNumber,
+      name: name ?? this.name,
     );
   }
 
@@ -87,6 +92,7 @@ class UserModel {
       'age': age,
       'profile_picture_url': profilePictureUrl,
       'phone_number': phoneNumber,
+      'name': name,
     };
   }
 }

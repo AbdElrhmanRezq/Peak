@@ -11,7 +11,7 @@ class GateWay extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final supabaseService = Supabase.instance.client;
-    return StreamBuilder(
+    return StreamBuilder<AuthState>(
       stream: supabaseService.auth.onAuthStateChange,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -20,10 +20,13 @@ class GateWay extends ConsumerWidget {
         if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         }
-        final user = snapshot.data;
-        if (user?.session == null) {
+
+        final session = snapshot.data?.session;
+
+        if (session == null) {
           return const InitialScreen();
         }
+
         return const NavMenu();
       },
     );

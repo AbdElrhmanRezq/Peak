@@ -6,23 +6,14 @@ import 'package:repx/data/services/supabase_service.dart';
 import 'package:repx/data/repository/auth_repository.dart';
 
 final userDataProvider = FutureProvider<UserModel>((ref) async {
-  final authRepo = ref.watch(authRepositoryProvider);
-  final currentUserId = authRepo.currentUser?.id;
-  print('Current user ID: $currentUserId');
-
-  if (currentUserId == null) {
-    throw Exception('No user is currently logged in');
+  final currentUser = ref.watch(currentUserProvider);
+  if (currentUser == null) {
+    throw Exception("No user found");
   }
 
-  final userRepo = SupabaseUserRepository();
-  final user = await userRepo.getUserById(currentUserId);
-  print('Fetched user: $user');
-
-  if (user == null) {
-    throw Exception('User not found in database');
-  }
-
-  return user;
+  final repo = ref.watch(userRepositoryProvider);
+  final user = await repo.getUserById(currentUser.id);
+  return user as UserModel;
 });
 
 final isLoadingProvider = StateProvider<bool>((ref) => false);
@@ -46,4 +37,8 @@ final publicUserProvider = FutureProvider.family<UserModel, String>((
   return user;
 });
 
-final searchedUserProvider = StateProvider<UserModel?>((ref) => null);
+final searchedUserProvider = StateProvider<List<UserModel?>>((ref) => []);
+
+final followStatusProvider = StateProvider.family<bool, String>((ref, userId) {
+  return false;
+});

@@ -12,6 +12,7 @@ class EditProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    double width = MediaQuery.of(context).size.width;
     final user = ref.watch(userDataProvider);
     final isLoading = ref.watch(isLoadingProvider);
     final userRepo = ref.watch(userRepositoryProvider);
@@ -22,6 +23,7 @@ class EditProfileScreen extends ConsumerWidget {
     final ageController = TextEditingController();
     final genderController = TextEditingController();
     final phoneNumberController = TextEditingController();
+    final nameController = TextEditingController();
 
     Future<void> updateData() async {
       ref.read(isLoadingProvider.notifier).state = true;
@@ -37,6 +39,7 @@ class EditProfileScreen extends ConsumerWidget {
           username: userNameController.text.isNotEmpty
               ? userNameController.text
               : null,
+          name: nameController.text.trim(),
           weight: int.tryParse(weightController.text),
           height: int.tryParse(heightController.text),
           age: int.tryParse(ageController.text),
@@ -69,6 +72,7 @@ class EditProfileScreen extends ConsumerWidget {
         ageController.text = userData.age?.toString() ?? '';
         genderController.text = userData.gender ?? '';
         phoneNumberController.text = userData.phoneNumber ?? '';
+        nameController.text = userData.name ?? '';
 
         return Form(
           key: _key,
@@ -89,26 +93,42 @@ class EditProfileScreen extends ConsumerWidget {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your username';
+                      } else if (value.contains(' ')) {
+                        return "Username shouldn't have spaces";
                       }
                       return null;
                     },
                   ),
                   SizedBox(height: 16),
                   CustomTextField(
+                    labelText: 'Name',
+                    controller: nameController,
+                    width: width * 0.9,
+                  ),
+                  SizedBox(height: 16),
+
+                  CustomTextField(
                     labelText: 'Weight (kg)',
                     controller: weightController,
+                    width: width * 0.9,
                   ),
                   SizedBox(height: 16),
                   CustomTextField(
                     labelText: 'Height (cm)',
                     controller: heightController,
+                    width: width * 0.9,
                   ),
                   SizedBox(height: 16),
-                  CustomTextField(labelText: 'Age', controller: ageController),
+                  CustomTextField(
+                    labelText: 'Age',
+                    controller: ageController,
+                    width: width * 0.9,
+                  ),
                   SizedBox(height: 16),
                   CustomTextField(
                     labelText: 'Phone Number',
                     controller: phoneNumberController,
+                    width: width * 0.9,
                   ),
                   SizedBox(height: 16),
                   isLoading

@@ -5,12 +5,14 @@ import 'package:repx/presentation/views/auth/on_board_screen.dart';
 import 'package:repx/presentation/views/auth/signup_screen.dart';
 import 'package:repx/presentation/views/auth/user_data_screen.dart';
 import 'package:repx/presentation/views/gateway/auth_gate.dart';
+import 'package:repx/presentation/views/home/exercises/exercises_screen.dart';
 import 'package:repx/presentation/views/home/profile/add_friend_screen.dart';
 import 'package:repx/presentation/views/home/profile/edit_profile_screen.dart';
 import 'package:repx/presentation/views/home/home_screen.dart';
 import 'package:repx/presentation/views/home/nav_menu.dart';
 import 'package:repx/presentation/views/home/profile/friends_screen.dart';
 import 'package:repx/presentation/views/home/profile/profile_screen.dart';
+import 'package:repx/presentation/views/home/profile/profile_settings_screen.dart';
 import 'package:repx/presentation/views/home/profile/public_profile_screen.dart';
 import 'package:repx/presentation/views/initial_screen.dart';
 import 'package:repx/presentation/views/splash/splash_screen.dart';
@@ -53,6 +55,8 @@ class Repx extends StatelessWidget {
         FriendsScreen.id: (context) => const FriendsScreen(),
         PublicProfileScreen.id: (context) => const PublicProfileScreen(),
         AddFriendScreen.id: (context) => AddFriendScreen(),
+        ProfileSettingsScreen.id: (context) => ProfileSettingsScreen(),
+        ExercisesScreen.id: (context) => ExercisesScreen(),
       },
       debugShowCheckedModeBanner: false,
     );

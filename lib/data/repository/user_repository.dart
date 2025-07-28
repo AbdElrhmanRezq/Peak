@@ -35,28 +35,26 @@ class SupabaseUserRepository {
     }
   }
 
-  Future<UserModel?> getUserByUsernameOrPhone(String text) async {
+  Future<List<UserModel>> getUsersByName(String text) async {
     try {
       final data = await supabase
           .from('users')
           .select()
-          .or('username.ilike.$text,phone_number.eq.$text')
-          .limit(1)
-          .maybeSingle();
+          .or('username.ilike.%$text%,name.ilike.%$text%');
 
-      if (data != null) {
+      if (data.isNotEmpty) {
         print('Fetched user data: $data');
-        return UserModel.fromJson(data);
+        return data.map((e) => UserModel.fromJson(e)).toList();
       } else {
-        print('No matching user found.');
-        return null;
+        print('No matching users found.');
+        return [];
       }
     } on PostgrestException catch (e) {
       print('PostgrestException: ${e.message}');
-      return null;
+      return [];
     } catch (e) {
       print('Unknown error: $e');
-      return null;
+      return [];
     }
   }
 
