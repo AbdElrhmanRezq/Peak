@@ -5,7 +5,8 @@ import 'package:repx/presentation/views/auth/on_board_screen.dart';
 import 'package:repx/presentation/views/auth/signup_screen.dart';
 import 'package:repx/presentation/views/auth/user_data_screen.dart';
 import 'package:repx/presentation/views/gateway/auth_gate.dart';
-import 'package:repx/presentation/views/home/exercises/exercises_screen.dart';
+import 'package:repx/presentation/views/home/explore/exercises_screen.dart';
+import 'package:repx/presentation/views/home/explore/explore_screen.dart';
 import 'package:repx/presentation/views/home/profile/add_friend_screen.dart';
 import 'package:repx/presentation/views/home/profile/edit_profile_screen.dart';
 import 'package:repx/presentation/views/home/home_screen.dart';
@@ -56,6 +57,7 @@ class Repx extends StatelessWidget {
         PublicProfileScreen.id: (context) => const PublicProfileScreen(),
         AddFriendScreen.id: (context) => AddFriendScreen(),
         ProfileSettingsScreen.id: (context) => ProfileSettingsScreen(),
+        ExploreScreen.id: (context) => ExploreScreen(),
         ExercisesScreen.id: (context) => ExercisesScreen(),
       },
       debugShowCheckedModeBanner: false,

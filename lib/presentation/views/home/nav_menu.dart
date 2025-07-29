@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repx/data/providers/nav_provider.dart';
-import 'package:repx/presentation/views/home/exercises/exercises_screen.dart';
+import 'package:repx/presentation/views/home/explore/explore_screen.dart';
 import 'package:repx/presentation/views/home/home_screen.dart';
 import 'package:repx/presentation/views/home/profile/profile_screen.dart';
 
@@ -19,7 +19,7 @@ class NavMenu extends ConsumerWidget {
     final screens = [
       const HomeScreen(),
       const Center(child: Text('Workouts Screen')),
-      const ExercisesScreen(),
+      const ExploreScreen(),
       const ProfileScreen(),
       const Center(child: Text('Notifications Screen')),
     ];
