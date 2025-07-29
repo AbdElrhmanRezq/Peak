@@ -6,7 +6,7 @@ class ExerciseApiService {
 
   Future<List<String>> getTargetMuscles() async {
     final url = Uri.parse(
-      'https://exercisedb.p.rapidapi.com/exercises/targetList',
+      'https://exercisedb.p.rapidapi.com/exercises/bodyPartList',
     );
 
     final response = await http.get(
