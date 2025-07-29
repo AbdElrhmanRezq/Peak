@@ -109,6 +109,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                         },
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Flexible(
                               flex: 1,
@@ -127,6 +128,20 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                             Text(
                               exercises[index].name.toUpperCase(),
                               style: Theme.of(context).textTheme.bodyMedium,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              exercises[index].difficulty.toUpperCase(),
+                              style: TextStyle(
+                                color:
+                                    exercises[index].difficulty ==
+                                        'intermediate'
+                                    ? Colors.amberAccent
+                                    : exercises[index].difficulty == 'beginner'
+                                    ? Colors.lightGreenAccent
+                                    : Colors.red,
+                              ),
                             ),
                           ],
                         ),

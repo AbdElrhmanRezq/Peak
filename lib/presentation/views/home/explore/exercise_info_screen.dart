@@ -48,6 +48,10 @@ class ExerciseInfoScreen extends StatelessWidget {
                   "Secondary muscles: ${exercise.secondaryMuscles}",
                   style: TextStyle(color: Colors.grey),
                 ),
+                Text(
+                  "Difficulty: ${exercise.difficulty}",
+                  style: TextStyle(color: Colors.grey),
+                ),
                 SizedBox(height: 16),
                 if (exercise.instructions.isNotEmpty)
                   ListView.builder(
