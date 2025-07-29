@@ -99,10 +99,13 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          // Navigator.of(context).pushNamed(
-                          //   'exercises_screen',
-                          //   arguments: {'bodyPart': targets[index]},
-                          // );
+                          Navigator.of(context).pushNamed(
+                            'exercise_info_screen',
+                            arguments: {
+                              'exercise': exercises[index],
+                              'image': getExerciseGifUrl(exercises[index].id),
+                            },
+                          );
                         },
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
