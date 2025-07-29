@@ -78,6 +78,7 @@ flutter:
     - assets/icons/flash.png
     - assets/icons/flash2.png
     - assets/images/body_parts/
+    - assets/images/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
