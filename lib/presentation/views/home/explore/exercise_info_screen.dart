@@ -49,8 +49,14 @@ class ExerciseInfoScreen extends StatelessWidget {
                   style: TextStyle(color: Colors.grey),
                 ),
                 Text(
-                  "Difficulty: ${exercise.difficulty}",
-                  style: TextStyle(color: Colors.grey),
+                  "Difficulty: ${exercise.difficulty.toUpperCase()}",
+                  style: TextStyle(
+                    color: exercise.difficulty == 'intermediate'
+                        ? Colors.amberAccent
+                        : exercise.difficulty == 'beginner'
+                        ? Colors.lightGreenAccent
+                        : Colors.red,
+                  ),
                 ),
                 SizedBox(height: 16),
                 if (exercise.instructions.isNotEmpty)

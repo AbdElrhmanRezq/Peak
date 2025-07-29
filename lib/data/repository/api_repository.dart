@@ -8,12 +8,12 @@ class ApiRepository {
 
   Future<List<ExerciseModel>> getTargetBodyPartsExercises(
     String bodyPart,
-    String offset,
+    String page,
   ) async {
     try {
       final dataList = await apiService.getTargetBodyPartsExercises(
         bodyPart,
-        offset,
+        page,
       );
       return dataList.map((json) => ExerciseModel.fromJson(json)).toList();
     } on PostgrestException catch (e) {

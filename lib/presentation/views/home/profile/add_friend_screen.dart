@@ -123,6 +123,14 @@ class AddFriendScreen extends ConsumerWidget {
                                 color: Theme.of(context).colorScheme.secondary,
                               ),
                               child: ListTile(
+                                onTap: () {
+                                  Navigator.of(context).pushNamed(
+                                    'public_profile_screen',
+                                    arguments: {
+                                      'userId': foundUsers[index]?.id,
+                                    },
+                                  );
+                                },
                                 leading: ClipRRect(
                                   borderRadius: BorderRadiusGeometry.circular(
                                     100,

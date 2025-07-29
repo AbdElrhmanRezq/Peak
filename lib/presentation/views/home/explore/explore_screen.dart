@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:repx/data/services/api_service.dart';
 import 'package:repx/presentation/widgets/custom_circular_button.dart';
+import 'package:repx/presentation/widgets/custom_text_field.dart';
 
 class ExploreScreen extends StatefulWidget {
   static const id = 'explore_screen_id';
@@ -16,6 +17,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
+
+    final searchController = TextEditingController();
+
     final exerciseService = ExerciseApiService();
     return Scaffold(
       appBar: AppBar(
