@@ -4,12 +4,14 @@ class CustomTextField extends StatelessWidget {
   final String? labelText;
   final TextEditingController? controller;
   final double width;
+  final ValueChanged<String>? onChanged;
 
   const CustomTextField({
     super.key,
     this.labelText,
     this.controller,
     this.width = 50,
+    this.onChanged,
   });
 
   @override
@@ -39,6 +41,7 @@ class CustomTextField extends StatelessWidget {
         ),
         controller: controller,
         keyboardType: TextInputType.number,
+        onChanged: onChanged,
       ),
     );
   }

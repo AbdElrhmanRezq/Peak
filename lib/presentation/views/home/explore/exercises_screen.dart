@@ -4,6 +4,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:repx/data/models/exercise_model.dart';
 import 'package:repx/data/repository/api_repository.dart';
 import 'package:repx/data/services/api_service.dart';
+import 'package:repx/data/services/custom_image_getter.dart';
 import 'package:repx/presentation/widgets/custom_app_bar.dart';
 import 'package:repx/data/services/custom_cache_manager.dart';
 
@@ -33,15 +34,6 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
     final args =
         ModalRoute.of(context)?.settings.arguments as Map<String, String>;
     final bodyPart = args['bodyPart'];
-
-    String getExerciseGifUrl(String exerciseId, {int resolution = 180}) {
-      const String apiKey =
-          '44c38561c2mshf6844ae156474c6p1d46e9jsn1bc156a74ea9'; //
-      return 'https://exercisedb.p.rapidapi.com/image'
-          '?exerciseId=$exerciseId'
-          '&resolution=$resolution'
-          '&rapidapi-key=$apiKey';
-    }
 
     return Scaffold(
       appBar: CustomAppBar(title: bodyPart?.toUpperCase() as String),

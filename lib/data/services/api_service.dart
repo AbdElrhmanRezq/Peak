@@ -49,4 +49,27 @@ class ExerciseApiService {
       throw Exception('Failed to load exercises');
     }
   }
+
+  Future<List<Map<String, dynamic>>> getSearchedExercises(
+    String searchText,
+  ) async {
+    final url = Uri.parse(
+      'https://exercisedb.p.rapidapi.com/exercises/name/${searchText}',
+    );
+
+    final response = await http.get(
+      url,
+      headers: {
+        'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com',
+        'X-RapidAPI-Key': apiKey,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Failed to load exercises');
+    }
+  }
 }
