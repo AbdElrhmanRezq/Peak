@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:repx/data/models/exercise_model.dart';
 import 'package:repx/presentation/widgets/custom_app_bar.dart';
+import 'package:repx/data/services/custom_cache_manager.dart';
 
 class ExerciseInfoScreen extends StatelessWidget {
   static const String id = 'exercise_info_screen';
@@ -16,15 +18,15 @@ class ExerciseInfoScreen extends StatelessWidget {
     final ExerciseModel exercise = args['exercise'];
     final image = args['image'];
     return Scaffold(
-      appBar: CustomAppBar(title: exercise.name),
+      appBar: CustomAppBar(title: exercise.name.toUpperCase()),
       body: ListView(
         children: [
-          Image.network(
-            image,
+          CachedNetworkImage(
+            cacheManager: exerciseImageCacheManager,
+            imageUrl: image,
             height: height * 0.4,
             width: double.infinity,
             fit: BoxFit.fill,
-            errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
           ),
           Padding(
             padding: EdgeInsets.symmetric(
@@ -40,7 +42,11 @@ class ExerciseInfoScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 16),
                 Text(
-                  "Muscle: ${exercise.target}",
+                  "Muscle: ${exercise.bodyPart}",
+                  style: TextStyle(color: Colors.grey),
+                ),
+                Text(
+                  "Target: ${exercise.target}",
                   style: TextStyle(color: Colors.grey),
                 ),
 

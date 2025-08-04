@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ExerciseApiService {
-  final String apiKey = '5cdaa879c4msh1d58221fdeb82b7p1d41d3jsn3035b3a57966';
+  final String apiKey = '44c38561c2mshf6844ae156474c6p1d46e9jsn1bc156a74ea9';
 
   Future<List<String>> getTargetBodyParts() async {
     final url = Uri.parse(
@@ -16,7 +16,7 @@ class ExerciseApiService {
         'X-RapidAPI-Key': apiKey,
       },
     );
-
+    print(response.body);
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
       return data.map((e) => e.toString()).toList();

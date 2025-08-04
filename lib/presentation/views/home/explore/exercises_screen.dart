@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:repx/data/models/exercise_model.dart';
 import 'package:repx/data/repository/api_repository.dart';
 import 'package:repx/data/services/api_service.dart';
 import 'package:repx/presentation/widgets/custom_app_bar.dart';
+import 'package:repx/data/services/custom_cache_manager.dart';
 
 class ExercisesScreen extends StatefulWidget {
   static const id = 'exercises_screen';
@@ -14,6 +16,14 @@ class ExercisesScreen extends StatefulWidget {
 }
 
 class _ExercisesScreenState extends State<ExercisesScreen> {
+  late final ApiRepository exerciseRepo;
+
+  @override
+  void initState() {
+    super.initState();
+    exerciseRepo = ApiRepository();
+  }
+
   int page = 1;
   @override
   Widget build(BuildContext context) {
@@ -24,11 +34,9 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
         ModalRoute.of(context)?.settings.arguments as Map<String, String>;
     final bodyPart = args['bodyPart'];
 
-    final exerciseRepo = ApiRepository();
-
     String getExerciseGifUrl(String exerciseId, {int resolution = 180}) {
       const String apiKey =
-          '5cdaa879c4msh1d58221fdeb82b7p1d41d3jsn3035b3a57966'; //
+          '44c38561c2mshf6844ae156474c6p1d46e9jsn1bc156a74ea9'; //
       return 'https://exercisedb.p.rapidapi.com/image'
           '?exerciseId=$exerciseId'
           '&resolution=$resolution'
@@ -115,18 +123,32 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                               flex: 1,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
-                                child: Image.network(
-                                  getExerciseGifUrl(exercises[index].id),
+                                child: CachedNetworkImage(
+                                  cacheManager: exerciseImageCacheManager,
+                                  imageUrl: getExerciseGifUrl(
+                                    exercises[index].id,
+                                  ),
                                   width: 200,
                                   height: 200,
                                   fit: BoxFit.contain,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Icon(Icons.error),
+                                  placeholder: (context, url) => Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                  errorWidget: (context, url, error) => Icon(
+                                    Icons.broken_image,
+                                    color: Colors.grey,
+                                  ),
                                 ),
                               ),
                             ),
                             Text(
                               exercises[index].name.toUpperCase(),
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              'Target: ${exercises[index].target.toUpperCase()}',
                               style: Theme.of(context).textTheme.bodyMedium,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
