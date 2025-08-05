@@ -1,10 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:repx/data/models/exercise_model.dart';
 import 'package:repx/data/repository/api_repository.dart';
-import 'package:repx/data/services/api_service.dart';
-import 'package:repx/data/services/custom_cache_manager.dart';
-import 'package:repx/data/services/custom_image_getter.dart';
 import 'package:repx/presentation/widgets/custom_circular_button.dart';
 import 'package:repx/presentation/widgets/custom_exercises_grid.dart';
 import 'package:repx/presentation/widgets/custom_text_field.dart';

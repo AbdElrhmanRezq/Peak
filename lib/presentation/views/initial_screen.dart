@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:repx/presentation/widgets/custom_circular_button.dart';
 import 'package:repx/presentation/widgets/custom_wide_button.dart';
 
 class InitialScreen extends StatelessWidget {

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repx/data/models/user_model.dart';
 import 'package:repx/data/providers/auth_providers.dart';
-import 'package:repx/presentation/widgets/custom_text_field.dart';
 import 'package:repx/presentation/widgets/custom_text_form_field.dart';
 import 'package:repx/presentation/widgets/custom_wide_button.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -64,7 +63,6 @@ class _UserDataScreenState extends ConsumerState<UserDataScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = ref.read(authRepositoryProvider);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 

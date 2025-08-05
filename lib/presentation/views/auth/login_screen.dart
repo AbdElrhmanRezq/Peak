@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:repx/data/models/user_model.dart';
 import 'package:repx/data/providers/auth_providers.dart';
 import 'package:repx/data/providers/user_data_provider.dart';
-import 'package:repx/presentation/widgets/custom_circular_button.dart';
 import 'package:repx/presentation/widgets/custom_text_form_field.dart';
 import 'package:repx/presentation/widgets/custom_wide_button.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
 class LoginScreen extends ConsumerStatefulWidget {
   static const String id = 'login_screen';

@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:repx/data/models/user_model.dart';
 import 'package:repx/data/providers/auth_providers.dart';
-import 'package:repx/presentation/widgets/custom_circular_button.dart';
 import 'package:repx/presentation/widgets/custom_text_form_field.dart';
 import 'package:repx/presentation/widgets/custom_wide_button.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
 class SignupScreen extends ConsumerStatefulWidget {
   static const String id = 'signup_screen';
@@ -48,7 +44,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     ref.read(loginLoadingProvider.notifier).state = true;
 
     try {
-      final user = await auth.signup(email, password, confirmPassword);
+      await auth.signup(email, password, confirmPassword);
       Navigator.of(context).pushReplacementNamed('on_board_screen');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
