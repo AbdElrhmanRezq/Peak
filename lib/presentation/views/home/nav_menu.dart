@@ -4,6 +4,7 @@ import 'package:repx/data/providers/nav_provider.dart';
 import 'package:repx/presentation/views/home/explore/explore_screen.dart';
 import 'package:repx/presentation/views/home/home_screen.dart';
 import 'package:repx/presentation/views/home/profile/profile_screen.dart';
+import 'package:repx/presentation/views/home/workouts/workouts_screen.dart';
 
 class NavMenu extends ConsumerWidget {
   static const String id = 'nav_menu';
@@ -18,7 +19,7 @@ class NavMenu extends ConsumerWidget {
 
     final screens = [
       const HomeScreen(),
-      const Center(child: Text('Workouts Screen')),
+      const WorkoutsScreen(),
       const ExploreScreen(),
       const ProfileScreen(),
       const Center(child: Text('Notifications Screen')),
@@ -54,7 +55,7 @@ class NavMenu extends ConsumerWidget {
         },
         destinations: [
           navDest(Icons.home_rounded, 0),
-          navDest(Icons.bar_chart, 1),
+          navDest(Icons.fitness_center_rounded, 1),
           navDest(Icons.explore_rounded, 2),
           navDest(Icons.person_rounded, 3),
           navDest(Icons.notifications_rounded, 4),

@@ -1,12 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:repx/data/models/exercise_model.dart';
 import 'package:repx/data/repository/api_repository.dart';
-import 'package:repx/data/services/api_service.dart';
-import 'package:repx/data/services/custom_image_getter.dart';
 import 'package:repx/presentation/widgets/custom_app_bar.dart';
-import 'package:repx/data/services/custom_cache_manager.dart';
 import 'package:repx/presentation/widgets/custom_exercises_grid.dart';
 
 class ExercisesScreen extends StatefulWidget {
@@ -29,9 +24,6 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
   int page = 1;
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
-
     final args =
         ModalRoute.of(context)?.settings.arguments as Map<String, String>;
     final bodyPart = args['bodyPart'];
