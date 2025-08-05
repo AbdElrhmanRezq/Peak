@@ -7,6 +7,7 @@ import 'package:repx/data/services/api_service.dart';
 import 'package:repx/data/services/custom_image_getter.dart';
 import 'package:repx/presentation/widgets/custom_app_bar.dart';
 import 'package:repx/data/services/custom_cache_manager.dart';
+import 'package:repx/presentation/widgets/custom_exercises_grid.dart';
 
 class ExercisesScreen extends StatefulWidget {
   static const id = 'exercises_screen';
@@ -83,86 +84,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                 }
 
                 final exercises = snapshot.data!;
-                return Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: width * 0.05,
-                    vertical: height * 0.02,
-                  ),
-                  child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: width * 0.02,
-                      mainAxisSpacing: height * 0.015,
-                      childAspectRatio: 3 / 4,
-                    ),
-                    itemCount: exercises.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pushNamed(
-                            'exercise_info_screen',
-                            arguments: {
-                              'exercise': exercises[index],
-                              'image': getExerciseGifUrl(exercises[index].id),
-                            },
-                          );
-                        },
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Flexible(
-                              flex: 1,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: CachedNetworkImage(
-                                  cacheManager: exerciseImageCacheManager,
-                                  imageUrl: getExerciseGifUrl(
-                                    exercises[index].id,
-                                  ),
-                                  width: 200,
-                                  height: 200,
-                                  fit: BoxFit.contain,
-                                  placeholder: (context, url) => Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                  errorWidget: (context, url, error) => Icon(
-                                    Icons.broken_image,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Text(
-                              exercises[index].name.toUpperCase(),
-                              style: Theme.of(context).textTheme.bodyMedium,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text(
-                              'Target: ${exercises[index].target.toUpperCase()}',
-                              style: Theme.of(context).textTheme.bodyMedium,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text(
-                              exercises[index].difficulty.toUpperCase(),
-                              style: TextStyle(
-                                color:
-                                    exercises[index].difficulty ==
-                                        'intermediate'
-                                    ? Colors.amberAccent
-                                    : exercises[index].difficulty == 'beginner'
-                                    ? Colors.lightGreenAccent
-                                    : Colors.red,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                );
+                return CustomExercisesGrid(exercises: exercises);
               },
             ),
           ),
