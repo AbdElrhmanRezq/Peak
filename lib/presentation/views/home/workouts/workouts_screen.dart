@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:repx/presentation/widgets/custom_app_bar.dart';
 import 'package:repx/presentation/widgets/custom_icon_text_button.dart';
 
 class WorkoutsScreen extends StatelessWidget {

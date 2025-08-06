@@ -27,11 +27,12 @@ class ExerciseApiService {
 
   Future<List<Map<String, dynamic>>> getTargetBodyPartsExercises(
     String bodyPart,
-    String page,
-  ) async {
+    String page, {
+    int limit = 10,
+  }) async {
     final offset = ((int.parse(page) - 1) * 10).toString();
     final url = Uri.parse(
-      'https://exercisedb.p.rapidapi.com/exercises/bodyPart/${bodyPart}?limit=10&offset=${offset}',
+      'https://exercisedb.p.rapidapi.com/exercises/bodyPart/${bodyPart}?limit=${limit.toString()}&offset=${offset}',
     );
 
     final response = await http.get(
