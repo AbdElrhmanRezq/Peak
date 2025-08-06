@@ -16,7 +16,8 @@ import 'package:repx/presentation/views/home/profile/friends_screen.dart';
 import 'package:repx/presentation/views/home/profile/profile_screen.dart';
 import 'package:repx/presentation/views/home/profile/profile_settings_screen.dart';
 import 'package:repx/presentation/views/home/profile/public_profile_screen.dart';
-import 'package:repx/presentation/views/home/workouts/create_wrokout_screen.dart';
+import 'package:repx/presentation/views/home/workouts/create_workout_screen.dart';
+import 'package:repx/presentation/views/home/workouts/select_exercises_screen.dart';
 import 'package:repx/presentation/views/initial_screen.dart';
 import 'package:repx/presentation/views/splash/splash_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -62,7 +63,8 @@ class Repx extends StatelessWidget {
         ExploreScreen.id: (context) => ExploreScreen(),
         ExercisesScreen.id: (context) => ExercisesScreen(),
         ExerciseInfoScreen.id: (context) => ExerciseInfoScreen(),
-        CreateWrokoutScreen.id: (context) => CreateWrokoutScreen(),
+        CreateWorkoutScreen.id: (context) => CreateWorkoutScreen(),
+        SelectExercisesScreen.id: (context) => SelectExercisesScreen(),
       },
       debugShowCheckedModeBanner: false,
     );

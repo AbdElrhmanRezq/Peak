@@ -7,8 +7,8 @@ class ExerciseModel {
   final List<String> secondaryMuscles;
   final List<String> instructions;
   final String description;
-  final String difficulty; // Can be 'beginner', 'intermediate', or 'advanced'
-  final String category; // Can be 'strength', 'cardio', 'mobility', etc.
+  final String difficulty;
+  final String category;
 
   ExerciseModel({
     required this.id,

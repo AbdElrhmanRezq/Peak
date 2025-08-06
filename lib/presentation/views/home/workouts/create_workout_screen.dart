@@ -1,15 +1,21 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:repx/data/models/exercise_model.dart';
+import 'package:repx/data/providers/exercises_provider.dart';
+import 'package:repx/data/services/custom_image_getter.dart';
 import 'package:repx/presentation/widgets/custom_wide_button.dart';
 
-class CreateWrokoutScreen extends StatelessWidget {
+class CreateWorkoutScreen extends ConsumerWidget {
   static const String id = 'create_workout_screen';
-  const CreateWrokoutScreen({super.key});
+  const CreateWorkoutScreen({super.key});
 
   void saveWorkout() {}
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final titleController = TextEditingController();
+    final exercises = ref.watch(selectedExercisesProvider);
 
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
@@ -59,12 +65,37 @@ class CreateWrokoutScreen extends StatelessWidget {
                     vertical: 8,
                   ),
                 ),
+                controller: titleController,
               ),
             ),
-            Expanded(child: ListView()),
+            Expanded(
+              child: ListView.builder(
+                itemCount: exercises.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(exercises[index]?.name as String),
+                    leading: CachedNetworkImage(
+                      imageUrl: getExerciseGifUrl(
+                        exercises[index]?.id as String,
+                      ),
+                    ),
+                    trailing: IconButton(
+                      onPressed: () {
+                        ref
+                            .read(selectedExercisesProvider.notifier)
+                            .removeExercise(exercises[index] as ExerciseModel);
+                      },
+                      icon: Icon(Icons.cancel),
+                    ),
+                  );
+                },
+              ),
+            ),
             CustomWideButton(
               text: "Add Exercises",
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed('select_exercises_screen');
+              },
               textColor: Colors.black,
               backgroundColor: Theme.of(context).primaryColor,
             ),

@@ -22,6 +22,7 @@ final ThemeData appTheme = ThemeData(
     labelSmall: AppFonts.label,
     headlineMedium: AppFonts.headingMedium,
   ),
+  primaryIconTheme: IconThemeData(color: Colors.white),
   inputDecorationTheme: const InputDecorationTheme(
     enabledBorder: UnderlineInputBorder(
       borderSide: BorderSide(color: Color(0xFFd1fc3e)),
@@ -37,6 +38,7 @@ final ThemeData appTheme = ThemeData(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
     ),
   ),
-  iconTheme: IconThemeData(color: Color(0xFF505050)),
+  iconTheme: const IconThemeData(color: Colors.white),
+  appBarTheme: AppBarTheme(iconTheme: IconThemeData(color: Colors.white)),
   useMaterial3: true,
 );

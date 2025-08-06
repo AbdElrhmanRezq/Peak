@@ -8,6 +8,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(title, style: TextStyle(color: Colors.white)),
+      centerTitle: true,
       backgroundColor: Colors.transparent,
       leading: IconButton(
         icon: Icon(Icons.arrow_back, color: Colors.white),

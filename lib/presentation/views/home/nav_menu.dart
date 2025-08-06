@@ -33,8 +33,8 @@ class NavMenu extends ConsumerWidget {
             icon,
             key: ValueKey<bool>(screenIndex == index),
             color: screenIndex == index
-                ? Colors.white
-                : Theme.of(context).iconTheme.color,
+                ? Theme.of(context).iconTheme.color
+                : Color(0xFF505050),
           ),
         ),
         label: '',
