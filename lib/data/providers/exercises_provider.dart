@@ -24,8 +24,18 @@ final selectedExercisesProvider =
     StateNotifierProvider<SelectedExercisesNotifier, List<ExerciseModel>>(
       (ref) => SelectedExercisesNotifier(),
     );
+
 final exercisesByBodyPartProvider =
     FutureProvider.family<List<ExerciseModel>, String>((ref, bodyPart) {
       final api = ApiRepository();
       return api.getTargetBodyPartsExercises(bodyPart, "1", limit: 10);
+    });
+
+final searchedExercisesProvider =
+    FutureProvider.family<List<ExerciseModel>, String>((ref, searchText) async {
+      if (searchText.trim().isEmpty) {
+        return []; // nothing to search
+      }
+      final apiRepository = ApiRepository();
+      return await apiRepository.getSearchedExercises(searchText);
     });
