@@ -6,15 +6,22 @@ import 'package:repx/data/providers/exercises_provider.dart';
 import 'package:repx/data/services/custom_image_getter.dart';
 import 'package:repx/presentation/widgets/custom_wide_button.dart';
 
-class CreateWorkoutScreen extends ConsumerWidget {
+class CreateWorkoutScreen extends ConsumerStatefulWidget {
   static const String id = 'create_workout_screen';
   const CreateWorkoutScreen({super.key});
+
+  @override
+  ConsumerState<CreateWorkoutScreen> createState() =>
+      _CreateWorkoutScreenState();
+}
+
+class _CreateWorkoutScreenState extends ConsumerState<CreateWorkoutScreen> {
+  final titleController = TextEditingController();
 
   void saveWorkout() {}
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final titleController = TextEditingController();
+  Widget build(BuildContext context) {
     final exercises = ref.watch(selectedExercisesProvider);
 
     double height = MediaQuery.of(context).size.height;

@@ -85,13 +85,30 @@ class _SelectExercisesScreenState extends ConsumerState<SelectExercisesScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Column(
                             children: [
-                              ClipOval(
-                                child: Container(
-                                  width: height * 0.1,
-                                  height: height * 0.1,
-                                  child: Image.asset(
-                                    'assets/images/body_parts/$bodyPart.jpg',
-                                    fit: BoxFit.fill,
+                              Container(
+                                decoration: isSelected
+                                    ? BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                          100,
+                                        ),
+                                        border: Border.all(
+                                          width: 2,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : BoxDecoration(),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: ClipOval(
+                                    child: Container(
+                                      width: height * 0.1,
+                                      height: height * 0.1,
+
+                                      child: Image.asset(
+                                        'assets/images/body_parts/$bodyPart.jpg',
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -205,18 +222,29 @@ class _SelectExercisesScreenState extends ConsumerState<SelectExercisesScreen> {
                                                 color: Colors.blueGrey,
                                               ),
                                             ),
+                                            onTap: () {
+                                              Navigator.of(context).pushNamed(
+                                                'exercise_info_screen',
+                                                arguments: {
+                                                  'exercise': exercise,
+                                                  'image': getExerciseGifUrl(
+                                                    exercise.id,
+                                                  ),
+                                                },
+                                              );
+                                            },
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
                                   if (selectedExercises.contains(exercise))
-                                    const Positioned(
+                                    Positioned(
                                       right: 6,
                                       top: 6,
                                       child: Icon(
                                         Icons.check_circle,
-                                        color: Colors.green,
+                                        color: Colors.blueGrey,
                                       ),
                                     ),
                                 ],
