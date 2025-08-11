@@ -53,12 +53,12 @@ class _CreateWorkoutScreenState extends ConsumerState<CreateWorkoutScreen> {
       body: Padding(
         padding: EdgeInsets.symmetric(
           vertical: height * 0.03,
-          horizontal: width * 0.05,
+          horizontal: width * 0.02,
         ),
         child: Column(
           children: [
             Container(
-              height: height * 0.2,
+              height: height * 0.1,
               child: TextFormField(
                 style: Theme.of(context).textTheme.headlineLarge,
                 decoration: InputDecoration(
@@ -79,22 +79,36 @@ class _CreateWorkoutScreenState extends ConsumerState<CreateWorkoutScreen> {
               child: ListView.builder(
                 itemCount: exercises.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(exercises[index]?.name as String),
-                    leading: Container(
-                      width: 50,
-                      height: 50,
-                      child: CachedNetworkImage(
-                        imageUrl: getExerciseGifUrl(exercises[index].id),
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: height * 0.01),
+                    child: ListTile(
+                      title: Text(
+                        exercises[index].name.toUpperCase(),
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                       ),
-                    ),
-                    trailing: IconButton(
-                      onPressed: () {
-                        ref
-                            .read(selectedExercisesProvider.notifier)
-                            .removeExercise(exercises[index] as ExerciseModel);
-                      },
-                      icon: Icon(Icons.cancel),
+                      leading: Container(
+                        width: width * 0.15,
+                        height: height * 0.15,
+                        child: CachedNetworkImage(
+                          imageUrl: getExerciseGifUrl(exercises[index].id),
+                          fit: BoxFit.fitHeight,
+                        ),
+                      ),
+                      trailing: IconButton(
+                        onPressed: () {
+                          ref
+                              .read(selectedExercisesProvider.notifier)
+                              .removeExercise(
+                                exercises[index] as ExerciseModel,
+                              );
+                        },
+                        icon: Icon(
+                          Icons.cancel,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
                     ),
                   );
                 },
