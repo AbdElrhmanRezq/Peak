@@ -33,4 +33,10 @@ class AppFonts {
     fontWeight: FontWeight.w300,
     color: Colors.grey,
   );
+  static const TextStyle titleSmall = TextStyle(
+    fontFamily: 'Viga',
+    fontSize: 12,
+    fontWeight: FontWeight.w300,
+    color: Color(0xFFd1fc3e),
+  );
 }

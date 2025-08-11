@@ -1,3 +1,5 @@
+import 'package:repx/data/models/set_model.dart';
+
 class ExerciseModel {
   final String id;
   final String name;
@@ -9,6 +11,7 @@ class ExerciseModel {
   final String description;
   final String difficulty;
   final String category;
+  final List<SetModel>? sets = [SetModel(weight: 50, type: "Rep Range")];
 
   ExerciseModel({
     required this.id,

@@ -2,13 +2,15 @@ class SetModel {
   double? prevWeight;
   double weight;
   int? reps;
-  int? repRange;
+  int? repRangeMin;
+  int? repRangeMax;
   String type;
   SetModel({
     this.prevWeight,
     required this.weight,
     this.reps,
-    this.repRange,
+    this.repRangeMin,
+    this.repRangeMax,
     required this.type,
   });
 }

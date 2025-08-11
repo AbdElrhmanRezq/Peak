@@ -88,6 +88,10 @@ class _CreateWorkoutScreenState extends ConsumerState<CreateWorkoutScreen> {
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
+                      subtitle: Text(
+                        "Sets: ${exercises[index].sets?.length.toString() as String}",
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
                       leading: Container(
                         width: width * 0.15,
                         height: height * 0.15,
@@ -98,14 +102,74 @@ class _CreateWorkoutScreenState extends ConsumerState<CreateWorkoutScreen> {
                       ),
                       trailing: IconButton(
                         onPressed: () {
-                          ref
-                              .read(selectedExercisesProvider.notifier)
-                              .removeExercise(
-                                exercises[index] as ExerciseModel,
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return Container(
+                                height: height * 0.3,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.surface,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                  ),
+                                ),
+                                child: ListView(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Divider(
+                                        radius: BorderRadius.circular(12),
+                                        endIndent: width * 0.35,
+                                        indent: width * 0.35,
+                                        thickness: 5,
+                                      ),
+                                    ),
+                                    ListTile(
+                                      onTap: () {},
+                                      leading: Icon(
+                                        Icons.list,
+                                        color: Colors.white,
+                                      ),
+                                      title: Text(
+                                        "Manage sets",
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyMedium,
+                                      ),
+                                    ),
+                                    ListTile(
+                                      onTap: () {
+                                        ref
+                                            .read(
+                                              selectedExercisesProvider
+                                                  .notifier,
+                                            )
+                                            .removeExercise(
+                                              exercises[index] as ExerciseModel,
+                                            );
+                                        Navigator.of(context).pop();
+                                      },
+                                      leading: Icon(
+                                        Icons.cancel_outlined,
+                                        color: Colors.white,
+                                      ),
+                                      title: Text(
+                                        "Remove exercise",
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyMedium,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               );
+                            },
+                          );
                         },
                         icon: Icon(
-                          Icons.cancel,
+                          Icons.more_vert_rounded,
                           color: Theme.of(context).primaryColor,
                         ),
                       ),

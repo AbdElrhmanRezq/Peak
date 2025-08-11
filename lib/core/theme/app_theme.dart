@@ -8,6 +8,7 @@ final ThemeData appTheme = ThemeData(
     seedColor: const Color(0xFFd1fc3e),
     primary: const Color(0xFFd1fc3e),
     secondary: const Color(0xFF2d2c2f),
+    surface: const Color(0xFF1d1d1e),
   ),
   scaffoldBackgroundColor: const Color(0xFF1d1d1e),
   textSelectionTheme: const TextSelectionThemeData(
@@ -21,6 +22,7 @@ final ThemeData appTheme = ThemeData(
     bodyMedium: AppFonts.body,
     labelSmall: AppFonts.label,
     headlineMedium: AppFonts.headingMedium,
+    titleSmall: AppFonts.titleSmall,
   ),
   primaryIconTheme: IconThemeData(color: Colors.white),
   inputDecorationTheme: const InputDecorationTheme(
