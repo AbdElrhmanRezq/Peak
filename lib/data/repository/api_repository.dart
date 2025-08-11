@@ -37,6 +37,19 @@ class ApiRepository {
     }
   }
 
+  Future<List<ExerciseModel>> getExercises({int limit = 10}) async {
+    try {
+      final dataList = await apiService.getExercises(limit: limit);
+      return dataList.map((json) => ExerciseModel.fromJson(json)).toList();
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      return [];
+    } catch (e) {
+      print('Unknown error: $e');
+      return [];
+    }
+  }
+
   Future<List<ExerciseModel>> getSearchedExercises(String searchText) async {
     try {
       final dataList = await apiService.getSearchedExercises(searchText);

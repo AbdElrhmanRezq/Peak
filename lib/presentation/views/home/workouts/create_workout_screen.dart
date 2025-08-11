@@ -74,9 +74,11 @@ class CreateWorkoutScreen extends ConsumerWidget {
                 itemBuilder: (context, index) {
                   return ListTile(
                     title: Text(exercises[index]?.name as String),
-                    leading: CachedNetworkImage(
-                      imageUrl: getExerciseGifUrl(
-                        exercises[index]?.id as String,
+                    leading: Container(
+                      width: 50,
+                      height: 50,
+                      child: CachedNetworkImage(
+                        imageUrl: getExerciseGifUrl(exercises[index].id),
                       ),
                     ),
                     trailing: IconButton(
