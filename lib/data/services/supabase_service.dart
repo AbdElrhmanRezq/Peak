@@ -1,4 +1,5 @@
 import 'package:repx/data/models/user_model.dart';
+import 'package:repx/data/models/workout_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseService {
@@ -32,5 +33,51 @@ class SupabaseService {
         'id': user.id,
       },
     ]);
+  }
+
+  void saveWorkout(WorkoutModel workout) async {
+    final userId = supabase.auth.currentSession?.user.id;
+
+    // 1. Insert workout
+    final workoutRes = await supabase
+        .from('workouts')
+        .insert({
+          'u_id': userId,
+          'title': workout.title,
+          'description': workout.description,
+        })
+        .select()
+        .single();
+
+    final workoutId = workoutRes['id'];
+
+    // 2. Insert exercises
+    for (final exercise in workout.exercises) {
+      final exerciseRes = await supabase
+          .from('exercises')
+          .insert({
+            'w_id': workoutId,
+            'db_id': exercise.id,
+            'name': exercise.name,
+          })
+          .select()
+          .single();
+
+      final eId = exerciseRes['id']; // Primary key from workout_exercises table
+
+      // 3. Insert sets for this exercise
+      final setsData = exercise.sets.map((set) {
+        return {
+          'e_id': eId, // foreign key to this exercise
+          'weight': set.weight,
+          'reps': set.reps,
+          'repRangeMin': set.repRangeMin,
+          'repRangeMax': set.repRangeMax,
+          'type': set.type,
+        };
+      }).toList();
+
+      await supabase.from('sets').insert(setsData);
+    }
   }
 }

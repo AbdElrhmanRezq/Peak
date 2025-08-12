@@ -9,9 +9,9 @@ class SetModel {
   SetModel({
     this.prev,
     this.weight = 50,
-    this.reps,
-    this.repRangeMin,
-    this.repRangeMax,
+    this.reps = 10,
+    this.repRangeMin = 8,
+    this.repRangeMax = 12,
     this.type = "Reps",
   });
 

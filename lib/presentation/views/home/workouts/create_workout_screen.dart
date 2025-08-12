@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repx/data/models/exercise_model.dart';
 import 'package:repx/data/models/set_model.dart';
+import 'package:repx/data/models/workout_model.dart';
 import 'package:repx/data/providers/exercises_provider.dart';
+import 'package:repx/data/repository/workouts_repository.dart';
 import 'package:repx/data/services/custom_image_getter.dart';
 import 'package:repx/presentation/widgets/custom_icon_button.dart';
 import 'package:repx/presentation/widgets/custom_icon_text_button.dart';
@@ -21,8 +23,30 @@ class CreateWorkoutScreen extends ConsumerStatefulWidget {
 
 class _CreateWorkoutScreenState extends ConsumerState<CreateWorkoutScreen> {
   final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
 
-  void saveWorkout() {}
+  Future<void> saveWorkout(List<ExerciseModel> exercises) async {
+    final String title = titleController.text.trim();
+    final String description = descriptionController.text.trim();
+
+    ref.read(workoutLoadingProvider.notifier).state = true;
+    try {
+      WorkoutsRepository workoutsRepository = WorkoutsRepository();
+      await workoutsRepository.saveWorkout(
+        WorkoutModel(
+          title: title,
+          description: description,
+          exercises: exercises,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Saveing failed: ${e}')));
+    } finally {
+      ref.read(workoutLoadingProvider.notifier).state = false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,12 +71,15 @@ class _CreateWorkoutScreenState extends ConsumerState<CreateWorkoutScreen> {
           },
         ),
         actions: [
-          IconButton(
-            onPressed: () {
-              saveWorkout();
-            },
-            icon: Icon(Icons.check_sharp, color: Colors.white),
-          ),
+          ref.watch(workoutLoadingProvider)
+              ? CircularProgressIndicator()
+              : IconButton(
+                  onPressed: () async {
+                    await saveWorkout(exercises);
+                    Navigator.of(context).pop();
+                  },
+                  icon: Icon(Icons.check_sharp, color: Colors.white),
+                ),
         ],
       ),
       body: Padding(
@@ -63,7 +90,7 @@ class _CreateWorkoutScreenState extends ConsumerState<CreateWorkoutScreen> {
         child: Column(
           children: [
             Container(
-              height: height * 0.1,
+              height: height * 0.05,
               child: TextFormField(
                 style: Theme.of(context).textTheme.headlineLarge,
                 decoration: InputDecoration(
@@ -78,6 +105,24 @@ class _CreateWorkoutScreenState extends ConsumerState<CreateWorkoutScreen> {
                   ),
                 ),
                 controller: titleController,
+              ),
+            ),
+            Container(
+              height: height * 0.05,
+              child: TextFormField(
+                style: Theme.of(context).textTheme.bodyMedium,
+                decoration: InputDecoration(
+                  hintText: "Discribtion",
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  hintStyle: TextStyle(color: Colors.grey),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                ),
+                controller: descriptionController,
               ),
             ),
             Expanded(

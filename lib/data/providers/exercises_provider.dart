@@ -76,3 +76,5 @@ final searchedExercisesProvider =
       final apiRepository = ApiRepository();
       return await apiRepository.getSearchedExercises(searchText);
     });
+
+final workoutLoadingProvider = StateProvider<bool>((ref) => false);
