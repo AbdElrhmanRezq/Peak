@@ -193,6 +193,17 @@ class _SelectExercisesScreenState extends ConsumerState<SelectExercisesScreen> {
                                                 exercise.id,
                                               ),
                                               fit: BoxFit.cover,
+                                              placeholder: (context, url) =>
+                                                  const Center(
+                                                    child:
+                                                        CircularProgressIndicator(),
+                                                  ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Icon(
+                                                        Icons.broken_image,
+                                                        size: 40,
+                                                      ),
                                             ),
                                           ),
                                         ),

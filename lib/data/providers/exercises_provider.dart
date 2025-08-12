@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repx/data/models/exercise_model.dart';
+import 'package:repx/data/models/set_model.dart';
 import 'package:repx/data/repository/api_repository.dart';
 
 class SelectedExercisesNotifier extends StateNotifier<List<ExerciseModel>> {
@@ -9,6 +10,16 @@ class SelectedExercisesNotifier extends StateNotifier<List<ExerciseModel>> {
     if (!state.contains(exercise)) {
       state = [...state, exercise];
     }
+  }
+
+  void updateExerciseSets(String exerciseId, SetModel newSet) {
+    state = [
+      for (final ex in state)
+        if (ex.id == exerciseId)
+          ex.copyWith(sets: [...?ex.sets, newSet]) // create new list
+        else
+          ex,
+    ];
   }
 
   void removeExercise(ExerciseModel exercise) {

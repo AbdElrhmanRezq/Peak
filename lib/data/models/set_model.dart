@@ -1,16 +1,35 @@
 class SetModel {
-  double? prevWeight;
+  String? prev;
   double weight;
   int? reps;
   int? repRangeMin;
   int? repRangeMax;
   String type;
+
   SetModel({
-    this.prevWeight,
-    required this.weight,
+    this.prev,
+    this.weight = 50,
     this.reps,
     this.repRangeMin,
     this.repRangeMax,
-    required this.type,
+    this.type = "Reps",
   });
+
+  SetModel copyWith({
+    String? prev,
+    double? weight,
+    int? reps,
+    int? repRangeMin,
+    int? repRangeMax,
+    String? type,
+  }) {
+    return SetModel(
+      prev: prev ?? this.prev,
+      weight: weight ?? this.weight,
+      reps: reps ?? this.reps,
+      repRangeMin: repRangeMin ?? this.repRangeMin,
+      repRangeMax: repRangeMax ?? this.repRangeMax,
+      type: type ?? this.type,
+    );
+  }
 }
