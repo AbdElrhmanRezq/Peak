@@ -80,4 +80,31 @@ class SupabaseService {
       await supabase.from('sets').insert(setsData);
     }
   }
+
+  Future<List<WorkoutModel>> getWorkouts() async {
+    final userId = supabase.auth.currentSession?.user.id;
+
+    if (userId == null) {
+      print("No logged-in user");
+      return [];
+    }
+
+    try {
+      final data = await supabase.from('workouts').select().eq('u_id', userId);
+
+      print('Fetched workouts: $data');
+
+      if (data == null) return [];
+
+      return (data as List<dynamic>)
+          .map((e) => WorkoutModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      return [];
+    } catch (e) {
+      print('Unknown error: $e');
+      return [];
+    }
+  }
 }
