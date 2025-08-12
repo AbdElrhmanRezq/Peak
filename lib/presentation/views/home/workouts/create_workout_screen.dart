@@ -180,6 +180,26 @@ class CustomExpansionTile extends ConsumerWidget {
                     ),
                     ListTile(
                       onTap: () {
+                        exercise.sets[0].type == "Reps"
+                            ? ref
+                                  .read(selectedExercisesProvider.notifier)
+                                  .changeAllSetsToRepRange(exercise.id)
+                            : ref
+                                  .read(selectedExercisesProvider.notifier)
+                                  .changeAllSetsToReps(exercise.id);
+                        ;
+                        Navigator.of(context).pop();
+                      },
+                      leading: Icon(Icons.change_circle, color: Colors.white),
+                      title: Text(
+                        exercise.sets[0].type == "Reps"
+                            ? "Convert to Rep range"
+                            : "Convert to Reps",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                    ListTile(
+                      onTap: () {
                         ref
                             .read(selectedExercisesProvider.notifier)
                             .removeExercise(exercise as ExerciseModel);
@@ -203,72 +223,161 @@ class CustomExpansionTile extends ConsumerWidget {
         ),
       ),
       children: [
-        DataTable(
-          columns: const [
-            DataColumn(label: Text('Set')),
-            DataColumn(label: Text('Weight')),
-            DataColumn(label: Text('Reps')),
-            DataColumn(label: Text('Previous')),
-          ],
-          rows: List.generate(exercise.sets?.length as int, (index) {
-            final set = exercise.sets?[index];
-            return DataRow(
-              cells: [
-                DataCell(Text((index + 1).toString())),
+        exercise.sets[0].type == "Reps"
+            ? DataTable(
+                columns: const [
+                  DataColumn(label: Text('Set')),
+                  DataColumn(label: Text('Weight')),
+                  DataColumn(label: Text('Reps')),
+                  //DataColumn(label: Text('Previous')),
+                ],
+                rows: List.generate(exercise.sets?.length as int, (index) {
+                  final set = exercise.sets?[index];
+                  return DataRow(
+                    cells: [
+                      DataCell(Text((index + 1).toString())),
 
-                // Weight
-                DataCell(
-                  TextFormField(
-                    initialValue: set?.weight?.toString() ?? '',
-                    decoration: const InputDecoration(hintText: 'kg'),
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                    ),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
+                      // Weight
+                      DataCell(
+                        TextFormField(
+                          initialValue: set?.weight?.toString() ?? '',
+                          decoration: const InputDecoration(hintText: 'kg'),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d*\.?\d*$'),
+                            ),
+                          ],
+                          onChanged: (val) {
+                            final trimmed = val.trim();
+                            set?.weight = trimmed.isEmpty
+                                ? 0
+                                : double.tryParse(trimmed) ?? 0;
+                          },
+                        ),
+                      ),
+
+                      // Reps
+                      DataCell(
+                        TextFormField(
+                          initialValue: set?.reps?.toString() ?? '',
+                          decoration: const InputDecoration(hintText: 'reps'),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          onChanged: (val) {
+                            final trimmed = val.trim();
+                            set?.reps = trimmed.isEmpty
+                                ? 0
+                                : int.tryParse(trimmed) ?? 0;
+                          },
+                        ),
+                      ),
+
+                      // Prev
+                      // DataCell(
+                      //   TextFormField(
+                      //     initialValue: set?.prev ?? '',
+                      //     decoration: const InputDecoration(hintText: 'Sets x KG'),
+                      //     style: Theme.of(context).textTheme.bodyMedium,
+                      //     readOnly: true,
+                      //   ),
+                      // ),
                     ],
-                    onChanged: (val) {
-                      final trimmed = val.trim();
-                      set?.weight = trimmed.isEmpty
-                          ? 0
-                          : double.tryParse(trimmed) ?? 0;
-                    },
-                  ),
-                ),
+                  );
+                }),
+              )
+            : DataTable(
+                columns: const [
+                  DataColumn(label: Text('Set')),
+                  DataColumn(label: Text('Weight')),
+                  DataColumn(label: Text('Min')),
+                  DataColumn(label: Text('Max')),
+                  //DataColumn(label: Text('Previous')),
+                ],
+                rows: List.generate(exercise.sets?.length as int, (index) {
+                  final set = exercise.sets?[index];
+                  return DataRow(
+                    cells: [
+                      DataCell(Text((index + 1).toString())),
 
-                // Reps
-                DataCell(
-                  TextFormField(
-                    initialValue: set?.reps?.toString() ?? '',
-                    decoration: const InputDecoration(hintText: 'reps'),
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    onChanged: (val) {
-                      final trimmed = val.trim();
-                      set?.reps = trimmed.isEmpty
-                          ? 0
-                          : int.tryParse(trimmed) ?? 0;
-                    },
-                  ),
-                ),
+                      // Weight
+                      DataCell(
+                        TextFormField(
+                          initialValue: set?.weight?.toString() ?? '',
+                          decoration: const InputDecoration(hintText: 'kg'),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d*\.?\d*$'),
+                            ),
+                          ],
+                          onChanged: (val) {
+                            final trimmed = val.trim();
+                            set?.weight = trimmed.isEmpty
+                                ? 0
+                                : double.tryParse(trimmed) ?? 0;
+                          },
+                        ),
+                      ),
 
-                // Prev
-                DataCell(
-                  TextFormField(
-                    initialValue: set?.prev ?? '',
-                    decoration: const InputDecoration(hintText: 'Sets x KG'),
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    onChanged: (val) {
-                      set?.prev = val.trim();
-                    },
-                  ),
-                ),
-              ],
-            );
-          }),
-        ),
+                      // Reps
+                      DataCell(
+                        TextFormField(
+                          initialValue: set?.repRangeMin?.toString() ?? '',
+                          decoration: const InputDecoration(hintText: 'Min'),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          onChanged: (val) {
+                            final trimmed = val.trim();
+                            set?.repRangeMin = trimmed.isEmpty
+                                ? 0
+                                : int.tryParse(trimmed) ?? 0;
+                          },
+                        ),
+                      ),
+                      DataCell(
+                        TextFormField(
+                          initialValue: set?.repRangeMax?.toString() ?? '',
+                          decoration: const InputDecoration(hintText: 'Max'),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          onChanged: (val) {
+                            final trimmed = val.trim();
+                            set?.repRangeMax = trimmed.isEmpty
+                                ? 0
+                                : int.tryParse(trimmed) ?? 0;
+                          },
+                        ),
+                      ),
+
+                      // Prev
+                      // DataCell(
+                      //   TextFormField(
+                      //     initialValue: set?.prev ?? '',
+                      //     decoration: const InputDecoration(hintText: 'Sets x KG'),
+                      //     style: Theme.of(context).textTheme.bodyMedium,
+                      //     readOnly: true,
+                      //   ),
+                      // ),
+                    ],
+                  );
+                }),
+              ),
       ],
     );
   }

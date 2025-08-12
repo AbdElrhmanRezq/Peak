@@ -27,7 +27,7 @@ class ExerciseModel {
     required this.category,
     this.note,
     List<SetModel>? sets,
-  }) : sets = sets ?? [SetModel(reps: 10)];
+  }) : sets = sets ?? [SetModel()];
 
   ExerciseModel copyWith({
     String? id,

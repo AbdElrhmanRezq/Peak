@@ -22,6 +22,32 @@ class SelectedExercisesNotifier extends StateNotifier<List<ExerciseModel>> {
     ];
   }
 
+  void changeAllSetsToRepRange(String exerciseId) {
+    state = [
+      for (final ex in state)
+        if (ex.id == exerciseId)
+          ex.copyWith(
+            sets: [
+              for (final set in ex.sets ?? []) set.copyWith(type: "Rep Range"),
+            ],
+          )
+        else
+          ex,
+    ];
+  }
+
+  void changeAllSetsToReps(String exerciseId) {
+    state = [
+      for (final ex in state)
+        if (ex.id == exerciseId)
+          ex.copyWith(
+            sets: [for (final set in ex.sets ?? []) set.copyWith(type: "Reps")],
+          )
+        else
+          ex,
+    ];
+  }
+
   void removeExercise(ExerciseModel exercise) {
     state = state.where((e) => e.id != exercise.id).toList();
   }
