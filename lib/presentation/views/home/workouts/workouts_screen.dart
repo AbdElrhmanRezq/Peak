@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:repx/data/models/workout_model.dart';
-import 'package:repx/data/services/supabase_service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:repx/data/providers/workouts_provider.dart';
 import 'package:repx/presentation/widgets/custom_icon_text_button.dart';
 
-class WorkoutsScreen extends StatelessWidget {
+class WorkoutsScreen extends ConsumerWidget {
   const WorkoutsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
-    SupabaseService _service = SupabaseService();
+    final workoutsAsync = ref.watch(workoutsProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -36,30 +36,66 @@ class WorkoutsScreen extends StatelessWidget {
                 Navigator.of(context).pushNamed('create_workout_screen');
               },
             ),
-            FutureBuilder(
-              future: _service.getWorkouts(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
+            workoutsAsync.when(
+              data: (workouts) {
+                if (workouts.isEmpty) {
+                  return const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text("No workouts found."),
+                  );
                 }
-                final List<WorkoutModel> workouts = snapshot.data!;
                 return Expanded(
                   child: ListView.builder(
                     shrinkWrap: true,
                     itemCount: workouts.length,
                     itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(
-                          workouts[index].title,
-                          style: Theme.of(context).textTheme.headlineMedium,
+                      final workout = workouts[index];
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: height * 0.01),
+                        child: Container(
+                          height: height * 0.1,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.secondary,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Center(
+                            child: ListTile(
+                              onTap: () {
+                                Navigator.of(context).pushNamed(
+                                  'workout_details_screen',
+                                  arguments: index,
+                                );
+                              },
+                              title: Text(
+                                workout.title,
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.headlineMedium,
+                              ),
+                              subtitle: Text(workout.description ?? ''),
+                              leading: Icon(
+                                Icons.fitness_center,
+                                size: height * 0.04,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                          ),
                         ),
                       );
                     },
                   ),
                 );
               },
+              loading: () => const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+              error: (err, stack) => Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text('Error: $err'),
+              ),
             ),
           ],
         ),

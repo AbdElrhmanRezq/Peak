@@ -1,3 +1,5 @@
+import 'package:repx/data/models/exercise_model.dart';
+import 'package:repx/data/models/set_model.dart';
 import 'package:repx/data/models/user_model.dart';
 import 'package:repx/data/models/workout_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -35,7 +37,7 @@ class SupabaseService {
     ]);
   }
 
-  void saveWorkout(WorkoutModel workout) async {
+  Future<void> saveWorkout(WorkoutModel workout) async {
     final userId = supabase.auth.currentSession?.user.id;
 
     // 1. Insert workout
@@ -90,15 +92,44 @@ class SupabaseService {
     }
 
     try {
-      final data = await supabase.from('workouts').select().eq('u_id', userId);
+      final workoutsData = await supabase
+          .from('workouts')
+          .select()
+          .eq('u_id', userId);
 
-      print('Fetched workouts: $data');
-
-      if (data == null) return [];
-
-      return (data as List<dynamic>)
-          .map((e) => WorkoutModel.fromJson(e as Map<String, dynamic>))
+      final workouts = workoutsData
+          .map((w) => WorkoutModel.fromJson(w))
           .toList();
+
+      for (WorkoutModel workout in workouts) {
+        final exercisesData = await supabase
+            .from('exercises')
+            .select()
+            .eq('w_id', workout.id ?? "");
+
+        final exercises = exercisesData
+            .map((e) => ExerciseModel.fromJson(e))
+            .toList();
+
+        for (ExerciseModel exercise in exercises) {
+          final setsData = await supabase
+              .from('sets')
+              .select()
+              .eq('e_id', exercise.supaId ?? "");
+
+          final sets = setsData.map((s) => SetModel.fromJson(s)).toList();
+          exercise.sets.addAll(sets);
+        }
+        workout.exercises.addAll(exercises);
+      }
+
+      print('Fetched workouts: $workouts');
+      print('Fetched exercises for w1: ${workouts[0].exercises}');
+      print('Fetched exercises for w1 e1: ${workouts[0].exercises[0].name}');
+
+      if (workouts == null) return [];
+
+      return workouts;
     } on PostgrestException catch (e) {
       print('PostgrestException: ${e.message}');
       return [];

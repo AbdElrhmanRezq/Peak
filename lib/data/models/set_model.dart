@@ -32,4 +32,15 @@ class SetModel {
       type: type ?? this.type,
     );
   }
+
+  factory SetModel.fromJson(Map<String, dynamic> json) {
+    return SetModel(
+      prev: json['prev'] as String?,
+      weight: (json['weight'] as num?)?.toDouble() ?? 50,
+      reps: json['reps'] as int?,
+      repRangeMin: json['repRangeMin'] as int?,
+      repRangeMax: json['repRangeMax'] as int?,
+      type: json['type'] as String? ?? "Reps",
+    );
+  }
 }

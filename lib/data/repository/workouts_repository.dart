@@ -7,8 +7,20 @@ class WorkoutsRepository {
 
   Future<void> saveWorkout(WorkoutModel workout) async {
     try {
-      _service.saveWorkout(workout);
+      await _service.saveWorkout(workout);
       print("Workout Saved");
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
+
+  Future<List<WorkoutModel>> getWorkouts() async {
+    try {
+      return await _service.getWorkouts();
     } on PostgrestException catch (e) {
       print('PostgrestException: ${e.message}');
       throw e;

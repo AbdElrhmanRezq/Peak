@@ -13,6 +13,7 @@ class ExerciseModel {
   final String category;
   final String? note;
   final List<SetModel> sets;
+  final int? supaId;
 
   ExerciseModel({
     required this.id,
@@ -25,6 +26,7 @@ class ExerciseModel {
     required this.description,
     required this.difficulty,
     required this.category,
+    this.supaId,
     this.note,
     List<SetModel>? sets,
   }) : sets = sets ?? [SetModel()];
@@ -42,6 +44,7 @@ class ExerciseModel {
     String? category,
     String? note,
     List<SetModel>? sets,
+    int? supaId,
   }) {
     return ExerciseModel(
       id: id ?? this.id,
@@ -56,6 +59,7 @@ class ExerciseModel {
       category: category ?? this.category,
       note: note ?? this.note,
       sets: sets ?? this.sets,
+      supaId: supaId,
     );
   }
 
@@ -72,6 +76,7 @@ class ExerciseModel {
       difficulty: json['difficulty'] ?? '',
       category: json['category'] ?? '',
       note: json['note'],
+      supaId: json['s_id'],
       sets:
           (json['sets'] as List<dynamic>?)
               ?.map(
@@ -85,7 +90,7 @@ class ExerciseModel {
                 ),
               )
               .toList() ??
-          [SetModel(reps: 10)],
+          [],
     );
   }
 
