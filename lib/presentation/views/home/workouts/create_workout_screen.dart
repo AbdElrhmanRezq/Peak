@@ -6,6 +6,7 @@ import 'package:repx/data/models/exercise_model.dart';
 import 'package:repx/data/models/set_model.dart';
 import 'package:repx/data/models/workout_model.dart';
 import 'package:repx/data/providers/exercises_provider.dart';
+import 'package:repx/data/providers/workouts_provider.dart';
 import 'package:repx/data/repository/workouts_repository.dart';
 import 'package:repx/data/services/custom_image_getter.dart';
 import 'package:repx/presentation/widgets/custom_wide_button.dart';
@@ -20,6 +21,7 @@ class CreateWorkoutScreen extends ConsumerStatefulWidget {
 }
 
 class _CreateWorkoutScreenState extends ConsumerState<CreateWorkoutScreen> {
+  final _formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
 
@@ -37,6 +39,7 @@ class _CreateWorkoutScreenState extends ConsumerState<CreateWorkoutScreen> {
           exercises: exercises,
         ),
       );
+      ref.invalidate(workoutsProvider);
     } catch (e) {
       ScaffoldMessenger.of(
         context,
@@ -73,8 +76,16 @@ class _CreateWorkoutScreenState extends ConsumerState<CreateWorkoutScreen> {
               ? CircularProgressIndicator()
               : IconButton(
                   onPressed: () async {
-                    await saveWorkout(exercises);
-                    Navigator.of(context).pop();
+                    if (_formKey.currentState?.validate() ?? false) {
+                      if (exercises.length == 0) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Add at least 1 exercise')),
+                        );
+                      } else {
+                        await saveWorkout(exercises);
+                        Navigator.of(context).pop();
+                      }
+                    }
                   },
                   icon: Icon(Icons.check_sharp, color: Colors.white),
                 ),
@@ -89,20 +100,27 @@ class _CreateWorkoutScreenState extends ConsumerState<CreateWorkoutScreen> {
           children: [
             Container(
               height: height * 0.05,
-              child: TextFormField(
-                style: Theme.of(context).textTheme.headlineLarge,
-                decoration: InputDecoration(
-                  hintText: "Workout title",
-                  border: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  hintStyle: TextStyle(color: Colors.grey),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
+              child: Form(
+                key: _formKey,
+                child: TextFormField(
+                  style: Theme.of(context).textTheme.headlineLarge,
+                  decoration: InputDecoration(
+                    hintText: "Workout title",
+                    border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    hintStyle: TextStyle(color: Colors.grey),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
                   ),
+                  controller: titleController,
+
+                  validator: (value) => value == null || value.isEmpty
+                      ? 'Please enter a title for workout'
+                      : null,
                 ),
-                controller: titleController,
               ),
             ),
             Container(
