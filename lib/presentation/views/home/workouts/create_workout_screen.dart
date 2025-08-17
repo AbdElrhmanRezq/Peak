@@ -8,8 +8,6 @@ import 'package:repx/data/models/workout_model.dart';
 import 'package:repx/data/providers/exercises_provider.dart';
 import 'package:repx/data/repository/workouts_repository.dart';
 import 'package:repx/data/services/custom_image_getter.dart';
-import 'package:repx/presentation/widgets/custom_icon_button.dart';
-import 'package:repx/presentation/widgets/custom_icon_text_button.dart';
 import 'package:repx/presentation/widgets/custom_wide_button.dart';
 
 class CreateWorkoutScreen extends ConsumerStatefulWidget {

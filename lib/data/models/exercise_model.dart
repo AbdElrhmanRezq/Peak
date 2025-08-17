@@ -90,7 +90,7 @@ class ExerciseModel {
                 ),
               )
               .toList() ??
-          [],
+          [SetModel()],
     );
   }
 

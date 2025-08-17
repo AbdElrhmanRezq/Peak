@@ -57,15 +57,12 @@ class SupabaseService {
     for (final exercise in workout.exercises) {
       final exerciseRes = await supabase
           .from('exercises')
-          .insert({
-            'w_id': workoutId,
-            'db_id': exercise.id,
-            'name': exercise.name,
-          })
+          .insert({'w_id': workoutId, 'id': exercise.id, 'name': exercise.name})
           .select()
           .single();
 
-      final eId = exerciseRes['id']; // Primary key from workout_exercises table
+      final eId =
+          exerciseRes['s_id']; // Primary key from workout_exercises table
 
       // 3. Insert sets for this exercise
       final setsData = exercise.sets.map((set) {
@@ -118,6 +115,7 @@ class SupabaseService {
               .eq('e_id', exercise.supaId ?? "");
 
           final sets = setsData.map((s) => SetModel.fromJson(s)).toList();
+          exercise.sets.clear();
           exercise.sets.addAll(sets);
         }
         workout.exercises.addAll(exercises);

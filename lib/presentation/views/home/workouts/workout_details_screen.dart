@@ -44,6 +44,10 @@ class WorkoutDetailsScreen extends ConsumerWidget {
                           width: 50,
                           height: 50,
                           fit: BoxFit.cover,
+                          placeholder: (context, url) =>
+                              const Center(child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.broken_image, size: 40),
                         ),
                         title: Text(exercise.name),
                         subtitle: Text('Sets: ${exercise.sets?.length ?? 0}'),
