@@ -80,4 +80,20 @@ class WorkoutsRepository {
       throw e;
     }
   }
+
+  Future<void> updateWorkout(
+    int workoutId,
+    String workoutTitle,
+    String description,
+  ) async {
+    try {
+      await _service.updateWorkout(workoutId, workoutTitle, description);
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
 }

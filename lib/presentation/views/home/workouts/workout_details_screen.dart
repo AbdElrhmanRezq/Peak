@@ -8,6 +8,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:repx/data/repository/workouts_repository.dart';
 import 'package:repx/data/services/custom_image_getter.dart';
 
+final _formKey = GlobalKey<FormState>();
+
 class WorkoutDetailsScreen extends ConsumerWidget {
   static const String id = 'workout_details_screen';
 
@@ -17,6 +19,9 @@ class WorkoutDetailsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+
+    final titleController = TextEditingController();
+    final descriptionController = TextEditingController();
     final theme = Theme.of(context);
     //Next to be done: Add sets
     //Implement editted sets
@@ -40,6 +45,8 @@ class WorkoutDetailsScreen extends ConsumerWidget {
         }
 
         final workout = workouts[args];
+        titleController.text = workout.title;
+        descriptionController.text = workout.description ?? ' ';
         final exercises = workout.exercises;
 
         return Scaffold(
@@ -49,80 +56,168 @@ class WorkoutDetailsScreen extends ConsumerWidget {
             actions: [
               IconButton(
                 onPressed: () async {
-                  try {
-                    await workoutRep.updateSets(changedSets);
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text('Saved')));
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Saving failed: ${e}')),
-                    );
+                  if (changedSets.isNotEmpty) {
+                    try {
+                      await workoutRep.updateSets(changedSets);
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text('Saved')));
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Saving failed: ${e}')),
+                      );
+                    }
                   }
                 },
                 icon: Icon(
-                  Icons.check_sharp,
-                  color: changedSets.isNotEmpty || deletedSets.isNotEmpty
+                  Icons.save,
+
+                  color: changedSets.isNotEmpty
                       ? Theme.of(context).colorScheme.primary
                       : Colors.white,
                 ),
               ),
+              IconButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      backgroundColor: theme.scaffoldBackgroundColor,
+                      title: Text(
+                        "Change title",
+                        style: theme.textTheme.headlineMedium,
+                      ),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Form(
+                            key: _formKey,
+                            child: TextFormField(
+                              style: theme.textTheme.headlineMedium,
+                              decoration: InputDecoration(
+                                hintText: "Workout title",
+                                border: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                hintStyle: TextStyle(color: Colors.grey),
+                              ),
+                              controller: titleController,
+
+                              validator: (value) =>
+                                  value == null || value.isEmpty
+                                  ? 'Please enter a title for workout'
+                                  : null,
+                            ),
+                          ),
+                          TextFormField(
+                            style: theme.textTheme.bodyMedium,
+                            decoration: InputDecoration(
+                              hintText: "Workout description",
+                              border: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              hintStyle: TextStyle(color: Colors.grey),
+                            ),
+                            controller: descriptionController,
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () async {
+                            if (_formKey.currentState?.validate() ?? false) {
+                              await workoutRep.updateWorkout(
+                                workout.id as int,
+                                titleController.text.trim(),
+                                descriptionController.text.trim(),
+                              );
+                              ref.invalidate(workoutsProvider);
+                              Navigator.of(context).pop();
+                            }
+                          },
+                          child: Text("Save"),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                icon: Icon(Icons.edit),
+              ),
+              SizedBox(width: width * 0.02),
             ],
           ),
           body: exercises.isEmpty
               ? const Center(child: Text("No exercises found"))
-              : ListView.builder(
-                  padding: const EdgeInsets.all(12),
-                  itemCount: exercises.length,
-                  itemBuilder: (context, index) {
-                    final exercise = exercises[index];
-                    return ExpansionTile(
-                      leading: CachedNetworkImage(
-                        imageUrl: getExerciseGifUrl(exercise.id),
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) =>
-                            const Center(child: CircularProgressIndicator()),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.broken_image, size: 40),
+              : Column(
+                  children: [
+                    Text(workout.title, style: theme.textTheme.headlineLarge),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: width * 0.06,
+                        vertical: height * 0.01,
                       ),
-                      title: Text(
-                        exercise.name,
-                        style: Theme.of(context).textTheme.bodyMedium,
+                      child: Text(
+                        workout.description ?? '',
+                        style: theme.textTheme.bodyMedium,
                       ),
-                      subtitle: Text(
-                        'Sets: ${exercise.sets.length}',
-                        style: theme.textTheme.titleSmall,
-                      ),
-                      trailing: IconButton(
-                        onPressed: () {
-                          showButtomSheetCustom(
-                            ref,
-                            context,
-                            width,
-                            height,
-                            workoutRep,
-                            exercise,
-                            changedSets,
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(12),
+                        itemCount: exercises.length,
+                        itemBuilder: (context, index) {
+                          final exercise = exercises[index];
+                          return ExpansionTile(
+                            leading: CachedNetworkImage(
+                              imageUrl: getExerciseGifUrl(exercise.id),
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.broken_image, size: 40),
+                            ),
+                            title: Text(
+                              exercise.name,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            subtitle: Text(
+                              'Sets: ${exercise.sets.length}',
+                              style: theme.textTheme.titleSmall,
+                            ),
+                            trailing: IconButton(
+                              onPressed: () {
+                                showButtomSheetCustom(
+                                  ref,
+                                  context,
+                                  width,
+                                  height,
+                                  workoutRep,
+                                  exercise,
+                                  changedSets,
+                                );
+                              },
+                              icon: Icon(
+                                Icons.more_vert_rounded,
+                                color: theme.primaryColor,
+                              ),
+                            ),
+                            children: [
+                              if (exercise.sets.isEmpty)
+                                const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text("No sets for this exercise"),
+                                )
+                              else
+                                _SetsTable(sets: exercise.sets),
+                            ],
                           );
                         },
-                        icon: Icon(
-                          Icons.more_vert_rounded,
-                          color: theme.primaryColor,
-                        ),
                       ),
-                      children: [
-                        if (exercise.sets.isEmpty)
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text("No sets for this exercise"),
-                          )
-                        else
-                          _SetsTable(sets: exercise.sets),
-                      ],
-                    );
-                  },
+                    ),
+                  ],
                 ),
         );
       },
@@ -194,7 +289,7 @@ class WorkoutDetailsScreen extends ConsumerWidget {
 
                   Navigator.of(context).pop();
                 },
-                leading: Icon(Icons.cancel_outlined, color: Colors.white),
+                leading: Icon(Icons.change_circle, color: Colors.white),
                 title: Text(
                   exercise.sets[0].type == "Reps"
                       ? "Convert to Rep Range"
