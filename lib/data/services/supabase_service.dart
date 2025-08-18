@@ -136,4 +136,40 @@ class SupabaseService {
       return [];
     }
   }
+
+  Future<void> deleteWorkout(int workoutId) async {
+    try {
+      await supabase.from('workouts').delete().eq('id', workoutId);
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
+
+  Future<void> deleteExercise(int exerciseId) async {
+    try {
+      await supabase.from('exercises').delete().eq('s_id', exerciseId);
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
+
+  Future<void> deleteSet(int setId) async {
+    try {
+      await supabase.from('sets').delete().eq('id', setId);
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
 }

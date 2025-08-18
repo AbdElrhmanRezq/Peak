@@ -29,4 +29,40 @@ class WorkoutsRepository {
       throw e;
     }
   }
+
+  Future<void> deleteWorkout(int workoutId) async {
+    try {
+      return await _service.deleteWorkout(workoutId);
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
+
+  Future<void> deleteExercise(int exerciseId) async {
+    try {
+      return await _service.deleteExercise(exerciseId);
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
+
+  Future<void> deleteSet(int setId) async {
+    try {
+      return await _service.deleteSet(setId);
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
 }
