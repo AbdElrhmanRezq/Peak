@@ -1,3 +1,4 @@
+import 'package:repx/data/models/set_model.dart';
 import 'package:repx/data/models/workout_model.dart';
 import 'package:repx/data/services/supabase_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -57,6 +58,20 @@ class WorkoutsRepository {
   Future<void> deleteSet(int setId) async {
     try {
       return await _service.deleteSet(setId);
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
+
+  Future<void> updateSets(List<SetModel> sets) async {
+    try {
+      sets.forEach((s) async {
+        await _service.updateSet(s);
+      });
     } on PostgrestException catch (e) {
       print('PostgrestException: ${e.message}');
       throw e;

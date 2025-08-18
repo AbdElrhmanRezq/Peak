@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:repx/data/models/exercise_model.dart';
 import 'package:repx/data/models/set_model.dart';
 import 'package:repx/data/providers/sets_provider.dart';
 import 'package:repx/data/providers/workouts_provider.dart';
@@ -27,7 +28,8 @@ class WorkoutDetailsScreen extends ConsumerWidget {
 
     final WorkoutsRepository workoutRep = WorkoutsRepository();
 
-    final List<SetModel> changedSets = ref.watch(setsProvider);
+    final List<SetModel> changedSets = ref.watch(changedSetsProvider);
+    final List<SetModel> deletedSets = ref.watch(deletedSetsProvider);
 
     return workoutsAsync.when(
       data: (workouts) {
@@ -46,10 +48,21 @@ class WorkoutDetailsScreen extends ConsumerWidget {
             centerTitle: true,
             actions: [
               IconButton(
-                onPressed: () {},
+                onPressed: () async {
+                  try {
+                    await workoutRep.updateSets(changedSets);
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text('Saved')));
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Saving failed: ${e}')),
+                    );
+                  }
+                },
                 icon: Icon(
                   Icons.check_sharp,
-                  color: changedSets.isNotEmpty
+                  color: changedSets.isNotEmpty || deletedSets.isNotEmpty
                       ? Theme.of(context).colorScheme.primary
                       : Colors.white,
                 ),
@@ -90,7 +103,8 @@ class WorkoutDetailsScreen extends ConsumerWidget {
                             width,
                             height,
                             workoutRep,
-                            exercise.supaId as int,
+                            exercise,
+                            changedSets,
                           );
                         },
                         icon: Icon(
@@ -125,7 +139,8 @@ class WorkoutDetailsScreen extends ConsumerWidget {
     width,
     height,
     WorkoutsRepository workoutRep,
-    int exerciseId,
+    ExerciseModel exercise,
+    List<SetModel> changedSets,
   ) {
     showModalBottomSheet(
       context: context,
@@ -153,13 +168,37 @@ class WorkoutDetailsScreen extends ConsumerWidget {
               ),
               ListTile(
                 onTap: () async {
-                  await workoutRep.deleteExercise(exerciseId);
+                  await workoutRep.deleteExercise(exercise.supaId as int);
                   ref.invalidate(workoutsProvider);
                   Navigator.of(context).pop();
                 },
                 leading: Icon(Icons.cancel_outlined, color: Colors.white),
                 title: Text(
                   "Delete exercise",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+              ListTile(
+                onTap: () async {
+                  // await workoutRep.deleteExercise(exerciseId);
+                  // ref.invalidate(workoutsProvider);
+                  exercise.sets.forEach((s) {
+                    s.type = s.type == "Reps" ? "Rep Range" : "Reps";
+                    if (changedSets.contains(s)) {
+                      changedSets.remove(s);
+                      ref.watch(changedSetsProvider.notifier).addSet(s);
+                    } else {
+                      ref.watch(changedSetsProvider.notifier).addSet(s);
+                    }
+                  });
+
+                  Navigator.of(context).pop();
+                },
+                leading: Icon(Icons.cancel_outlined, color: Colors.white),
+                title: Text(
+                  exercise.sets[0].type == "Reps"
+                      ? "Convert to Rep Range"
+                      : "Convert to Reps",
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -177,7 +216,7 @@ class _SetsTable extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final changedSets = ref.watch(setsProvider);
+    final changedSets = ref.watch(changedSetsProvider);
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal, // in case the table is wide
       child: DataTable(
@@ -185,7 +224,7 @@ class _SetsTable extends ConsumerWidget {
           DataColumn(label: Text("Set #")),
           DataColumn(label: Text("Weight (kg)")),
           DataColumn(label: Text("Reps / Range")),
-          DataColumn(label: Text("Type")),
+          //DataColumn(label: Text("Type")),
         ],
         rows: sets.asMap().entries.map((entry) {
           final idx = entry.key + 1;
@@ -210,7 +249,7 @@ class _SetsTable extends ConsumerWidget {
                         : double.tryParse(trimmed) ?? 0;
                     changedSets.contains(set)
                         ? null
-                        : ref.watch(setsProvider.notifier).addChangedSet(set);
+                        : ref.watch(changedSetsProvider.notifier).addSet(set);
                   },
                 ),
               ),
@@ -231,8 +270,8 @@ class _SetsTable extends ConsumerWidget {
                           changedSets.contains(set)
                               ? null
                               : ref
-                                    .watch(setsProvider.notifier)
-                                    .addChangedSet(set);
+                                    .watch(changedSetsProvider.notifier)
+                                    .addSet(set);
                         },
                       )
                     : Row(
@@ -254,8 +293,8 @@ class _SetsTable extends ConsumerWidget {
                                 changedSets.contains(set)
                                     ? null
                                     : ref
-                                          .watch(setsProvider.notifier)
-                                          .addChangedSet(set);
+                                          .watch(changedSetsProvider.notifier)
+                                          .addSet(set);
                               },
                             ),
                           ),
@@ -277,16 +316,14 @@ class _SetsTable extends ConsumerWidget {
                                 changedSets.contains(set)
                                     ? null
                                     : ref
-                                          .watch(setsProvider.notifier)
-                                          .addChangedSet(set);
+                                          .watch(changedSetsProvider.notifier)
+                                          .addSet(set);
                               },
                             ),
                           ),
                         ],
                       ),
               ),
-
-              DataCell(Text(set.type ?? "-")),
             ],
           );
         }).toList(),

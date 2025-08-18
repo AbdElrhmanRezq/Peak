@@ -5,6 +5,7 @@ class SetModel {
   int? repRangeMin;
   int? repRangeMax;
   String type;
+  int? id;
 
   SetModel({
     this.prev,
@@ -13,6 +14,7 @@ class SetModel {
     this.repRangeMin = 8,
     this.repRangeMax = 12,
     this.type = "Reps",
+    this.id,
   });
 
   SetModel copyWith({
@@ -33,6 +35,17 @@ class SetModel {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'prev': prev,
+      'weight': weight,
+      'reps': reps,
+      'repRangeMin': repRangeMin,
+      'repRangeMax': repRangeMax,
+      'type': type,
+    };
+  }
+
   factory SetModel.fromJson(Map<String, dynamic> json) {
     return SetModel(
       prev: json['prev'] as String?,
@@ -41,6 +54,7 @@ class SetModel {
       repRangeMin: json['repRangeMin'] as int?,
       repRangeMax: json['repRangeMax'] as int?,
       type: json['type'] as String? ?? "Reps",
+      id: json['id'] as int,
     );
   }
 }

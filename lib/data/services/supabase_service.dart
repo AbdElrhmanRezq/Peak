@@ -172,4 +172,19 @@ class SupabaseService {
       throw e;
     }
   }
+
+  Future<void> updateSet(SetModel set) async {
+    try {
+      await supabase
+          .from('sets')
+          .update(set.toJson())
+          .eq('id', set.id!); // make sure id is not null
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
 }

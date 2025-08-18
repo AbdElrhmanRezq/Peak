@@ -4,7 +4,7 @@ import 'package:repx/data/models/set_model.dart';
 class SetsNotifier extends StateNotifier<List<SetModel>> {
   SetsNotifier() : super([]);
 
-  void addChangedSet(SetModel set) {
+  void addSet(SetModel set) {
     if (!state.contains(set)) {
       state = [...state, set]; // replace with new list so Riverpod rebuilds
     }
@@ -15,6 +15,10 @@ class SetsNotifier extends StateNotifier<List<SetModel>> {
   }
 }
 
-final setsProvider = StateNotifierProvider<SetsNotifier, List<SetModel>>(
+final changedSetsProvider = StateNotifierProvider<SetsNotifier, List<SetModel>>(
+  (ref) => SetsNotifier(),
+);
+
+final deletedSetsProvider = StateNotifierProvider<SetsNotifier, List<SetModel>>(
   (ref) => SetsNotifier(),
 );
