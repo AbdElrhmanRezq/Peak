@@ -12,6 +12,8 @@ class WorkoutsScreen extends ConsumerWidget {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
+    final theme = Theme.of(context);
+
     WorkoutsRepository workoutsRep = WorkoutsRepository();
 
     final workoutsAsync = ref.watch(workoutsProvider);
@@ -39,6 +41,13 @@ class WorkoutsScreen extends ConsumerWidget {
                 Navigator.of(context).pushNamed('create_workout_screen');
               },
             ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                "Your Workouts",
+                style: theme.textTheme.headlineLarge,
+              ),
+            ),
             workoutsAsync.when(
               data: (workouts) {
                 if (workouts.isEmpty) {
@@ -58,7 +67,7 @@ class WorkoutsScreen extends ConsumerWidget {
                         child: Container(
                           height: height * 0.1,
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.secondary,
+                            color: theme.colorScheme.secondary,
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Center(
@@ -71,9 +80,7 @@ class WorkoutsScreen extends ConsumerWidget {
                               },
                               title: Text(
                                 workout.title,
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.headlineMedium,
+                                style: theme.textTheme.headlineMedium,
                               ),
                               subtitle: Text(
                                 workout.description ?? '',
@@ -83,7 +90,7 @@ class WorkoutsScreen extends ConsumerWidget {
                               leading: Icon(
                                 Icons.fitness_center,
                                 size: height * 0.04,
-                                color: Theme.of(context).primaryColor,
+                                color: theme.primaryColor,
                               ),
                               trailing: IconButton(
                                 onPressed: () {
@@ -96,7 +103,10 @@ class WorkoutsScreen extends ConsumerWidget {
                                     workout.id as int,
                                   );
                                 },
-                                icon: Icon(Icons.more_vert_rounded),
+                                icon: Icon(
+                                  Icons.more_vert_rounded,
+                                  color: theme.primaryColor,
+                                ),
                               ),
                             ),
                           ),

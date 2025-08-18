@@ -4,6 +4,7 @@ import 'package:repx/data/models/set_model.dart';
 import 'package:repx/data/providers/sets_provider.dart';
 import 'package:repx/data/providers/workouts_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:repx/data/repository/workouts_repository.dart';
 import 'package:repx/data/services/custom_image_getter.dart';
 
 class WorkoutDetailsScreen extends ConsumerWidget {
@@ -13,6 +14,9 @@ class WorkoutDetailsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    final theme = Theme.of(context);
     //Next to be done: Add sets
     //Implement editted sets
     //Delete exercise/set
@@ -20,6 +24,8 @@ class WorkoutDetailsScreen extends ConsumerWidget {
     final args = ModalRoute.of(context)!.settings.arguments as int;
 
     final workoutsAsync = ref.watch(workoutsProvider);
+
+    final WorkoutsRepository workoutRep = WorkoutsRepository();
 
     final List<SetModel> changedSets = ref.watch(setsProvider);
 
@@ -32,7 +38,7 @@ class WorkoutDetailsScreen extends ConsumerWidget {
         }
 
         final workout = workouts[args];
-        final exercises = workout.exercises ?? [];
+        final exercises = workout.exercises;
 
         return Scaffold(
           appBar: AppBar(
@@ -73,17 +79,33 @@ class WorkoutDetailsScreen extends ConsumerWidget {
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       subtitle: Text(
-                        'Sets: ${exercise.sets?.length ?? 0}',
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        'Sets: ${exercise.sets.length}',
+                        style: theme.textTheme.titleSmall,
+                      ),
+                      trailing: IconButton(
+                        onPressed: () {
+                          showButtomSheetCustom(
+                            ref,
+                            context,
+                            width,
+                            height,
+                            workoutRep,
+                            exercise.supaId as int,
+                          );
+                        },
+                        icon: Icon(
+                          Icons.more_vert_rounded,
+                          color: theme.primaryColor,
+                        ),
                       ),
                       children: [
-                        if (exercise.sets?.isEmpty ?? true)
+                        if (exercise.sets.isEmpty)
                           const Padding(
                             padding: EdgeInsets.all(8.0),
                             child: Text("No sets for this exercise"),
                           )
                         else
-                          _SetsTable(sets: exercise.sets!),
+                          _SetsTable(sets: exercise.sets),
                       ],
                     );
                   },
@@ -94,6 +116,57 @@ class WorkoutDetailsScreen extends ConsumerWidget {
           const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (error, _) =>
           Scaffold(body: Center(child: Text(error.toString()))),
+    );
+  }
+
+  void showButtomSheetCustom(
+    WidgetRef ref,
+    BuildContext context,
+    width,
+    height,
+    WorkoutsRepository workoutRep,
+    int exerciseId,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          height: height * 0.3,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: ListView(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Divider(
+                  radius: BorderRadius.circular(12),
+                  endIndent: width * 0.35,
+                  indent: width * 0.35,
+                  thickness: 5,
+                ),
+              ),
+              ListTile(
+                onTap: () async {
+                  await workoutRep.deleteExercise(exerciseId);
+                  ref.invalidate(workoutsProvider);
+                  Navigator.of(context).pop();
+                },
+                leading: Icon(Icons.cancel_outlined, color: Colors.white),
+                title: Text(
+                  "Delete exercise",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
