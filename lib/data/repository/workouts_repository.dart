@@ -1,3 +1,4 @@
+import 'package:repx/data/models/exercise_model.dart';
 import 'package:repx/data/models/set_model.dart';
 import 'package:repx/data/models/workout_model.dart';
 import 'package:repx/data/services/supabase_service.dart';
@@ -88,6 +89,23 @@ class WorkoutsRepository {
   ) async {
     try {
       await _service.updateWorkout(workoutId, workoutTitle, description);
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
+
+  Future<void> addExercisesToWorkout(
+    int workoutId,
+    List<ExerciseModel> exercises,
+  ) async {
+    try {
+      for (ExerciseModel exercise in exercises) {
+        await _service.addExerciseToWorkout(workoutId, exercise);
+      }
     } on PostgrestException catch (e) {
       print('PostgrestException: ${e.message}');
       throw e;

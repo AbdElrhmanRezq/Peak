@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repx/data/models/exercise_model.dart';
 import 'package:repx/data/models/set_model.dart';
+import 'package:repx/data/providers/exercises_provider.dart';
 import 'package:repx/data/providers/sets_provider.dart';
 import 'package:repx/data/providers/workouts_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -51,9 +52,29 @@ class WorkoutDetailsScreen extends ConsumerWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text(workout.title),
-            centerTitle: true,
+            leading: IconButton(
+              onPressed: () {
+                ref.invalidate(selectedExercisesProvider);
+                Navigator.of(context).pop();
+              },
+              icon: Icon(Icons.arrow_back),
+            ),
             actions: [
+              IconButton(
+                onPressed: () async {
+                  Navigator.of(context).pushNamed(
+                    "select_exercises_screen",
+                    arguments: {'workoutReady': true, 'workoutId': workout.id},
+                  );
+                },
+                icon: Icon(
+                  Icons.add,
+
+                  color: changedSets.isNotEmpty
+                      ? Theme.of(context).colorScheme.primary
+                      : Colors.white,
+                ),
+              ),
               IconButton(
                 onPressed: () async {
                   if (changedSets.isNotEmpty) {

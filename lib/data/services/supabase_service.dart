@@ -204,4 +204,38 @@ class SupabaseService {
       throw e;
     }
   }
+
+  Future<void> addExerciseToWorkout(
+    int workoutId,
+    ExerciseModel exercise,
+  ) async {
+    try {
+      final exerciseRes = await supabase
+          .from('exercises')
+          .insert({'w_id': workoutId, 'id': exercise.id, 'name': exercise.name})
+          .select()
+          .single();
+
+      final eId = exerciseRes['s_id'];
+
+      final setsData = exercise.sets.map((set) {
+        return {
+          'e_id': eId, // foreign key to this exercise
+          'weight': set.weight,
+          'reps': set.reps,
+          'repRangeMin': set.repRangeMin,
+          'repRangeMax': set.repRangeMax,
+          'type': set.type,
+        };
+      }).toList();
+
+      await supabase.from('sets').insert(setsData);
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
 }

@@ -68,6 +68,7 @@ class _CreateWorkoutScreenState extends ConsumerState<CreateWorkoutScreen> {
           icon: Icon(Icons.arrow_back),
           color: Colors.white,
           onPressed: () {
+            ref.invalidate(selectedExercisesProvider);
             Navigator.of(context).pop();
           },
         ),

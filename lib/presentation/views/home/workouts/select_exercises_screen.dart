@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repx/data/providers/exercises_provider.dart';
 import 'package:repx/data/providers/select_exercise_provider.dart';
+import 'package:repx/data/providers/workouts_provider.dart';
 import 'package:repx/data/repository/api_repository.dart';
+import 'package:repx/data/repository/workouts_repository.dart';
 import 'package:repx/data/services/custom_image_getter.dart';
 
+//Invalidate the selected exercises in both the selected screen when coming from here
+//And the create workout screen
 class SelectExercisesScreen extends ConsumerStatefulWidget {
   static const String id = 'select_exercises_screen';
   const SelectExercisesScreen({super.key});
@@ -27,10 +31,17 @@ class _SelectExercisesScreenState extends ConsumerState<SelectExercisesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ??
+        {};
+    bool workoutReady = args['workoutReady'] ?? false;
+    int workoutId = args['workoutId'] ?? 0;
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     final selectedBodyPart = ref.watch(bodyPartProvider);
     final selectedExercises = ref.watch(selectedExercisesProvider);
+
+    WorkoutsRepository workoutRep = WorkoutsRepository();
 
     return Scaffold(
       appBar: AppBar(
@@ -47,6 +58,20 @@ class _SelectExercisesScreenState extends ConsumerState<SelectExercisesScreen> {
             },
             icon: Icon(Icons.search),
           ),
+          workoutReady
+              ? IconButton(
+                  onPressed: () async {
+                    await workoutRep.addExercisesToWorkout(
+                      workoutId,
+                      selectedExercises,
+                    );
+                    ref.invalidate(selectedExercisesProvider);
+                    ref.invalidate(workoutsProvider);
+                    Navigator.of(context).pop();
+                  },
+                  icon: Icon(Icons.check),
+                )
+              : Container(),
         ],
       ),
       body: FutureBuilder<List<String>>(
