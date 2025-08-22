@@ -5,12 +5,14 @@ class WorkoutModel {
   final String? description;
   final List<ExerciseModel> exercises;
   final int? id;
+  final int? stars;
 
   WorkoutModel({
     required this.title,
     this.description,
     required this.exercises,
     this.id,
+    this.stars,
   });
 
   factory WorkoutModel.fromJson(Map<String, dynamic> json) {
@@ -21,6 +23,7 @@ class WorkoutModel {
           .map((e) => ExerciseModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       id: json['id'] as int?,
+      stars: json['stars'] as int?,
     );
   }
 

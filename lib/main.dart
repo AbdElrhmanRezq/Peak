@@ -8,6 +8,7 @@ import 'package:repx/presentation/views/gateway/auth_gate.dart';
 import 'package:repx/presentation/views/nav/explore/exercise_info_screen.dart';
 import 'package:repx/presentation/views/nav/explore/exercises_screen.dart';
 import 'package:repx/presentation/views/nav/explore/explore_screen.dart';
+import 'package:repx/presentation/views/nav/explore/public_workout_screen.dart';
 import 'package:repx/presentation/views/nav/profile/add_friend_screen.dart';
 import 'package:repx/presentation/views/nav/profile/edit_profile_screen.dart';
 import 'package:repx/presentation/views/nav/home/home_screen.dart';
@@ -68,6 +69,7 @@ class Repx extends StatelessWidget {
         SelectExercisesScreen.id: (context) => SelectExercisesScreen(),
         SearchExercisesScreen.id: (context) => SearchExercisesScreen(),
         WorkoutDetailsScreen.id: (context) => WorkoutDetailsScreen(),
+        PublicWorkoutScreen.id: (context) => PublicWorkoutScreen(),
       },
       debugShowCheckedModeBanner: false,
     );

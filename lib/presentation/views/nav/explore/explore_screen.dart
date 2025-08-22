@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:repx/data/models/exercise_model.dart';
+import 'package:repx/data/models/workout_model.dart';
 import 'package:repx/data/repository/api_repository.dart';
+import 'package:repx/data/repository/workouts_repository.dart';
 import 'package:repx/presentation/widgets/custom_circular_button.dart';
 import 'package:repx/presentation/widgets/custom_exercises_grid.dart';
 import 'package:repx/presentation/widgets/custom_text_field.dart';
@@ -66,16 +68,16 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   ),
                   SizedBox(width: width * 0.02),
                   AppButton(
-                    text: "Community",
+                    text: "Workouts",
                     onPressed: () {
                       setState(() {
-                        selectedPage = 'community';
+                        selectedPage = 'Workouts';
                       });
                     },
-                    backgroundColor: selectedPage == 'community'
+                    backgroundColor: selectedPage == 'Workouts'
                         ? Theme.of(context).primaryColor
                         : Theme.of(context).colorScheme.secondary,
-                    textColor: selectedPage == 'community'
+                    textColor: selectedPage == 'Workouts'
                         ? Colors.black
                         : Colors.white,
                   ),
@@ -122,6 +124,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 },
               ),
             ),
+
+          if (selectedPage == 'Workouts') WorkoutsExplore(),
         ],
       ),
     );
@@ -196,6 +200,84 @@ class BodyPartsGrid extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class WorkoutsExplore extends StatelessWidget {
+  const WorkoutsExplore({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+
+    double height = mediaQuery.size.height;
+    double width = mediaQuery.size.width;
+
+    WorkoutsRepository workoutsRep = WorkoutsRepository();
+
+    final theme = Theme.of(context);
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: width * 0.05,
+          vertical: height * 0.03,
+        ),
+        child: ListView(
+          children: [
+            Text("Popular Workouts", style: theme.textTheme.headlineMedium),
+            FutureBuilder(
+              future: workoutsRep.getPopularWorkouts(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: height * 0.4),
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Text('No data found');
+                }
+
+                final workouts = snapshot.data!;
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  itemCount: workouts.length,
+                  itemBuilder: (context, index) {
+                    WorkoutModel workout = workouts[index];
+                    return ListTile(
+                      onTap: () {
+                        Navigator.of(context).pushNamed(
+                          'public_workout_screen',
+                          arguments: {'workout': workout},
+                        );
+                      },
+                      title: Text(
+                        workout.title,
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                      subtitle: Text(workout.description ?? ''),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.star, color: theme.primaryColor),
+                          SizedBox(width: 10),
+                          Text('${workout.stars ?? 0}'),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -130,13 +130,16 @@ class HomeScreen extends ConsumerWidget {
                     style: theme.textTheme.headlineMedium,
                   ),
                 ),
-                Container(
-                  height: height * 0.5,
-                  color: theme.colorScheme.secondary,
-                  child: Center(
-                    child: Text(
-                      "Insert analytics later",
-                      style: theme.textTheme.headlineMedium,
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: height * 0.02),
+                  child: Container(
+                    height: height * 0.5,
+                    color: theme.colorScheme.secondary,
+                    child: Center(
+                      child: Text(
+                        "Insert analytics later",
+                        style: theme.textTheme.headlineMedium,
+                      ),
                     ),
                   ),
                 ),

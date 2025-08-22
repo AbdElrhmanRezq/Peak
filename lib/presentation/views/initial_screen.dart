@@ -13,12 +13,10 @@ class InitialScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          /// ✅ Animated GIF background
           Positioned.fill(
             child: Image.asset('assets/images/start.gif', fit: BoxFit.cover),
           ),
 
-          /// ✅ Foreground content with safe area
           SafeArea(
             child: Center(
               child: Padding(

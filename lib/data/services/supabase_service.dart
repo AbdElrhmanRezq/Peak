@@ -238,4 +238,61 @@ class SupabaseService {
       throw e;
     }
   }
+
+  Future<List<WorkoutModel>> getPopularWorkouts() async {
+    try {
+      final workoutsData = await supabase
+          .from('workouts')
+          .select()
+          .order('starts', ascending: false)
+          .limit(5);
+
+      final workouts = workoutsData
+          .map((w) => WorkoutModel.fromJson(w))
+          .toList();
+
+      for (WorkoutModel workout in workouts) {
+        final exercisesData = await supabase
+            .from('exercises')
+            .select()
+            .eq('w_id', workout.id ?? "");
+
+        final exercises = exercisesData
+            .map((e) => ExerciseModel.fromJson(e))
+            .toList();
+
+        for (ExerciseModel exercise in exercises) {
+          final setsData = await supabase
+              .from('sets')
+              .select()
+              .eq('e_id', exercise.supaId ?? "");
+
+          final sets = setsData.map((s) => SetModel.fromJson(s)).toList();
+          exercise.sets.clear();
+          exercise.sets.addAll(sets);
+        }
+        workout.exercises.addAll(exercises);
+      }
+
+      if (workouts == null) return [];
+
+      return workouts;
+    } on PostgrestException catch (e) {
+      return [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future<void> starWorkout(int workoutId, String userId) async {
+    try {
+      await supabase.from('stars').insert({'w_id': workoutId, 'u_id': userId});
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
 }

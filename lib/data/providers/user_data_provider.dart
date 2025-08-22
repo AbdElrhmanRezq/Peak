@@ -42,3 +42,5 @@ final searchedUserProvider = StateProvider<List<UserModel?>>((ref) => []);
 final followStatusProvider = StateProvider.family<bool, String>((ref, userId) {
   return false;
 });
+
+final searchTextProvider = StateProvider<String>((ref) => "");

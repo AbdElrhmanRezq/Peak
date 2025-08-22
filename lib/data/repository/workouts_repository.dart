@@ -1,5 +1,6 @@
 import 'package:repx/data/models/exercise_model.dart';
 import 'package:repx/data/models/set_model.dart';
+import 'package:repx/data/models/user_model.dart';
 import 'package:repx/data/models/workout_model.dart';
 import 'package:repx/data/services/supabase_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -106,6 +107,37 @@ class WorkoutsRepository {
       for (ExerciseModel exercise in exercises) {
         await _service.addExerciseToWorkout(workoutId, exercise);
       }
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
+
+  Future<List<WorkoutModel>> getPopularWorkouts() async {
+    try {
+      return await _service.getPopularWorkouts();
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
+
+  Future<void> starWorkout(int workoutId, UserModel currentUser) async {
+    final userId = currentUser.id;
+
+    if (userId == null) {
+      print("No logged-in user");
+      return;
+    }
+
+    try {
+      return await _service.starWorkout(workoutId, userId);
     } on PostgrestException catch (e) {
       print('PostgrestException: ${e.message}');
       throw e;
