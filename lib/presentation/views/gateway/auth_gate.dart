@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:repx/presentation/views/home/nav_menu.dart';
+import 'package:repx/presentation/views/nav/nav_menu.dart';
 import 'package:repx/presentation/views/initial_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
