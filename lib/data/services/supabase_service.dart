@@ -296,6 +296,22 @@ class SupabaseService {
     }
   }
 
+  Future<void> unstarWorkout(int workoutId, String userId) async {
+    try {
+      await supabase
+          .from('stars')
+          .delete()
+          .eq('w_id', workoutId)
+          .eq('u_id', userId);
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
+
   Future<bool> isWorkoutStared(String userId, int workoutId) async {
     try {
       final response = await supabase
@@ -303,8 +319,8 @@ class SupabaseService {
           .select()
           .eq('u_id', userId)
           .eq('w_id', workoutId)
-          .single();
-
+          .maybeSingle(); // <-- does not throw if no row
+      print(response);
       return response != null;
     } on PostgrestException catch (e) {
       print('PostgrestException: ${e.message}');

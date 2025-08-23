@@ -147,6 +147,25 @@ class WorkoutsRepository {
     }
   }
 
+  Future<void> unstarWorkout(int workoutId, UserModel currentUser) async {
+    final userId = currentUser.id;
+
+    if (userId == null) {
+      print("No logged-in user");
+      return;
+    }
+
+    try {
+      return await _service.unstarWorkout(workoutId, userId);
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
+
   Future<bool> isWorkoutStared(String userId, int workoutId) async {
     try {
       final response = await _service.isWorkoutStared(userId, workoutId);

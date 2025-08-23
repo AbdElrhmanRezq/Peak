@@ -38,11 +38,20 @@ class PublicWorkoutScreen extends ConsumerWidget {
         actions: [
           IconButton(
             onPressed: () async {
-              await workoutsRepo.starWorkout(
+              bool isStared = await workoutsRepo.isWorkoutStared(
+                currentUser?.id ?? '',
                 workout.id,
-                currentUser as UserModel,
               );
-              ref.invalidate(staredStatusProvider);
+              isStared
+                  ? await workoutsRepo.unstarWorkout(
+                      workout.id,
+                      currentUser as UserModel,
+                    )
+                  : await workoutsRepo.starWorkout(
+                      workout.id,
+                      currentUser as UserModel,
+                    );
+              ref.invalidate(staredStatusProvider(workout.id));
             },
             icon: Icon(
               Icons.star,
