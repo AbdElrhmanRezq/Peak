@@ -295,4 +295,23 @@ class SupabaseService {
       throw e;
     }
   }
+
+  Future<bool> isWorkoutStared(String userId, int workoutId) async {
+    try {
+      final response = await supabase
+          .from('stars')
+          .select()
+          .eq('u_id', userId)
+          .eq('w_id', workoutId)
+          .single();
+
+      return response != null;
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
 }

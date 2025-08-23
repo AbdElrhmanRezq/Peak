@@ -5,6 +5,7 @@ import 'package:repx/data/models/exercise_model.dart';
 import 'package:repx/data/models/set_model.dart';
 import 'package:repx/data/models/user_model.dart';
 import 'package:repx/data/providers/auth_providers.dart';
+import 'package:repx/data/providers/workouts_provider.dart';
 import 'package:repx/data/repository/workouts_repository.dart';
 import 'package:repx/data/services/custom_image_getter.dart';
 
@@ -29,6 +30,8 @@ class PublicWorkoutScreen extends ConsumerWidget {
 
     final currentUser = ref.watch(currentUserProvider);
 
+    final isWorkoutStaredAsync = ref.watch(staredStatusProvider(workout.id));
+
     return Scaffold(
       appBar: AppBar(
         title: Text(workout.title, style: theme.textTheme.headlineMedium),
@@ -39,8 +42,16 @@ class PublicWorkoutScreen extends ConsumerWidget {
                 workout.id,
                 currentUser as UserModel,
               );
+              ref.invalidate(staredStatusProvider);
             },
-            icon: Icon(Icons.star),
+            icon: Icon(
+              Icons.star,
+              color: isWorkoutStaredAsync.when(
+                data: (data) => data ? Colors.yellow : Colors.grey,
+                error: (_, __) => Colors.grey, // <-- must be a function
+                loading: () => Colors.grey,
+              ),
+            ),
           ),
         ],
       ),

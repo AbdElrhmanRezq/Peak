@@ -51,6 +51,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
             child: Container(
               height: height * 0.04,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   AppButton(
                     text: "Exercises",

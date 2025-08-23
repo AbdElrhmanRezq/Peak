@@ -12,7 +12,6 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final auth = ref.read(authRepositoryProvider);
     final userAsync = ref.watch(userDataProvider);
 
     final theme = Theme.of(context);

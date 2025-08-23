@@ -148,71 +148,63 @@ class AddFriendScreen extends ConsumerWidget {
                                   foundUsers[index]?.username ?? 'N/A',
                                   style: Theme.of(context).textTheme.bodyMedium,
                                 ),
-                                trailing: FutureBuilder(
-                                  future: userRepo.isUserFollowed(
-                                    currentUserId as String,
-                                    foundUsers[index]?.id as String,
-                                  ),
-                                  builder: (context, snapshot) {
-                                    if (!snapshot.hasData) {
-                                      return CircularProgressIndicator(
-                                        color: Theme.of(context).primaryColor,
-                                      );
-                                    }
-
-                                    final isFollowed = ref.watch(
-                                      followStatusProvider(
-                                        foundUsers[index]!.id,
-                                      ),
-                                    );
-                                    return (foundUsers[index]?.id ==
-                                            currentUserId)
-                                        ? SizedBox()
-                                        : IconButton(
-                                            icon: Icon(
-                                              isFollowed
-                                                  ? Icons.done_outline_sharp
-                                                  : Icons.group_add_outlined,
-                                              color: Theme.of(
-                                                context,
-                                              ).primaryColor,
+                                trailing: foundUsers[index]?.id == currentUserId
+                                    ? const SizedBox()
+                                    : Consumer(
+                                        builder: (context, ref, _) {
+                                          final followStatus = ref.watch(
+                                            followStatusProvider(
+                                              foundUsers[index]!.id,
                                             ),
-                                            onPressed: () async {
-                                              if (isFollowed) {
-                                                await userRepo.unfollowUser(
-                                                  currentUserId,
-                                                  foundUsers[index]?.id
-                                                      as String,
-                                                );
-                                                ref
-                                                        .read(
-                                                          followStatusProvider(
-                                                            foundUsers[index]!
-                                                                .id,
-                                                          ).notifier,
-                                                        )
-                                                        .state =
-                                                    false; // or false
-                                              } else {
-                                                await userRepo.followUser(
-                                                  currentUserId,
-                                                  foundUsers[index]?.id
-                                                      as String,
-                                                );
-                                                ref
-                                                        .read(
-                                                          followStatusProvider(
-                                                            foundUsers[index]!
-                                                                .id,
-                                                          ).notifier,
-                                                        )
-                                                        .state =
-                                                    true; // or false
-                                              }
-                                            },
                                           );
-                                  },
-                                ),
+
+                                          return followStatus.when(
+                                            data: (isFollowed) {
+                                              return IconButton(
+                                                icon: Icon(
+                                                  isFollowed
+                                                      ? Icons.done_outline_sharp
+                                                      : Icons
+                                                            .group_add_outlined,
+                                                  color: Theme.of(
+                                                    context,
+                                                  ).primaryColor,
+                                                ),
+                                                onPressed: () async {
+                                                  if (isFollowed) {
+                                                    await userRepo.unfollowUser(
+                                                      currentUserId!,
+                                                      foundUsers[index]!.id,
+                                                    );
+                                                  } else {
+                                                    await userRepo.followUser(
+                                                      currentUserId!,
+                                                      foundUsers[index]!.id,
+                                                    );
+                                                  }
+
+                                                  // refresh the provider so UI updates
+                                                  ref.invalidate(
+                                                    followStatusProvider(
+                                                      foundUsers[index]!.id,
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            },
+                                            loading: () =>
+                                                CircularProgressIndicator(
+                                                  color: Theme.of(
+                                                    context,
+                                                  ).primaryColor,
+                                                ),
+                                            error: (e, _) => Icon(
+                                              Icons.error,
+                                              color: Colors.red,
+                                            ),
+                                          );
+                                        },
+                                      ),
                               ),
                             ),
                           );

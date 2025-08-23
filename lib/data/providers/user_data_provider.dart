@@ -39,8 +39,16 @@ final publicUserProvider = FutureProvider.family<UserModel, String>((
 
 final searchedUserProvider = StateProvider<List<UserModel?>>((ref) => []);
 
-final followStatusProvider = StateProvider.family<bool, String>((ref, userId) {
-  return false;
+final followStatusProvider = FutureProvider.family<bool, String>((
+  ref,
+  userId,
+) async {
+  final repo = ref.watch(userRepositoryProvider);
+  final currentUser = ref.watch(currentUserProvider);
+
+  if (currentUser == null) return false;
+
+  return await repo.isUserFollowed(currentUser.id, userId);
 });
 
 final searchTextProvider = StateProvider<String>((ref) => "");

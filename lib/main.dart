@@ -43,7 +43,7 @@ class Repx extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Repx',
+      title: 'Peak',
       theme: appTheme,
       initialRoute: GateWay.id,
       routes: {
