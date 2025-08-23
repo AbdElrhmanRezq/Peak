@@ -38,6 +38,13 @@ class PublicWorkoutScreen extends ConsumerWidget {
         actions: [
           IconButton(
             onPressed: () async {
+              await workoutsRepo.saveWorkout(workout);
+            },
+            icon: Icon(Icons.download),
+          ),
+
+          IconButton(
+            onPressed: () async {
               bool isStared = await workoutsRepo.isWorkoutStared(
                 currentUser?.id ?? '',
                 workout.id,
