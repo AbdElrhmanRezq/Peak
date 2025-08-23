@@ -178,4 +178,17 @@ class WorkoutsRepository {
       throw e;
     }
   }
+
+  Future<int> getWorkoutStaredCount(int workoutId) async {
+    try {
+      final response = await _service.getWorkoutStaredCount(workoutId);
+      return response;
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
 }

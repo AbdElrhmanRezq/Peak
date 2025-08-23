@@ -22,3 +22,16 @@ final staredStatusProvider = FutureProvider.family<bool, int>((
       .watch(workoutsRepositoryProvider)
       .isWorkoutStared(currentUser.id, workoutId);
 });
+
+final staredCountProvider = FutureProvider.family<int, int>((
+  ref,
+  workoutId,
+) async {
+  final currentUser = ref.watch(currentUserProvider);
+
+  if (currentUser == null) return 0;
+
+  return await ref
+      .watch(workoutsRepositoryProvider)
+      .getWorkoutStaredCount(workoutId);
+});

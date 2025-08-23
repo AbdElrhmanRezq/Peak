@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repx/data/models/exercise_model.dart';
 import 'package:repx/data/models/workout_model.dart';
+import 'package:repx/data/providers/workouts_provider.dart';
 import 'package:repx/data/repository/api_repository.dart';
 import 'package:repx/data/repository/workouts_repository.dart';
 import 'package:repx/presentation/widgets/custom_circular_button.dart';
@@ -206,11 +208,11 @@ class BodyPartsGrid extends StatelessWidget {
   }
 }
 
-class WorkoutsExplore extends StatelessWidget {
+class WorkoutsExplore extends ConsumerWidget {
   const WorkoutsExplore({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final mediaQuery = MediaQuery.of(context);
 
     double height = mediaQuery.size.height;
@@ -252,6 +254,9 @@ class WorkoutsExplore extends StatelessWidget {
                   itemCount: workouts.length,
                   itemBuilder: (context, index) {
                     WorkoutModel workout = workouts[index];
+                    final starsAsync = ref.watch(
+                      staredCountProvider(workout.id ?? 0),
+                    );
                     return ListTile(
                       onTap: () {
                         Navigator.of(context).pushNamed(
@@ -269,7 +274,14 @@ class WorkoutsExplore extends StatelessWidget {
                         children: [
                           Icon(Icons.star, color: theme.primaryColor),
                           SizedBox(width: 10),
-                          Text('${workout.stars ?? 0}'),
+                          starsAsync.when(
+                            data: (data) => Text(
+                              '$data',
+                              style: theme.textTheme.bodyMedium,
+                            ),
+                            error: (error, stack) => Text('Error: $error'),
+                            loading: () => CircularProgressIndicator(),
+                          ),
                         ],
                       ),
                     );

@@ -6,6 +6,7 @@ class WorkoutModel {
   final List<ExerciseModel> exercises;
   final int? id;
   final int? stars;
+  final String? uId;
 
   WorkoutModel({
     required this.title,
@@ -13,6 +14,7 @@ class WorkoutModel {
     required this.exercises,
     this.id,
     this.stars,
+    this.uId,
   });
 
   factory WorkoutModel.fromJson(Map<String, dynamic> json) {
@@ -24,6 +26,7 @@ class WorkoutModel {
           .toList(),
       id: json['id'] as int?,
       stars: json['stars'] as int?,
+      uId: json['u_id'] as String?,
     );
   }
 

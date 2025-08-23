@@ -36,12 +36,14 @@ class PublicWorkoutScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(workout.title, style: theme.textTheme.headlineMedium),
         actions: [
-          IconButton(
-            onPressed: () async {
-              await workoutsRepo.saveWorkout(workout);
-            },
-            icon: Icon(Icons.download),
-          ),
+          workout.uId == currentUser?.id
+              ? SizedBox()
+              : IconButton(
+                  onPressed: () async {
+                    await workoutsRepo.saveWorkout(workout);
+                  },
+                  icon: Icon(Icons.download),
+                ),
 
           IconButton(
             onPressed: () async {
@@ -59,6 +61,7 @@ class PublicWorkoutScreen extends ConsumerWidget {
                       currentUser as UserModel,
                     );
               ref.invalidate(staredStatusProvider(workout.id));
+              ref.invalidate(staredCountProvider(workout.id));
             },
             icon: Icon(
               Icons.star,

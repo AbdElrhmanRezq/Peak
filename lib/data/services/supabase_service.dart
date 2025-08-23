@@ -330,4 +330,21 @@ class SupabaseService {
       throw e;
     }
   }
+
+  Future<int> getWorkoutStaredCount(int workoutId) async {
+    try {
+      final rows = await Supabase.instance.client
+          .from('stars')
+          .select('id')
+          .eq('w_id', workoutId);
+
+      return (rows as List).length;
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
 }
