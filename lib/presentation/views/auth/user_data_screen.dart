@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repx/data/models/user_model.dart';
 import 'package:repx/data/providers/auth_providers.dart';
+import 'package:repx/data/providers/user_data_provider.dart';
 import 'package:repx/presentation/widgets/custom_text_form_field.dart';
 import 'package:repx/presentation/widgets/custom_wide_button.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -49,6 +50,7 @@ class _UserDataScreenState extends ConsumerState<UserDataScreen> {
           // age: int.parse(age),
         ),
       );
+      ref.invalidate(userDataProvider);
       Navigator.of(context).pushReplacementNamed('nav_menu');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
