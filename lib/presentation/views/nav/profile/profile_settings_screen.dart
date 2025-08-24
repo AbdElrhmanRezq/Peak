@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:repx/core/utils/helpers/image_helper.dart';
 import 'package:repx/data/providers/auth_providers.dart';
 import 'package:repx/data/providers/user_data_provider.dart';
+import 'package:repx/data/repository/images_repository.dart';
 import 'package:repx/presentation/widgets/custom_app_bar.dart';
 import 'package:repx/presentation/widgets/custom_icon_text_button.dart';
 
@@ -14,7 +17,14 @@ class ProfileSettingsScreen extends ConsumerWidget {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
+    final imageHelper = ImageHelper();
     final auth = ref.watch(authRepositoryProvider);
+
+    uploadImage(CroppedFile file) async {
+      ImagesRepository imageRep = ImagesRepository();
+      await imageRep.uploadProfileImage(file);
+    }
+
     return Scaffold(
       appBar: CustomAppBar(title: "Settings"),
       body: Padding(
@@ -29,6 +39,21 @@ class ProfileSettingsScreen extends ConsumerWidget {
               icon: Icons.edit,
               onPressed: () {
                 Navigator.of(context).pushNamed("edit_profile_screen");
+              },
+            ),
+            SizedBox(height: height * 0.01),
+            CustomIconTextButton(
+              title: "Change profile picture",
+              icon: Icons.add_a_photo,
+              onPressed: () async {
+                final file = await imageHelper.pickImage();
+                if (file != null) {
+                  final croppedImage = await imageHelper.crop(file: file);
+                  if (croppedImage != null) {
+                    await uploadImage(croppedImage);
+                    ref.invalidate(userDataProvider);
+                  }
+                }
               },
             ),
             SizedBox(height: height * 0.01),

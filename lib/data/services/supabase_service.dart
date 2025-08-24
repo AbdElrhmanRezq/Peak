@@ -1,3 +1,4 @@
+import 'package:image_cropper/image_cropper.dart';
 import 'package:repx/data/models/exercise_model.dart';
 import 'package:repx/data/models/set_model.dart';
 import 'package:repx/data/models/user_model.dart';
@@ -339,6 +340,56 @@ class SupabaseService {
           .eq('w_id', workoutId);
 
       return (rows as List).length;
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
+
+  Future<String> uploadImage(CroppedFile file) async {
+    try {
+      final imageExtension = file.path.split('.').last.toLowerCase();
+      final imageBytes = await file.readAsBytes();
+
+      // Always include extension in file name
+      final imagePath =
+          '${supabase.auth.currentUser?.id}/profile.$imageExtension';
+
+      // Upload to Supabase
+      await supabase.storage
+          .from('profile')
+          .uploadBinary(
+            imagePath,
+            imageBytes,
+            fileOptions: FileOptions(
+              upsert: true,
+              contentType: 'image/$imageExtension',
+            ),
+          );
+
+      print('Image uploaded: $imagePath');
+
+      // ✅ Return public URL
+      return supabase.storage.from('profile').getPublicUrl(imagePath);
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
+
+  Future<void> updateProfileImage(String imageURL) async {
+    try {
+      final String currentUser = supabase.auth.currentUser?.id ?? '';
+      await supabase
+          .from('users')
+          .update({'profile_picture_url': imageURL})
+          .eq('id', currentUser);
     } on PostgrestException catch (e) {
       print('PostgrestException: ${e.message}');
       throw e;

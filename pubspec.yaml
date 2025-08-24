@@ -44,6 +44,8 @@ dependencies:
   http: ^1.4.0
   cached_network_image: ^3.4.1
   flutter_cache_manager: ^3.4.1
+  image_picker: ^1.2.0
+  image_cropper: ^9.1.0
 
 dev_dependencies:
   flutter_test:
@@ -76,6 +78,7 @@ flutter:
     - .env
     - assets/images/people/black_man.png
     - assets/images/profile/pro4.jpeg
+    - assets/images/profile/pro1.jpeg
     - assets/icons/burn.png
     - assets/icons/flash.png
     - assets/icons/flash2.png

@@ -131,15 +131,30 @@ class AddFriendScreen extends ConsumerWidget {
                                     },
                                   );
                                 },
-                                leading: ClipRRect(
-                                  borderRadius: BorderRadiusGeometry.circular(
-                                    100,
-                                  ),
-                                  child: Image.asset(
-                                    foundUsers[index]?.profilePictureUrl ??
-                                        'assets/images/profile/pro4.jpeg',
+                                leading: ClipOval(
+                                  child: Container(
+                                    width: width * 0.15,
+                                    height: height * 0.15,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image:
+                                            foundUsers[index]
+                                                    ?.profilePictureUrl !=
+                                                null
+                                            ? NetworkImage(
+                                                foundUsers[index]!
+                                                    .profilePictureUrl!,
+                                              )
+                                            : const AssetImage(
+                                                    'assets/images/profile/pro4.jpeg',
+                                                  )
+                                                  as ImageProvider,
+                                        fit: BoxFit.fitHeight,
+                                      ),
+                                    ),
                                   ),
                                 ),
+
                                 title: Text(
                                   foundUsers[index]?.name ?? 'N/A',
                                   style: Theme.of(context).textTheme.bodyMedium,

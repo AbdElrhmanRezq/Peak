@@ -33,9 +33,11 @@ class ProfileScreen extends ConsumerWidget {
                         height: height * 0.4,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage(
-                              'assets/images/profile/pro4.jpeg',
-                            ),
+                            image: userData.profilePictureUrl != null
+                                ? NetworkImage(userData.profilePictureUrl!)
+                                : const AssetImage(
+                                    'assets/images/profile/pro4.jpeg',
+                                  ),
                             fit: BoxFit.cover,
                             alignment: Alignment.topCenter,
                           ),
