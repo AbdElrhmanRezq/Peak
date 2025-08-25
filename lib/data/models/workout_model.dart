@@ -5,16 +5,16 @@ class WorkoutModel {
   final String? description;
   final List<ExerciseModel> exercises;
   final int? id;
-  final int? stars;
   final String? uId;
+  final String? imageUrl;
 
   WorkoutModel({
     required this.title,
     this.description,
     required this.exercises,
     this.id,
-    this.stars,
     this.uId,
+    this.imageUrl,
   });
 
   factory WorkoutModel.fromJson(Map<String, dynamic> json) {
@@ -25,8 +25,8 @@ class WorkoutModel {
           .map((e) => ExerciseModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       id: json['id'] as int?,
-      stars: json['stars'] as int?,
       uId: json['u_id'] as String?,
+      imageUrl: json['image_url'] as String?,
     );
   }
 
@@ -36,6 +36,7 @@ class WorkoutModel {
       'description': description,
       'exercises': exercises.map((e) => e.toJson()).toList(),
       'id': id,
+      'image_url': imageUrl,
     };
   }
 }

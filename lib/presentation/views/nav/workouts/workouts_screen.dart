@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:repx/data/providers/image_provider.dart';
 import 'package:repx/data/providers/workouts_provider.dart';
+import 'package:repx/data/repository/images_repository.dart';
 import 'package:repx/data/repository/workouts_repository.dart';
 import 'package:repx/presentation/widgets/custom_icon_text_button.dart';
 
@@ -87,10 +90,16 @@ class WorkoutsScreen extends ConsumerWidget {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              leading: Icon(
-                                Icons.fitness_center,
-                                size: height * 0.04,
-                                color: theme.primaryColor,
+                              leading: Container(
+                                width: width * 0.1,
+                                height: height * 0.1,
+                                child: workout.imageUrl != null
+                                    ? Image.network(workout.imageUrl ?? ' ')
+                                    : Icon(
+                                        Icons.fitness_center,
+                                        size: height * 0.04,
+                                        color: theme.primaryColor,
+                                      ),
                               ),
                               trailing: IconButton(
                                 onPressed: () {
@@ -167,6 +176,25 @@ class WorkoutsScreen extends ConsumerWidget {
               ),
               ListTile(
                 onTap: () async {
+                  final imageHelper = ref.watch(imageHelperProvider);
+                  final file = await imageHelper.pickImage();
+                  if (file != null) {
+                    final croppedImage = await imageHelper.crop(file: file);
+                    if (croppedImage != null) {
+                      await uploadImage(croppedImage, workoutId);
+                      ref.invalidate(workoutsProvider);
+                    }
+                  }
+                  Navigator.of(context).pop();
+                },
+                leading: Icon(Icons.photo, color: Colors.white),
+                title: Text(
+                  "Update photo Workout",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+              ListTile(
+                onTap: () async {
                   await workoutRep.deleteWorkout(workoutId);
                   ref.invalidate(workoutsProvider);
                   Navigator.of(context).pop();
@@ -182,5 +210,10 @@ class WorkoutsScreen extends ConsumerWidget {
         );
       },
     );
+  }
+
+  uploadImage(CroppedFile file, int workoutId) async {
+    ImagesRepository imageRep = ImagesRepository();
+    await imageRep.uploadWorkoutImage(file, workoutId);
   }
 }

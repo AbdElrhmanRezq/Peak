@@ -245,8 +245,8 @@ class SupabaseService {
       final workoutsData = await supabase
           .from('workouts')
           .select()
-          .order('starts', ascending: false)
-          .limit(5);
+          //.order('starts', ascending: false)
+          .limit(10);
 
       final workouts = workoutsData
           .map((w) => WorkoutModel.fromJson(w))
@@ -279,8 +279,10 @@ class SupabaseService {
 
       return workouts;
     } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
       return [];
     } catch (e) {
+      print(e);
       return [];
     }
   }
@@ -349,14 +351,17 @@ class SupabaseService {
     }
   }
 
-  Future<String> uploadImage(CroppedFile file, String folder) async {
+  Future<String> uploadImage(
+    CroppedFile file,
+    String folder,
+    String name,
+  ) async {
     try {
       final imageExtension = file.path.split('.').last.toLowerCase();
       final imageBytes = await file.readAsBytes();
 
-      // Always include extension in file name
       final imagePath =
-          '${supabase.auth.currentUser?.id}/profile.$imageExtension';
+          '${supabase.auth.currentUser?.id}/$name.$imageExtension';
 
       // Upload to Supabase
       await supabase.storage
@@ -389,6 +394,21 @@ class SupabaseService {
           .from('users')
           .update({'profile_picture_url': imageURL})
           .eq('id', currentUser);
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
+
+  Future<void> updateWorkoutImage(String imageURL, int workoutId) async {
+    try {
+      await supabase
+          .from('workouts')
+          .update({'image_url': imageURL})
+          .eq('id', workoutId);
     } on PostgrestException catch (e) {
       print('PostgrestException: ${e.message}');
       throw e;
