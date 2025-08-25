@@ -5,9 +5,11 @@ import 'package:repx/data/models/exercise_model.dart';
 import 'package:repx/data/models/set_model.dart';
 import 'package:repx/data/models/user_model.dart';
 import 'package:repx/data/providers/auth_providers.dart';
+import 'package:repx/data/providers/user_data_provider.dart';
 import 'package:repx/data/providers/workouts_provider.dart';
 import 'package:repx/data/repository/workouts_repository.dart';
 import 'package:repx/data/services/custom_image_getter.dart';
+import 'package:repx/presentation/widgets/custom_user_photo.dart';
 
 class PublicWorkoutScreen extends ConsumerWidget {
   static const String id = 'public_workout_screen';
@@ -32,9 +34,10 @@ class PublicWorkoutScreen extends ConsumerWidget {
 
     final isWorkoutStaredAsync = ref.watch(staredStatusProvider(workout.id));
 
+    final userRepo = ref.watch(userRepositoryProvider);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(workout.title, style: theme.textTheme.headlineMedium),
         actions: [
           workout.uId == currentUser?.id
               ? SizedBox()
@@ -84,9 +87,59 @@ class PublicWorkoutScreen extends ConsumerWidget {
                     vertical: height * 0.01,
                   ),
                   child: Text(
+                    workout.title,
+                    style: theme.textTheme.headlineMedium,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: width * 0.06,
+                    vertical: height * 0.01,
+                  ),
+                  child: Text(
                     workout.description ?? '',
                     style: theme.textTheme.bodyMedium,
                   ),
+                ),
+                FutureBuilder(
+                  future: userRepo.getUserById(workout.uId),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (!snapshot.hasData || snapshot.data == null) {
+                      return Text('No user found');
+                    }
+
+                    final user = snapshot.data!;
+                    return Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: width * 0.06,
+                        vertical: height * 0.01,
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(
+                            'public_profile_screen',
+                            arguments: {'userId': user.id},
+                          );
+                        },
+                        child: Container(
+                          height: height * 0.05,
+                          child: Row(
+                            children: [
+                              CustomUserPhoto(user: user),
+                              Text(
+                                user.name ?? '',
+                                style: theme.textTheme.bodyMedium,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 Expanded(
                   child: ListView.builder(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repx/data/models/exercise_model.dart';
 import 'package:repx/data/models/set_model.dart';
+import 'package:repx/data/providers/auth_providers.dart';
 import 'package:repx/data/providers/exercises_provider.dart';
 import 'package:repx/data/providers/sets_provider.dart';
 import 'package:repx/data/providers/workouts_provider.dart';
@@ -30,7 +31,11 @@ class WorkoutDetailsScreen extends ConsumerWidget {
     //UI to match the other screen
     final args = ModalRoute.of(context)!.settings.arguments as int;
 
-    final workoutsAsync = ref.watch(workoutsProvider);
+    final authRepo = ref.watch(authRepositoryProvider);
+
+    final currentUser = authRepo.currentUser;
+
+    final workoutsAsync = ref.watch(workoutsProvider(currentUser?.id ?? ''));
 
     final WorkoutsRepository workoutRep = WorkoutsRepository();
 

@@ -5,9 +5,12 @@ import 'package:repx/data/repository/workouts_repository.dart';
 
 final workoutsRepositoryProvider = Provider((ref) => WorkoutsRepository());
 
-final workoutsProvider = FutureProvider<List<WorkoutModel>>((ref) async {
+final workoutsProvider = FutureProvider.family<List<WorkoutModel>, String>((
+  ref,
+  userId,
+) async {
   final workoutRepo = ref.read(workoutsRepositoryProvider);
-  return workoutRepo.getWorkouts();
+  return workoutRepo.getWorkoutsByUserId(userId);
 });
 
 final staredStatusProvider = FutureProvider.family<bool, int>((

@@ -257,53 +257,66 @@ class WorkoutsExplore extends ConsumerWidget {
                     final starsAsync = ref.watch(
                       staredCountProvider(workout.id ?? 0),
                     );
-                    return ListTile(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(
-                          'public_workout_screen',
-                          arguments: {'workout': workout},
-                        );
-                      },
-                      leading: Container(
-                        width: width * 0.15,
-                        height: width * 0.15,
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: height * 0.01),
+                      child: Container(
                         decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: workout.imageUrl != null
-                              ? DecorationImage(
-                                  image: NetworkImage(workout.imageUrl!),
-                                  fit: BoxFit.cover,
-                                )
-                              : null,
+                          color: theme.colorScheme.secondary,
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        child: workout.imageUrl == null
-                            ? Icon(
-                                Icons.fitness_center,
-                                size: height * 0.04,
-                                color: theme.primaryColor,
-                              )
-                            : null,
-                      ),
-
-                      title: Text(
-                        workout.title,
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                      subtitle: Text(workout.description ?? ''),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.star, color: theme.primaryColor),
-                          SizedBox(width: 10),
-                          starsAsync.when(
-                            data: (data) => Text(
-                              '$data',
-                              style: theme.textTheme.bodyMedium,
+                        child: ListTile(
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                              'public_workout_screen',
+                              arguments: {'workout': workout},
+                            );
+                          },
+                          leading: Container(
+                            width: width * 0.15,
+                            height: width * 0.15,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: workout.imageUrl != null
+                                  ? DecorationImage(
+                                      image: NetworkImage(workout.imageUrl!),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : null,
                             ),
-                            error: (error, stack) => Text('Error: $error'),
-                            loading: () => CircularProgressIndicator(),
+                            child: workout.imageUrl == null
+                                ? Icon(
+                                    Icons.fitness_center,
+                                    size: height * 0.04,
+                                    color: theme.primaryColor,
+                                  )
+                                : null,
                           ),
-                        ],
+
+                          title: Text(
+                            workout.title,
+                            style: theme.textTheme.headlineMedium,
+                          ),
+                          subtitle: Text(
+                            workout.description ?? '',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.star, color: theme.primaryColor),
+                              SizedBox(width: 10),
+                              starsAsync.when(
+                                data: (data) => Text(
+                                  '$data',
+                                  style: theme.textTheme.bodyMedium,
+                                ),
+                                error: (error, stack) => Text('Error: $error'),
+                                loading: () => CircularProgressIndicator(),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     );
                   },

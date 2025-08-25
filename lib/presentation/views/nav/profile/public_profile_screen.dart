@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repx/data/models/user_model.dart';
 import 'package:repx/data/providers/auth_providers.dart';
 import 'package:repx/data/providers/user_data_provider.dart';
+import 'package:repx/data/providers/workouts_provider.dart';
 import 'package:repx/presentation/widgets/custom_profile_cards.dart';
 import 'package:repx/presentation/widgets/custom_wide_button.dart';
 
@@ -48,6 +49,7 @@ class PublicProfileScreen extends ConsumerWidget {
         final userData = snapshot.data!;
         final followers = userRepo.getUserFollowers(userData.id);
         final following = userRepo.getUserFollowings(userData.id);
+        final workoutsAsync = ref.watch(workoutsProvider(userData.id));
 
         return Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -119,50 +121,55 @@ class PublicProfileScreen extends ConsumerWidget {
                       ],
                     ),
 
-                    Consumer(
-                      builder: (context, ref, _) {
-                        final followStatus = ref.watch(
-                          followStatusProvider(userId),
-                        );
+                    userData.id != currentUser?.id
+                        ? Consumer(
+                            builder: (context, ref, _) {
+                              final followStatus = ref.watch(
+                                followStatusProvider(userId),
+                              );
 
-                        return followStatus.when(
-                          data: (isFollowed) {
-                            return Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: height * 0.01,
-                              ),
-                              child: CustomWideButton(
-                                backgroundColor: theme.primaryColor,
-                                text: isFollowed
-                                    ? "Remove friend"
-                                    : "Add Friend",
+                              return followStatus.when(
+                                data: (isFollowed) {
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: height * 0.01,
+                                    ),
+                                    child: CustomWideButton(
+                                      backgroundColor: theme.primaryColor,
+                                      text: isFollowed
+                                          ? "Remove friend"
+                                          : "Add Friend",
 
-                                onPressed: () async {
-                                  if (isFollowed) {
-                                    await userRepo.unfollowUser(
-                                      currentUser?.id ?? '',
-                                      userId,
-                                    );
-                                  } else {
-                                    await userRepo.followUser(
-                                      currentUser?.id ?? '',
-                                      userId,
-                                    );
-                                  }
+                                      onPressed: () async {
+                                        if (isFollowed) {
+                                          await userRepo.unfollowUser(
+                                            currentUser?.id ?? '',
+                                            userId,
+                                          );
+                                        } else {
+                                          await userRepo.followUser(
+                                            currentUser?.id ?? '',
+                                            userId,
+                                          );
+                                        }
 
-                                  // refresh the provider so UI updates
-                                  ref.invalidate(followStatusProvider(userId));
+                                        // refresh the provider so UI updates
+                                        ref.invalidate(
+                                          followStatusProvider(userId),
+                                        );
+                                      },
+                                    ),
+                                  );
                                 },
-                              ),
-                            );
-                          },
-                          loading: () => CircularProgressIndicator(
-                            color: Theme.of(context).primaryColor,
-                          ),
-                          error: (e, _) => Icon(Icons.error, color: Colors.red),
-                        );
-                      },
-                    ),
+                                loading: () => CircularProgressIndicator(
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                error: (e, _) =>
+                                    Icon(Icons.error, color: Colors.red),
+                              );
+                            },
+                          )
+                        : SizedBox(),
 
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: height * 0.01),
@@ -224,6 +231,36 @@ class PublicProfileScreen extends ConsumerWidget {
                                   ),
                                   Text("Following"),
                                 ],
+                              ),
+                              workoutsAsync.when(
+                                data: (workouts) {
+                                  if (workouts.isEmpty) {
+                                    return Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+
+                                      children: [Text('0'), Text("Workouts")],
+                                    );
+                                  }
+                                  return Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+
+                                    children: [
+                                      Text(workouts.length.toString()),
+                                      Text("Workouts"),
+                                    ],
+                                  );
+                                },
+                                loading: () => const Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(16.0),
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ),
+                                error: (err, stack) => Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Text('Error: $err'),
+                                ),
                               ),
                             ],
                           ),

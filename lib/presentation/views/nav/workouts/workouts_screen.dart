@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:repx/data/providers/auth_providers.dart';
 import 'package:repx/data/providers/image_provider.dart';
 import 'package:repx/data/providers/workouts_provider.dart';
 import 'package:repx/data/repository/images_repository.dart';
@@ -19,7 +20,11 @@ class WorkoutsScreen extends ConsumerWidget {
 
     WorkoutsRepository workoutsRep = WorkoutsRepository();
 
-    final workoutsAsync = ref.watch(workoutsProvider);
+    final authRepo = ref.watch(authRepositoryProvider);
+
+    final currentUser = authRepo.currentUser;
+
+    final workoutsAsync = ref.watch(workoutsProvider(currentUser?.id ?? ''));
 
     return Scaffold(
       appBar: AppBar(

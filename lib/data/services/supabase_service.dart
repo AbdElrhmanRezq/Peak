@@ -81,9 +81,7 @@ class SupabaseService {
     }
   }
 
-  Future<List<WorkoutModel>> getWorkouts() async {
-    final userId = supabase.auth.currentSession?.user.id;
-
+  Future<List<WorkoutModel>> getWorkoutsByUserId(String userId) async {
     if (userId == null) {
       print("No logged-in user");
       return [];

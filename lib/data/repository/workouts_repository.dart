@@ -21,9 +21,9 @@ class WorkoutsRepository {
     }
   }
 
-  Future<List<WorkoutModel>> getWorkouts() async {
+  Future<List<WorkoutModel>> getWorkoutsByUserId(String userId) async {
     try {
-      return await _service.getWorkouts();
+      return await _service.getWorkoutsByUserId(userId);
     } on PostgrestException catch (e) {
       print('PostgrestException: ${e.message}');
       throw e;
