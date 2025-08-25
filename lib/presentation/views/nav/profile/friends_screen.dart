@@ -107,22 +107,29 @@ class PeopleList extends StatelessWidget {
                 );
               },
               child: ListTile(
-                leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: Image.asset(
-                    follower.profilePictureUrl ??
-                        'assets/images/profile/pro4.jpeg',
-                    fit: BoxFit.cover,
-                    width: 40,
-                    height: 40,
+                leading: ClipOval(
+                  child: Container(
+                    width: width * 0.15,
+                    height: height * 0.15,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: follower?.profilePictureUrl != null
+                            ? NetworkImage(follower!.profilePictureUrl!)
+                            : const AssetImage(
+                                    'assets/images/profile/pro4.jpeg',
+                                  )
+                                  as ImageProvider,
+                        fit: BoxFit.fitHeight,
+                      ),
+                    ),
                   ),
                 ),
                 title: Text(
-                  follower.username ?? 'N/A',
+                  follower.name ?? 'N/A',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 subtitle: Text(
-                  follower.email ?? 'N/A',
+                  follower.username ?? 'N/A',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
