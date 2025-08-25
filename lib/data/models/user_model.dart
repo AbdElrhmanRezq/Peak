@@ -75,6 +75,7 @@ class UserModel {
       age: age ?? this.age,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       name: name ?? this.name,
+      profilePictureUrl: profilePictureUrl ?? this.profilePictureUrl,
     );
   }
 

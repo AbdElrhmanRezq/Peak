@@ -52,7 +52,7 @@ class InitialScreen extends StatelessWidget {
                         right: width * 0.15,
                       ),
                       child: Text(
-                        "Achieve your fitness goals with our expert trainers! Join us for personalized workouts that get results",
+                        "It’s time to take action and become your best self — no more excuses.",
                         style: Theme.of(context).textTheme.labelSmall,
                       ),
                     ),

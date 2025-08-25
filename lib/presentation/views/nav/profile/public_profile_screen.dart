@@ -18,6 +18,8 @@ class PublicProfileScreen extends ConsumerWidget {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
+    final theme = Theme.of(context);
+
     final userRepo = ref.watch(userRepositoryProvider);
     final authRepo = ref.watch(authRepositoryProvider);
 
@@ -57,7 +59,11 @@ class PublicProfileScreen extends ConsumerWidget {
                     height: height * 0.4,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage('assets/images/profile/pro4.jpeg'),
+                        image: userData.profilePictureUrl != null
+                            ? NetworkImage(userData.profilePictureUrl!)
+                            : const AssetImage(
+                                'assets/images/profile/pro4.jpeg',
+                              ),
                         fit: BoxFit.cover,
                         alignment: Alignment.topCenter,
                       ),
@@ -112,69 +118,47 @@ class PublicProfileScreen extends ConsumerWidget {
                       ],
                     ),
 
-                    FutureBuilder<bool>(
-                      future: userRepo.isUserFollowed(
-                        currentUser!.id,
-                        userData.id,
-                      ),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
-                        }
+                    Consumer(
+                      builder: (context, ref, _) {
+                        final followStatus = ref.watch(
+                          followStatusProvider(userId),
+                        );
 
-                        bool isFollowing = snapshot.data ?? false;
-
-                        return StatefulBuilder(
-                          builder: (context, setState) {
-                            bool isLoading = false;
-
-                            Future<void> _followUser() async {
-                              setState(() => isLoading = true);
-                              await userRepo.followUser(
-                                currentUser.id,
-                                userData.id,
-                              );
-                              setState(() {
-                                isLoading = false;
-                                isFollowing = true;
-                              });
-                            }
-
-                            Future<void> _unfollowUser() async {
-                              setState(() => isLoading = true);
-                              await userRepo.unfollowUser(
-                                currentUser.id,
-                                userData.id,
-                              );
-                              setState(() {
-                                isLoading = false;
-                                isFollowing = false;
-                              });
-                            }
-
+                        return followStatus.when(
+                          data: (isFollowed) {
                             return Padding(
                               padding: EdgeInsets.symmetric(
                                 vertical: height * 0.01,
                               ),
-                              child: currentUser.id == userData.id
-                                  ? SizedBox()
-                                  : isLoading
-                                  ? Center(child: CircularProgressIndicator())
-                                  : CustomWideButton(
-                                      text: isFollowing
-                                          ? "Remove Friend"
-                                          : "Add Friend",
-                                      backgroundColor: Theme.of(
-                                        context,
-                                      ).primaryColor,
-                                      textColor: Colors.black,
-                                      onPressed: isFollowing
-                                          ? _unfollowUser
-                                          : _followUser,
-                                    ),
+                              child: CustomWideButton(
+                                backgroundColor: theme.primaryColor,
+                                text: isFollowed
+                                    ? "Remove friend"
+                                    : "Add Friend",
+
+                                onPressed: () async {
+                                  if (isFollowed) {
+                                    await userRepo.unfollowUser(
+                                      currentUser?.id ?? '',
+                                      userId,
+                                    );
+                                  } else {
+                                    await userRepo.followUser(
+                                      currentUser?.id ?? '',
+                                      userId,
+                                    );
+                                  }
+
+                                  // refresh the provider so UI updates
+                                  ref.invalidate(followStatusProvider(userId));
+                                },
+                              ),
                             );
                           },
+                          loading: () => CircularProgressIndicator(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          error: (e, _) => Icon(Icons.error, color: Colors.red),
                         );
                       },
                     ),
