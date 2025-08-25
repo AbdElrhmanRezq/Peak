@@ -179,17 +179,17 @@ class PublicProfileScreen extends ConsumerWidget {
                           color: Theme.of(context).colorScheme.secondary,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pushNamed(
-                              "friends_screen",
-                              arguments: {'userId': userData.id},
-                            );
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Column(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pushNamed(
+                                  "friends_screen",
+                                  arguments: {'userId': userData.id},
+                                );
+                              },
+                              child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   //Make here logic
@@ -211,7 +211,15 @@ class PublicProfileScreen extends ConsumerWidget {
                                   Text("Followers"),
                                 ],
                               ),
-                              Column(
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pushNamed(
+                                  "friends_screen",
+                                  arguments: {'userId': userData.id},
+                                );
+                              },
+                              child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   FutureBuilder<List<UserModel>>(
@@ -232,38 +240,45 @@ class PublicProfileScreen extends ConsumerWidget {
                                   Text("Following"),
                                 ],
                               ),
-                              workoutsAsync.when(
-                                data: (workouts) {
-                                  if (workouts.isEmpty) {
-                                    return Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-
-                                      children: [Text('0'), Text("Workouts")],
-                                    );
-                                  }
+                            ),
+                            workoutsAsync.when(
+                              data: (workouts) {
+                                if (workouts.isEmpty) {
                                   return Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+
+                                    children: [Text('0'), Text("Workouts")],
+                                  );
+                                }
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed(
+                                      'user_workouts_screen',
+                                      arguments: workouts,
+                                    );
+                                  },
+                                  child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
 
                                     children: [
                                       Text(workouts.length.toString()),
                                       Text("Workouts"),
                                     ],
-                                  );
-                                },
-                                loading: () => const Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(16.0),
-                                    child: CircularProgressIndicator(),
                                   ),
-                                ),
-                                error: (err, stack) => Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Text('Error: $err'),
+                                );
+                              },
+                              loading: () => const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: CircularProgressIndicator(),
                                 ),
                               ),
-                            ],
-                          ),
+                              error: (err, stack) => Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text('Error: $err'),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
