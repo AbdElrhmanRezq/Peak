@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repx/data/models/user_model.dart';
 import 'package:repx/data/providers/auth_providers.dart';
 import 'package:repx/data/providers/user_data_provider.dart';
+import 'package:repx/presentation/widgets/custom_profile_cards.dart';
 import 'package:repx/presentation/widgets/custom_wide_button.dart';
 
 class PublicProfileScreen extends ConsumerWidget {
@@ -230,68 +231,7 @@ class PublicProfileScreen extends ConsumerWidget {
                       ),
                     ),
 
-                    // Age, Weight, Height
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: height * 0.01),
-                      child: Container(
-                        height: height * 0.1,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.secondary,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [Text('${userData.age}'), Text("Age")],
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text('${userData.weight}'),
-                                Text("Weight"),
-                              ],
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text('${userData.height}'),
-                                Text("Height"),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    // Streak & EXP
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: height * 0.01),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _buildStatCard(
-                            width,
-                            height,
-                            Theme.of(context).colorScheme.secondary,
-                            'assets/icons/burn.png',
-                            '${userData.streak}',
-                            "Streak",
-                          ),
-                          _buildStatCard(
-                            width,
-                            height,
-                            Theme.of(context).colorScheme.secondary,
-                            'assets/icons/flash.png',
-                            '${userData.exp}',
-                            "Experience",
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // (Optional) Follow/Unfollow Button here
+                    CustomProfileCards(userData: userData),
                   ],
                 ),
               ),
@@ -299,39 +239,6 @@ class PublicProfileScreen extends ConsumerWidget {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildStatCard(
-    double width,
-    double height,
-    Color color,
-    String iconPath,
-    String value,
-    String label,
-  ) {
-    return Container(
-      width: width * 0.42,
-      height: height * 0.08,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Image.asset(
-            iconPath,
-            width: 24,
-            height: 24,
-            color: Color(0xFFd1fc3e),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [Text(value), Text(label)],
-          ),
-        ],
-      ),
     );
   }
 }

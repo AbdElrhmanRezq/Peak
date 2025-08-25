@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repx/data/models/user_model.dart';
 import 'package:repx/data/providers/user_data_provider.dart';
 import 'package:repx/presentation/widgets/custom_icon_button.dart';
+import 'package:repx/presentation/widgets/custom_profile_cards.dart';
 import 'package:repx/presentation/widgets/custom_wide_button.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -179,114 +180,7 @@ class ProfileScreen extends ConsumerWidget {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: height * 0.01,
-                          ),
-                          child: Container(
-                            height: height * 0.1,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.secondary,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text('${userData.age}'),
-                                    Text("Age"),
-                                  ],
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text('${userData.weight}'),
-                                    Text("Weight"),
-                                  ],
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text('${userData.height}'),
-                                    Text("Height"),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: height * 0.01,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                width: width * 0.42,
-                                height: height * 0.08,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.secondary,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Image.asset(
-                                      'assets/icons/burn.png',
-                                      color: Theme.of(context).primaryColor,
-                                      width: 24,
-                                      height: 24,
-                                    ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text('${userData.streak}'),
-                                        Text("Streak"),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                width: width * 0.42,
-                                height: height * 0.08,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.secondary,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Image.asset(
-                                      'assets/icons/flash.png',
-                                      color: Theme.of(context).primaryColor,
-                                      width: 24,
-                                      height: 24,
-                                    ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text('${userData.exp}'),
-                                        Text("Experience"),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        CustomProfileCards(userData: userData),
                       ],
                     ),
                   ),

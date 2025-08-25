@@ -26,6 +26,11 @@ class AppFonts {
     fontSize: 16,
     color: Colors.white,
   );
+  static const TextStyle bodySmall = TextStyle(
+    fontFamily: 'Viga',
+    fontSize: 12,
+    color: Colors.white,
+  );
 
   static const TextStyle label = TextStyle(
     fontFamily: 'Viga',

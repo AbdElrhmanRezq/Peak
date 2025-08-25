@@ -23,6 +23,7 @@ final ThemeData appTheme = ThemeData(
     labelSmall: AppFonts.label,
     headlineMedium: AppFonts.headingMedium,
     titleSmall: AppFonts.titleSmall,
+    bodySmall: AppFonts.bodySmall,
   ),
   primaryIconTheme: IconThemeData(color: Colors.white),
   inputDecorationTheme: const InputDecorationTheme(

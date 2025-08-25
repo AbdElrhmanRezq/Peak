@@ -4,7 +4,6 @@ class UserModel {
   final String? username;
   final String? gender;
   final int streak;
-  final int exp;
   final DateTime? createdAt;
   final int? weight;
   final int? height;
@@ -19,7 +18,6 @@ class UserModel {
     this.username,
     this.gender,
     this.streak = 0,
-    this.exp = 0,
     this.createdAt,
     this.weight,
     this.height,
@@ -36,7 +34,6 @@ class UserModel {
       username: json['username'],
       gender: json['gender'],
       streak: json['streak'] ?? 0,
-      exp: json['exp'] ?? 0,
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
           : null,
@@ -68,7 +65,6 @@ class UserModel {
       username: username ?? this.username,
       gender: gender ?? this.gender,
       streak: streak ?? this.streak,
-      exp: exp ?? this.exp,
       createdAt: createdAt ?? this.createdAt,
       weight: weight ?? this.weight,
       height: height ?? this.height,
@@ -86,7 +82,6 @@ class UserModel {
       'username': username,
       'gender': gender,
       'streak': streak,
-      'exp': exp,
       'created_at': createdAt?.toIso8601String(),
       'weight': weight,
       'height': height,
