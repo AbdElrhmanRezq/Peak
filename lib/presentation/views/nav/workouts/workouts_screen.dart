@@ -91,15 +91,26 @@ class WorkoutsScreen extends ConsumerWidget {
                                 overflow: TextOverflow.ellipsis,
                               ),
                               leading: Container(
-                                width: width * 0.1,
-                                height: height * 0.1,
-                                child: workout.imageUrl != null
-                                    ? Image.network(workout.imageUrl ?? ' ')
-                                    : Icon(
+                                width: width * 0.15,
+                                height: width * 0.15,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: workout.imageUrl != null
+                                      ? DecorationImage(
+                                          image: NetworkImage(
+                                            workout.imageUrl!,
+                                          ),
+                                          fit: BoxFit.cover,
+                                        )
+                                      : null,
+                                ),
+                                child: workout.imageUrl == null
+                                    ? Icon(
                                         Icons.fitness_center,
                                         size: height * 0.04,
                                         color: theme.primaryColor,
-                                      ),
+                                      )
+                                    : null,
                               ),
                               trailing: IconButton(
                                 onPressed: () {

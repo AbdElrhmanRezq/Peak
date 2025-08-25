@@ -264,6 +264,27 @@ class WorkoutsExplore extends ConsumerWidget {
                           arguments: {'workout': workout},
                         );
                       },
+                      leading: Container(
+                        width: width * 0.15,
+                        height: width * 0.15,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: workout.imageUrl != null
+                              ? DecorationImage(
+                                  image: NetworkImage(workout.imageUrl!),
+                                  fit: BoxFit.cover,
+                                )
+                              : null,
+                        ),
+                        child: workout.imageUrl == null
+                            ? Icon(
+                                Icons.fitness_center,
+                                size: height * 0.04,
+                                color: theme.primaryColor,
+                              )
+                            : null,
+                      ),
+
                       title: Text(
                         workout.title,
                         style: theme.textTheme.bodyMedium,
