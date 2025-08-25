@@ -5,6 +5,7 @@ class WorkoutModel {
   final String? description;
   final List<ExerciseModel> exercises;
   final int? id;
+  final int? stars;
   final String? uId;
   final String? imageUrl;
 
@@ -13,6 +14,7 @@ class WorkoutModel {
     this.description,
     required this.exercises,
     this.id,
+    this.stars,
     this.uId,
     this.imageUrl,
   });
@@ -25,6 +27,7 @@ class WorkoutModel {
           .map((e) => ExerciseModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       id: json['id'] as int?,
+      stars: json['stars'] as int?,
       uId: json['u_id'] as String?,
       imageUrl: json['image_url'] as String?,
     );

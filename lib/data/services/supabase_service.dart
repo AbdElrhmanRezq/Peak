@@ -243,7 +243,7 @@ class SupabaseService {
       final workoutsData = await supabase
           .from('workouts')
           .select()
-          //.order('starts', ascending: false)
+          .order('stars', ascending: false)
           .limit(10);
 
       final workouts = workoutsData
