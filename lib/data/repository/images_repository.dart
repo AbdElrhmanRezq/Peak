@@ -6,7 +6,7 @@ class ImagesRepository {
 
   Future<String> uploadProfileImage(CroppedFile file) async {
     try {
-      final imageUrl = await _service.uploadImage(file);
+      final imageUrl = await _service.uploadImage(file, 'profile');
       await _service.updateProfileImage(imageUrl);
       return imageUrl;
     } catch (e) {

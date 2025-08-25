@@ -349,7 +349,7 @@ class SupabaseService {
     }
   }
 
-  Future<String> uploadImage(CroppedFile file) async {
+  Future<String> uploadImage(CroppedFile file, String folder) async {
     try {
       final imageExtension = file.path.split('.').last.toLowerCase();
       final imageBytes = await file.readAsBytes();
@@ -360,7 +360,7 @@ class SupabaseService {
 
       // Upload to Supabase
       await supabase.storage
-          .from('profile')
+          .from('$folder')
           .uploadBinary(
             imagePath,
             imageBytes,
@@ -372,8 +372,7 @@ class SupabaseService {
 
       print('Image uploaded: $imagePath');
 
-      // ✅ Return public URL
-      return supabase.storage.from('profile').getPublicUrl(imagePath);
+      return supabase.storage.from('$folder').getPublicUrl(imagePath);
     } on PostgrestException catch (e) {
       print('PostgrestException: ${e.message}');
       throw e;

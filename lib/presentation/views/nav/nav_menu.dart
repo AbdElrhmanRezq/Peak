@@ -22,7 +22,6 @@ class NavMenu extends ConsumerWidget {
       const WorkoutsScreen(),
       const ExploreScreen(),
       const ProfileScreen(),
-      const Center(child: Text('Notifications Screen')),
     ];
 
     Widget navDest(IconData icon, int index) {
@@ -58,7 +57,6 @@ class NavMenu extends ConsumerWidget {
           navDest(Icons.fitness_center_rounded, 1),
           navDest(Icons.explore_rounded, 2),
           navDest(Icons.person_rounded, 3),
-          navDest(Icons.notifications_rounded, 4),
         ],
       ),
       body: screens[screenIndex],

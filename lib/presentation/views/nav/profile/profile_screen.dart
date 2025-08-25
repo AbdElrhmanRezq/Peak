@@ -34,7 +34,9 @@ class ProfileScreen extends ConsumerWidget {
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             image: userData.profilePictureUrl != null
-                                ? NetworkImage(userData.profilePictureUrl!)
+                                ? NetworkImage(
+                                    '${userData.profilePictureUrl!}?v=${DateTime.now().millisecondsSinceEpoch}',
+                                  )
                                 : const AssetImage(
                                     'assets/images/profile/pro4.jpeg',
                                   ),

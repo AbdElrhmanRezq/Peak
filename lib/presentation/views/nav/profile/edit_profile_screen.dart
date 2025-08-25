@@ -18,7 +18,6 @@ class EditProfileScreen extends ConsumerWidget {
     final userRepo = ref.watch(userRepositoryProvider);
 
     final userNameController = TextEditingController();
-    final weightController = TextEditingController();
     final heightController = TextEditingController();
     final ageController = TextEditingController();
     final genderController = TextEditingController();
@@ -27,9 +26,6 @@ class EditProfileScreen extends ConsumerWidget {
 
     Future<void> updateData() async {
       ref.read(isLoadingProvider.notifier).state = true;
-      print(
-        'Updating user data... ${userNameController.text}=============================',
-      );
       try {
         final currentUser = user.value;
         if (currentUser == null) throw Exception('User data not loaded');
@@ -40,7 +36,6 @@ class EditProfileScreen extends ConsumerWidget {
               ? userNameController.text
               : null,
           name: nameController.text.trim(),
-          weight: int.tryParse(weightController.text),
           height: int.tryParse(heightController.text),
           age: int.tryParse(ageController.text),
           gender: genderController.text.isNotEmpty
@@ -67,7 +62,6 @@ class EditProfileScreen extends ConsumerWidget {
     return user.when(
       data: (userData) {
         userNameController.text = userData.username ?? '';
-        weightController.text = userData.weight?.toString() ?? '';
         heightController.text = userData.height?.toString() ?? '';
         ageController.text = userData.age?.toString() ?? '';
         genderController.text = userData.gender ?? '';
@@ -103,13 +97,6 @@ class EditProfileScreen extends ConsumerWidget {
                   CustomTextField(
                     labelText: 'Name',
                     controller: nameController,
-                    width: width * 0.9,
-                  ),
-                  SizedBox(height: 16),
-
-                  CustomTextField(
-                    labelText: 'Weight (kg)',
-                    controller: weightController,
                     width: width * 0.9,
                   ),
                   SizedBox(height: 16),
