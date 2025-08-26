@@ -40,6 +40,7 @@ class _CreateWorkoutScreenState extends ConsumerState<CreateWorkoutScreen> {
         ),
       );
       ref.invalidate(workoutsProvider);
+      ref.invalidate(selectedExercisesProvider);
     } catch (e) {
       ScaffoldMessenger.of(
         context,

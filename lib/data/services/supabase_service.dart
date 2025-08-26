@@ -238,13 +238,17 @@ class SupabaseService {
     }
   }
 
-  Future<List<WorkoutModel>> getPopularWorkouts() async {
+  Future<List<WorkoutModel>> getPopularWorkouts({
+    int limit = 5,
+    int page = 1,
+  }) async {
     try {
+      int offset = limit * (page - 1);
       final workoutsData = await supabase
           .from('workouts')
           .select()
           .order('stars', ascending: false)
-          .limit(10);
+          .limit(limit);
 
       final workouts = workoutsData
           .map((w) => WorkoutModel.fromJson(w))

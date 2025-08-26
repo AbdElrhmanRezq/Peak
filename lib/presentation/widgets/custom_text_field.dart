@@ -30,7 +30,7 @@ class CustomTextField extends StatelessWidget {
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(
-              color: const Color.fromARGB(255, 196, 195, 195),
+              color: Theme.of(context).colorScheme.secondary,
               width: 2,
             ),
           ),
@@ -43,7 +43,6 @@ class CustomTextField extends StatelessWidget {
           ),
         ),
         controller: controller,
-        keyboardType: TextInputType.number,
         onChanged: onChanged,
       ),
     );
