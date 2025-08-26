@@ -53,45 +53,48 @@ class CustomProfileCards extends StatelessWidget {
               color: theme.colorScheme.secondary,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Icon(
-                      Icons.cake, // Age icon
-                      size: height * 0.04,
-                      color: theme.primaryColor,
-                    ),
-                    Text('${userData.age} Y/O'),
-                  ],
-                ),
-                SizedBox(width: 8.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Icon(
-                      Icons.monitor_weight, // Weight icon
-                      size: height * 0.04,
-                      color: theme.primaryColor,
-                    ),
-                    Text('${userData.weight} KG'),
-                  ],
-                ),
-                SizedBox(width: 8.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Icon(
-                      Icons.height, // Height icon
-                      size: height * 0.04,
-                      color: theme.primaryColor,
-                    ),
-                    Text('${userData.height} CM'),
-                  ],
-                ),
-              ],
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Icon(
+                        Icons.cake, // Age icon
+                        size: height * 0.04,
+                        color: theme.primaryColor,
+                      ),
+                      Text('${userData.age} Y/O'),
+                    ],
+                  ),
+                  SizedBox(width: 8.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Icon(
+                        Icons.monitor_weight, // Weight icon
+                        size: height * 0.04,
+                        color: theme.primaryColor,
+                      ),
+                      Text('${userData.weight} KG'),
+                    ],
+                  ),
+                  SizedBox(width: 8.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Icon(
+                        Icons.height, // Height icon
+                        size: height * 0.04,
+                        color: theme.primaryColor,
+                      ),
+                      Text('${userData.height} CM'),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],
