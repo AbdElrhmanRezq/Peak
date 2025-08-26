@@ -42,6 +42,11 @@ final ThemeData appTheme = ThemeData(
     ),
   ),
   iconTheme: const IconThemeData(color: Colors.white),
-  appBarTheme: AppBarTheme(iconTheme: IconThemeData(color: Colors.white)),
+  appBarTheme: AppBarTheme(
+    iconTheme: IconThemeData(color: Colors.white),
+    color: const Color(0xFF1d1d1e),
+    elevation: 0,
+    scrolledUnderElevation: 0,
+  ),
   useMaterial3: true,
 );

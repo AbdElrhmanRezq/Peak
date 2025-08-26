@@ -33,7 +33,7 @@ class WorkoutsScreen extends ConsumerWidget {
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         centerTitle: true,
-        backgroundColor: Colors.transparent,
+        backgroundColor: theme.scaffoldBackgroundColor,
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
