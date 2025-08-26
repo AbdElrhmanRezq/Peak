@@ -40,7 +40,6 @@ class WorkoutDetailsScreen extends ConsumerWidget {
     final WorkoutsRepository workoutRep = WorkoutsRepository();
 
     final List<SetModel> changedSets = ref.watch(changedSetsProvider);
-    final List<SetModel> deletedSets = ref.watch(deletedSetsProvider);
 
     return workoutsAsync.when(
       data: (workouts) {
@@ -85,6 +84,7 @@ class WorkoutDetailsScreen extends ConsumerWidget {
                   if (changedSets.isNotEmpty) {
                     try {
                       await workoutRep.updateSets(changedSets);
+                      ref.invalidate(changedSetsProvider);
                       ScaffoldMessenger.of(
                         context,
                       ).showSnackBar(SnackBar(content: Text('Saved')));

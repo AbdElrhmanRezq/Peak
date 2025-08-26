@@ -74,45 +74,53 @@ class HomeScreen extends ConsumerWidget {
                     height: height * 0.25,
                     color: theme.colorScheme.secondary,
                     child: Center(
-                      child: Container(
-                        width: width * 0.8,
-                        height: height * 0.15,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: theme.scaffoldBackgroundColor,
-                        ),
-                        child: Center(
-                          child: Row(
-                            children: [
-                              Container(
-                                width: width * 0.45,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Today's workout",
-                                      style: TextStyle(
-                                        color: theme.primaryColor,
-                                        fontSize: 20,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(
+                            'workouts_screen',
+                            arguments: {'choosing': true},
+                          );
+                        },
+                        child: Container(
+                          width: width * 0.8,
+                          height: height * 0.15,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: theme.scaffoldBackgroundColor,
+                          ),
+                          child: Center(
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: width * 0.45,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Today's workout",
+                                        style: TextStyle(
+                                          color: theme.primaryColor,
+                                          fontSize: 20,
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      "Workout",
-                                      style: theme.textTheme.bodyMedium,
-                                    ),
-                                  ],
+                                      Text(
+                                        "Workout",
+                                        style: theme.textTheme.bodyMedium,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Image.asset(
-                                  height: height * 0.15,
-                                  width: width * 0.35,
-                                  'assets/images/start.gif',
-                                  fit: BoxFit.fitWidth,
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.asset(
+                                    height: height * 0.15,
+                                    width: width * 0.35,
+                                    'assets/images/start.gif',
+                                    fit: BoxFit.fitWidth,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),

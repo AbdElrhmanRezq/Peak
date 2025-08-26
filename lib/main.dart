@@ -23,6 +23,8 @@ import 'package:repx/presentation/views/nav/workouts/search_exercise_screen.dart
 import 'package:repx/presentation/views/nav/workouts/select_exercises_screen.dart';
 import 'package:repx/presentation/views/nav/workouts/workout_details_screen.dart';
 import 'package:repx/presentation/views/initial_screen.dart';
+import 'package:repx/presentation/views/nav/workouts/workout_session_screen.dart';
+import 'package:repx/presentation/views/nav/workouts/workouts_screen.dart';
 import 'package:repx/presentation/views/splash/splash_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -72,6 +74,8 @@ class Repx extends StatelessWidget {
         WorkoutDetailsScreen.id: (context) => WorkoutDetailsScreen(),
         PublicWorkoutScreen.id: (context) => PublicWorkoutScreen(),
         UserWorkoutsScreen.id: (context) => UserWorkoutsScreen(),
+        WorkoutSessionScreen.id: (context) => const WorkoutSessionScreen(),
+        WorkoutsScreen.id: (context) => const WorkoutsScreen(),
       },
       debugShowCheckedModeBanner: false,
     );

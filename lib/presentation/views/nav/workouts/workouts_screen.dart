@@ -9,6 +9,7 @@ import 'package:repx/data/repository/workouts_repository.dart';
 import 'package:repx/presentation/widgets/custom_icon_text_button.dart';
 
 class WorkoutsScreen extends ConsumerWidget {
+  static const String id = 'workouts_screen';
   const WorkoutsScreen({super.key});
 
   @override
@@ -25,6 +26,11 @@ class WorkoutsScreen extends ConsumerWidget {
     final currentUser = authRepo.currentUser;
 
     final workoutsAsync = ref.watch(workoutsProvider(currentUser?.id ?? ''));
+
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
+    final choosing = args?['choosing'] ?? false;
 
     return Scaffold(
       appBar: AppBar(
@@ -81,10 +87,15 @@ class WorkoutsScreen extends ConsumerWidget {
                           child: Center(
                             child: ListTile(
                               onTap: () {
-                                Navigator.of(context).pushNamed(
-                                  'workout_details_screen',
-                                  arguments: index,
-                                );
+                                choosing == false
+                                    ? Navigator.of(context).pushNamed(
+                                        'workout_details_screen',
+                                        arguments: index,
+                                      )
+                                    : Navigator.of(context).pushNamed(
+                                        'workout_session_screen',
+                                        arguments: {'workout': workout},
+                                      );
                               },
                               title: Text(
                                 workout.title,

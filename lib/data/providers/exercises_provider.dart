@@ -78,3 +78,5 @@ final searchedExercisesProvider =
     });
 
 final workoutLoadingProvider = StateProvider<bool>((ref) => false);
+
+final exercisesIndexProvider = StateProvider<int>((ref) => 0);

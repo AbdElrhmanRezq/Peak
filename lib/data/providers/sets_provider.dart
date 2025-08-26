@@ -10,6 +10,12 @@ class SetsNotifier extends StateNotifier<List<SetModel>> {
     }
   }
 
+  void removeSet(SetModel set) {
+    if (state.contains(set)) {
+      state = state.where((s) => s != set).toList();
+    }
+  }
+
   void clear() {
     state = [];
   }
