@@ -44,4 +44,10 @@ class AppFonts {
     fontWeight: FontWeight.w300,
     color: Color(0xFFd1fc3e),
   );
+  static const TextStyle titleMedium = TextStyle(
+    fontFamily: 'Viga',
+    fontSize: 16,
+    fontWeight: FontWeight.w300,
+    color: Color(0xFFd1fc3e),
+  );
 }

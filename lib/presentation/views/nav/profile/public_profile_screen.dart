@@ -4,6 +4,7 @@ import 'package:repx/data/models/user_model.dart';
 import 'package:repx/data/providers/auth_providers.dart';
 import 'package:repx/data/providers/user_data_provider.dart';
 import 'package:repx/data/providers/workouts_provider.dart';
+import 'package:repx/presentation/widgets/bubble_row.dart';
 import 'package:repx/presentation/widgets/custom_profile_cards.dart';
 import 'package:repx/presentation/widgets/custom_wide_button.dart';
 
@@ -50,6 +51,7 @@ class PublicProfileScreen extends ConsumerWidget {
         final followers = userRepo.getUserFollowers(userData.id);
         final following = userRepo.getUserFollowings(userData.id);
         final workoutsAsync = ref.watch(workoutsProvider(userData.id));
+        final friendsAsync = ref.watch(friendsProvider(userData.id));
 
         return Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -108,15 +110,15 @@ class PublicProfileScreen extends ConsumerWidget {
                       children: [
                         Text(
                           userData.username ?? '',
-                          style: Theme.of(context).textTheme.bodyMedium,
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
                         Text(
                           '•',
-                          style: Theme.of(context).textTheme.bodyMedium,
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
                         Text(
                           'Joined at: ${userData.createdAt?.year ?? 'N/A'}/${userData.createdAt?.month ?? 'N/A'}/${userData.createdAt?.day ?? 'N/A'}',
-                          style: Theme.of(context).textTheme.bodyMedium,
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ],
                     ),
@@ -177,70 +179,11 @@ class PublicProfileScreen extends ConsumerWidget {
                         height: height * 0.1,
                         decoration: BoxDecoration(
                           color: Theme.of(context).colorScheme.secondary,
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).pushNamed(
-                                  "friends_screen",
-                                  arguments: {'userId': userData.id},
-                                );
-                              },
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  //Make here logic
-                                  FutureBuilder<List<UserModel>>(
-                                    future: followers,
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return CircularProgressIndicator();
-                                      } else if (snapshot.hasError) {
-                                        return Text('Error');
-                                      } else {
-                                        return Text(
-                                          '${snapshot.data?.length ?? 0}',
-                                        );
-                                      }
-                                    },
-                                  ),
-                                  Text("Followers"),
-                                ],
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).pushNamed(
-                                  "friends_screen",
-                                  arguments: {'userId': userData.id},
-                                );
-                              },
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  FutureBuilder<List<UserModel>>(
-                                    future: following,
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return CircularProgressIndicator();
-                                      } else if (snapshot.hasError) {
-                                        return Text('Error');
-                                      } else {
-                                        return Text(
-                                          '${snapshot.data?.length ?? 0}',
-                                        );
-                                      }
-                                    },
-                                  ),
-                                  Text("Following"),
-                                ],
-                              ),
-                            ),
                             workoutsAsync.when(
                               data: (workouts) {
                                 if (workouts.isEmpty) {
@@ -283,7 +226,42 @@ class PublicProfileScreen extends ConsumerWidget {
                       ),
                     ),
 
-                    CustomProfileCards(userData: userData),
+                    Text("Friends", style: theme.textTheme.headlineMedium),
+                    friendsAsync.when(
+                      data: (friends) {
+                        if (friends.isEmpty) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [Text('0'), Text("Friends")],
+                          );
+                        }
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                              'friends_screen',
+                              arguments: {'userId': userData.id},
+                            );
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: height * 0.01,
+                            ),
+                            child: BubbleRow(friends: friends),
+                          ),
+                        );
+                      },
+                      loading: () => const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                      error: (err, stack) => Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text('Error: $err'),
+                      ),
+                    ),
+                    //CustomProfileCards(userData: userData),
                   ],
                 ),
               ),

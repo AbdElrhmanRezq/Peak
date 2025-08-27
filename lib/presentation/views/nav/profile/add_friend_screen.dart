@@ -125,7 +125,7 @@ class AddFriendScreen extends ConsumerWidget {
                               child: ListTile(
                                 onTap: () {
                                   Navigator.of(context).pushNamed(
-                                    'public_profile_screen',
+                                    'profile_screen',
                                     arguments: {
                                       'userId': foundUsers[index]?.id,
                                     },

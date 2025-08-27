@@ -24,6 +24,7 @@ final ThemeData appTheme = ThemeData(
     headlineMedium: AppFonts.headingMedium,
     titleSmall: AppFonts.titleSmall,
     bodySmall: AppFonts.bodySmall,
+    titleMedium: AppFonts.titleMedium,
   ),
   primaryIconTheme: IconThemeData(color: Colors.white),
   inputDecorationTheme: const InputDecorationTheme(

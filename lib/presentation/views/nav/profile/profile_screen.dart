@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:repx/data/models/user_model.dart';
+import 'package:repx/data/providers/auth_providers.dart';
 import 'package:repx/data/providers/user_data_provider.dart';
-import 'package:repx/presentation/widgets/custom_icon_button.dart';
-import 'package:repx/presentation/widgets/custom_profile_cards.dart';
-import 'package:repx/presentation/widgets/custom_wide_button.dart';
+import 'package:repx/data/providers/workouts_provider.dart';
+import 'package:repx/presentation/widgets/bubble_row.dart';
 
 class ProfileScreen extends ConsumerWidget {
   static const String id = 'profile_screen';
@@ -14,185 +13,312 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    final theme = Theme.of(context);
 
-    final user = ref.watch(userDataProvider);
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final userId = args != null ? args['userId'] as String? : null;
+
+    final authRepo = ref.watch(authRepositoryProvider);
+
+    final currentUser = authRepo.currentUser;
+
+    final userAsync = ref.watch(profileUserProvider(userId));
+
     final userRepo = ref.watch(userRepositoryProvider);
 
-    return user.when(
+    return userAsync.when(
       data: (userData) {
-        final followers = userRepo.getUserFollowers(userData.id);
-        final following = userRepo.getUserFollowings(userData.id);
-        return Stack(
-          children: [
-            Scaffold(
-              backgroundColor: Colors.transparent,
-              body: ListView(
-                children: [
-                  Stack(
-                    children: [
-                      Container(
-                        height: height * 0.4,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: userData.profilePictureUrl != null
-                                ? NetworkImage(
-                                    '${userData.profilePictureUrl!}?v=${DateTime.now().millisecondsSinceEpoch}',
-                                  )
-                                : const AssetImage(
-                                    'assets/images/profile/pro4.jpeg',
-                                  ),
-                            fit: BoxFit.cover,
-                            alignment: Alignment.topCenter,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 16, // spacing from top
-                        right: 16, // spacing from right
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.of(
-                              context,
-                            ).pushNamed('profile_settings_screen');
-                          },
-                          icon: Icon(
-                            Icons.settings,
-                            size: 36,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+        final friendsAsync = ref.watch(friendsProvider(userData.id));
+        final workoutsAsync = ref.watch(workoutsProvider(userData.id));
 
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: width * 0.06,
-                      vertical: height * 0.03,
+        return Scaffold(
+          backgroundColor: theme.scaffoldBackgroundColor,
+          body: ListView(
+            children: [
+              Stack(
+                children: [
+                  Container(
+                    height: height * 0.4,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: userData.profilePictureUrl != null
+                            ? NetworkImage(
+                                '${userData.profilePictureUrl!}?v=${DateTime.now().millisecondsSinceEpoch}',
+                              )
+                            : const AssetImage(
+                                'assets/images/profile/pro4.jpeg',
+                              ),
+                        fit: BoxFit.cover,
+                        alignment: Alignment.topCenter,
+                      ),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                  currentUser?.id == userData.id
+                      ? Positioned(
+                          top: 16,
+                          right: 16,
+                          child: IconButton(
+                            onPressed: () {
+                              Navigator.of(
+                                context,
+                              ).pushNamed('profile_settings_screen');
+                            },
+                            icon: const Icon(
+                              Icons.settings,
+                              size: 36,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
+                  currentUser?.id != userData.id
+                      ? Positioned(
+                          top: 16,
+                          left: 16,
+                          child: IconButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            icon: const Icon(
+                              Icons.arrow_back,
+                              size: 36,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
+                ],
+              ),
+
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: width * 0.06,
+                  vertical: height * 0.03,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          userData.name ?? 'N/A',
-                          style: Theme.of(context).textTheme.headlineLarge,
-                        ),
-                        Wrap(
-                          spacing: 4.0, // space between items
-                          runSpacing: 4.0, // space between lines
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+
                           children: [
                             Text(
-                              userData.username ?? '',
-                              style: Theme.of(context).textTheme.bodyMedium,
+                              userData.name ?? 'N/A',
+                              style: theme.textTheme.headlineLarge,
                             ),
-                            Text(
-                              '•',
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                            Text(
-                              'Joined at: ${userData.createdAt?.year ?? 'N/A'}/${userData.createdAt?.month ?? 'N/A'}/${userData.createdAt?.day ?? 'N/A'}',
-                              style: Theme.of(context).textTheme.bodyMedium,
+                            Wrap(
+                              spacing: 4.0,
+                              runSpacing: 4.0,
+                              children: [
+                                Text(
+                                  userData.username ?? '',
+                                  style: theme.textTheme.titleMedium,
+                                ),
+                                Text('•', style: theme.textTheme.titleMedium),
+                                Text(
+                                  'Joined at: ${userData.createdAt?.year ?? 'N/A'}/${userData.createdAt?.month ?? 'N/A'}/${userData.createdAt?.day ?? 'N/A'}',
+                                  style: theme.textTheme.titleMedium,
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: height * 0.01,
-                          ),
-                          child: Container(
-                            height: height * 0.1,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.secondary,
-                              borderRadius: BorderRadius.circular(10),
+                        currentUser?.id != userData.id
+                            ? Consumer(
+                                builder: (context, ref, _) {
+                                  final followStatus = ref.watch(
+                                    followStatusProvider(userId ?? ''),
+                                  );
+
+                                  return followStatus.when(
+                                    data: (isFollowed) {
+                                      return CircleAvatar(
+                                        backgroundColor: theme.primaryColor,
+                                        child: IconButton(
+                                          onPressed: () async {
+                                            if (isFollowed) {
+                                              await userRepo.unfollowUser(
+                                                currentUser?.id ?? '',
+                                                userId ?? '',
+                                              );
+                                            } else {
+                                              await userRepo.followUser(
+                                                currentUser?.id ?? '',
+                                                userId ?? ' ',
+                                              );
+                                            }
+
+                                            // refresh the provider so UI updates
+                                            ref.invalidate(
+                                              followStatusProvider(
+                                                userId ?? ' ',
+                                              ),
+                                            );
+                                          },
+                                          icon: isFollowed
+                                              ? Icon(Icons.check)
+                                              : Icon(Icons.person_add),
+                                        ),
+                                      );
+                                    },
+                                    loading: () => CircularProgressIndicator(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                    error: (e, _) =>
+                                        Icon(Icons.error, color: Colors.red),
+                                  );
+                                },
+                              )
+                            : SizedBox(),
+                      ],
+                    ),
+
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: height * 0.01),
+                      child: Container(
+                        height: height * 0.1,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.secondary,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(userData.streak.toString()),
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/icons/burn.png',
+                                      color: userData.streak > 0
+                                          ? theme.primaryColor
+                                          : Colors.white,
+                                      height: height * 0.03,
+                                    ),
+                                    Text(
+                                      " Streak",
+                                      style: TextStyle(
+                                        color: userData.streak > 0
+                                            ? theme.primaryColor
+                                            : Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).pushNamed(
-                                  "friends_screen",
-                                  arguments: {'userId': userData.id},
-                                );
-                              },
-                              child: Row(
+                            VerticalDivider(
+                              color: theme.scaffoldBackgroundColor,
+                              width: width * 0.01,
+                              indent: 8,
+                              endIndent: 8,
+                              radius: BorderRadius.circular(12),
+                            ),
+                            workoutsAsync.when(
+                              data: (workouts) => Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      FutureBuilder<List<UserModel>>(
-                                        future: followers,
-                                        builder: (context, snapshot) {
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.waiting) {
-                                            return CircularProgressIndicator();
-                                          } else if (snapshot.hasError) {
-                                            return Text(
-                                              'Error: ${snapshot.error}',
-                                            );
-                                          } else {
-                                            return Text(
-                                              '${snapshot.data?.length ?? 0}',
-                                            );
-                                          }
-                                        },
-                                      ),
-                                      Text("Followers"),
-                                    ],
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      FutureBuilder<List<UserModel>>(
-                                        future: following,
-                                        builder: (context, snapshot) {
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.waiting) {
-                                            return CircularProgressIndicator();
-                                          } else if (snapshot.hasError) {
-                                            return Text(
-                                              'Error: ${snapshot.error}',
-                                            );
-                                          } else {
-                                            return Text(
-                                              '${snapshot.data?.length ?? 0}',
-                                            );
-                                          }
-                                        },
-                                      ),
-                                      Text("Following"),
-                                    ],
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.of(
-                                        context,
-                                      ).pushNamed('add_friends_screen');
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Theme.of(
-                                        context,
-                                      ).primaryColor,
+                                  Text(workouts.length.toString()),
+                                  Text(
+                                    "Workouts",
+                                    style: TextStyle(
+                                      color: userData.streak > 0
+                                          ? theme.primaryColor
+                                          : Colors.white,
                                     ),
-                                    child: Text("Add Friends"),
                                   ),
                                 ],
                               ),
+                              loading: () => const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                              error: (err, stack) => Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text('Error: $err'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: height * 0.02),
+                      child: Text(
+                        "Friends",
+                        style: theme.textTheme.headlineMedium,
+                      ),
+                    ),
+                    friendsAsync.when(
+                      data: (friends) {
+                        if (friends.isEmpty) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [Text('0'), Text("Friends")],
+                          );
+                        }
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                              'friends_screen',
+                              arguments: {'userId': userData.id},
+                            );
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: height * 0.01,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                BubbleRow(friends: friends),
+                                currentUser?.id == userData.id
+                                    ? CircleAvatar(
+                                        backgroundColor: theme.primaryColor,
+                                        child: IconButton(
+                                          onPressed: () {
+                                            Navigator.of(
+                                              context,
+                                            ).pushNamed("add_friends_screen");
+                                          },
+                                          icon: Icon(Icons.person_add),
+                                        ),
+                                      )
+                                    : SizedBox(),
+                              ],
                             ),
                           ),
+                        );
+                      },
+                      loading: () => const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: CircularProgressIndicator(),
                         ),
-                        CustomProfileCards(userData: userData),
-                      ],
+                      ),
+                      error: (err, stack) => Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text('Error: $err'),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
-      loading: () => Center(
-        child: CircularProgressIndicator(color: Theme.of(context).primaryColor),
-      ),
+      loading: () =>
+          Center(child: CircularProgressIndicator(color: theme.primaryColor)),
       error: (error, stack) => Text('Error: $error'),
     );
   }

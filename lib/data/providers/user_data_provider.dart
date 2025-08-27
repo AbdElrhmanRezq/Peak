@@ -52,3 +52,42 @@ final followStatusProvider = FutureProvider.family<bool, String>((
 });
 
 final searchTextProvider = StateProvider<String>((ref) => "");
+
+final profileUserProvider = FutureProvider.family<UserModel, String?>((
+  ref,
+  userId,
+) async {
+  final repo = ref.watch(userRepositoryProvider);
+
+  if (userId == null) {
+    final currentUser = ref.watch(currentUserProvider);
+    if (currentUser == null) throw Exception("No logged-in user found");
+
+    final user = await repo.getUserById(currentUser.id);
+    if (user == null) throw Exception("User not found");
+    return user;
+  } else {
+    final user = await repo.getUserById(userId);
+    if (user == null) throw Exception("User not found");
+    return user;
+  }
+});
+
+final friendsProvider = FutureProvider.family<List<UserModel>, String>((
+  ref,
+  userId,
+) async {
+  final userRepo = ref.watch(userRepositoryProvider);
+  final userFollowers = await userRepo.getUserFollowers(userId);
+  final userFollowings = await userRepo.getUserFollowings(userId);
+
+  Set<UserModel> friends = {};
+  friends.addAll(userFollowers);
+  friends.addAll(userFollowings);
+
+  if (friends.isEmpty) {
+    throw Exception('No friends found');
+  }
+
+  return friends.toList();
+});
