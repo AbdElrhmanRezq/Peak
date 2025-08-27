@@ -121,7 +121,7 @@ class PublicWorkoutScreen extends ConsumerWidget {
                       child: GestureDetector(
                         onTap: () {
                           Navigator.of(context).pushNamed(
-                            'public_profile_screen',
+                            'profile_screen',
                             arguments: {'userId': user.id},
                           );
                         },
