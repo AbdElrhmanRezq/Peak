@@ -8,6 +8,7 @@ import 'package:repx/data/repository/workouts_repository.dart';
 import 'package:repx/presentation/widgets/custom_circular_button.dart';
 import 'package:repx/presentation/widgets/custom_exercises_grid.dart';
 import 'package:repx/presentation/widgets/custom_text_field.dart';
+import 'package:repx/presentation/widgets/workout_card.dart';
 
 class ExploreScreen extends StatefulWidget {
   static const id = 'explore_screen_id';
@@ -264,58 +265,11 @@ class WorkoutsExplore extends ConsumerWidget {
                           color: theme.colorScheme.secondary,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: ListTile(
-                          onTap: () {
-                            Navigator.of(context).pushNamed(
-                              'public_workout_screen',
-                              arguments: {'workout': workout},
-                            );
-                          },
-                          leading: Container(
-                            width: width * 0.15,
-                            height: width * 0.15,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: workout.imageUrl != null
-                                  ? DecorationImage(
-                                      image: NetworkImage(workout.imageUrl!),
-                                      fit: BoxFit.cover,
-                                    )
-                                  : null,
-                            ),
-                            child: workout.imageUrl == null
-                                ? Icon(
-                                    Icons.fitness_center,
-                                    size: height * 0.04,
-                                    color: theme.primaryColor,
-                                  )
-                                : null,
-                          ),
-
-                          title: Text(
-                            workout.title,
-                            style: theme.textTheme.headlineMedium,
-                          ),
-                          subtitle: Text(
-                            workout.description ?? '',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.star, color: theme.primaryColor),
-                              SizedBox(width: 10),
-                              starsAsync.when(
-                                data: (data) => Text(
-                                  '$data',
-                                  style: theme.textTheme.bodyMedium,
-                                ),
-                                error: (error, stack) => Text('Error: $error'),
-                                loading: () => CircularProgressIndicator(),
-                              ),
-                            ],
-                          ),
+                        child: WorkoutCard(
+                          workout: workout,
+                          index: index,
+                          showButtomSheet: () {},
+                          type: 'public',
                         ),
                       ),
                     );

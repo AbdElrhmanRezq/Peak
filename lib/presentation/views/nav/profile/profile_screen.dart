@@ -152,10 +152,14 @@ class ProfileScreen extends ConsumerWidget {
                                               );
                                             }
 
-                                            // refresh the provider so UI updates
                                             ref.invalidate(
                                               followStatusProvider(
                                                 userId ?? ' ',
+                                              ),
+                                            );
+                                            ref.invalidate(
+                                              friendsProvider(
+                                                currentUser?.id ?? ' ',
                                               ),
                                             );
                                           },

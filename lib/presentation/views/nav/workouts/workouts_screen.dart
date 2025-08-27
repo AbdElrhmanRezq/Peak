@@ -7,6 +7,7 @@ import 'package:repx/data/providers/workouts_provider.dart';
 import 'package:repx/data/repository/images_repository.dart';
 import 'package:repx/data/repository/workouts_repository.dart';
 import 'package:repx/presentation/widgets/custom_icon_text_button.dart';
+import 'package:repx/presentation/widgets/workout_card.dart';
 
 class WorkoutsScreen extends ConsumerWidget {
   static const String id = 'workouts_screen';
@@ -65,10 +66,7 @@ class WorkoutsScreen extends ConsumerWidget {
             workoutsAsync.when(
               data: (workouts) {
                 if (workouts.isEmpty) {
-                  return const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Text("No workouts found."),
-                  );
+                  return Text("No workouts found.");
                 }
                 return Expanded(
                   child: ListView.builder(
@@ -78,75 +76,31 @@ class WorkoutsScreen extends ConsumerWidget {
                       final workout = workouts[index];
                       return Padding(
                         padding: EdgeInsets.symmetric(vertical: height * 0.01),
-                        child: Container(
-                          height: height * 0.1,
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.secondary,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Center(
-                            child: ListTile(
-                              onTap: () {
-                                choosing == false
-                                    ? Navigator.of(context).pushNamed(
-                                        'workout_details_screen',
-                                        arguments: index,
-                                      )
-                                    : Navigator.of(context).pushNamed(
-                                        'workout_session_screen',
-                                        arguments: {'workout': workout},
-                                      );
-                              },
-                              title: Text(
-                                workout.title,
-                                style: theme.textTheme.headlineMedium,
-                              ),
-                              subtitle: Text(
-                                workout.description ?? '',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              leading: Container(
-                                width: width * 0.15,
-                                height: width * 0.15,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: workout.imageUrl != null
-                                      ? DecorationImage(
-                                          image: NetworkImage(
-                                            workout.imageUrl!,
-                                          ),
-                                          fit: BoxFit.cover,
-                                        )
-                                      : null,
-                                ),
-                                child: workout.imageUrl == null
-                                    ? Icon(
-                                        Icons.fitness_center,
-                                        size: height * 0.04,
-                                        color: theme.primaryColor,
-                                      )
-                                    : null,
-                              ),
-                              trailing: IconButton(
-                                onPressed: () {
-                                  showButtomSheetCustom(
-                                    ref,
-                                    context,
-                                    width,
-                                    height,
-                                    workoutsRep,
-                                    workout.id as int,
-                                  );
-                                },
-                                icon: Icon(
-                                  Icons.more_vert_rounded,
-                                  color: theme.primaryColor,
-                                ),
-                              ),
-                            ),
-                          ),
+                        child: WorkoutCard(
+                          index: index,
+                          workout: workout,
+                          choosing: choosing,
+                          showButtomSheet: () {
+                            showButtomSheetCustom(
+                              ref,
+                              context,
+                              width,
+                              height,
+                              workoutsRep,
+                              workout.id as int,
+                            );
+                          },
                         ),
+                        /*
+                        showButtomSheetCustom(
+                                            ref,
+                                            context,
+                                            width,
+                                            height,
+                                            workoutsRep,
+                                            workout.id as int,
+                                          );
+                        */
                       );
                     },
                   ),

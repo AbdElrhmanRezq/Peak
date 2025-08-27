@@ -204,6 +204,11 @@ class AddFriendScreen extends ConsumerWidget {
                                                       foundUsers[index]!.id,
                                                     ),
                                                   );
+                                                  ref.invalidate(
+                                                    friendsProvider(
+                                                      currentUser?.id ?? ' ',
+                                                    ),
+                                                  );
                                                 },
                                               );
                                             },
