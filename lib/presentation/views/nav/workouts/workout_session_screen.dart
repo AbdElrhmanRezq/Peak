@@ -91,7 +91,7 @@ class WorkoutSessionScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: theme.scaffoldBackgroundColor,
-        title: Text("Discard workout?", style: theme.textTheme.headlineSmall),
+        title: Text("Discard workout?", style: theme.textTheme.headlineMedium),
         content: Text(
           "Are you sure you want to discard this workout session? All unsaved changes will be lost.",
           style: theme.textTheme.bodyMedium,
@@ -173,7 +173,7 @@ class WorkoutSessionScreen extends ConsumerWidget {
 
         return Card(
           key: ValueKey("${workout.exercises[exerciseIndex].id}-$index"),
-          color: theme.colorScheme.secondaryContainer,
+          color: theme.colorScheme.secondary,
           margin: const EdgeInsets.symmetric(vertical: 6),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),

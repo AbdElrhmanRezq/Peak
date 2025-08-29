@@ -47,11 +47,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-
         children: [
+          // Top navigation buttons
           Padding(
             padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-            child: Container(
+            child: SizedBox(
               height: height * 0.04,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -61,6 +61,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     onPressed: () {
                       setState(() {
                         selectedPage = 'exercises';
+                        searchController.clear();
+                        searchQuery = '';
                       });
                     },
                     backgroundColor: selectedPage == 'exercises'
@@ -75,13 +77,15 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     text: "Workouts",
                     onPressed: () {
                       setState(() {
-                        selectedPage = 'Workouts';
+                        selectedPage = 'workouts';
+                        searchController.clear();
+                        searchQuery = '';
                       });
                     },
-                    backgroundColor: selectedPage == 'Workouts'
+                    backgroundColor: selectedPage == 'workouts'
                         ? Theme.of(context).primaryColor
                         : Theme.of(context).colorScheme.secondary,
-                    textColor: selectedPage == 'Workouts'
+                    textColor: selectedPage == 'workouts'
                         ? Colors.black
                         : Colors.white,
                   ),
@@ -90,6 +94,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
             ),
           ),
 
+          // Search bar for Exercises
           if (selectedPage == 'exercises')
             Padding(
               padding: EdgeInsets.symmetric(
@@ -108,6 +113,26 @@ class _ExploreScreenState extends State<ExploreScreen> {
               ),
             ),
 
+          // Search bar for Workouts
+          if (selectedPage == 'workouts')
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: width * 0.05,
+                vertical: height * 0.015,
+              ),
+              child: CustomTextField(
+                width: width * 0.9,
+                labelText: "Search Workouts",
+                controller: searchController,
+                onChanged: (value) {
+                  setState(() {
+                    searchQuery = value.trim();
+                  });
+                },
+              ),
+            ),
+
+          // Exercises section
           if (selectedPage == 'exercises' && searchQuery.isEmpty)
             BodyPartsGrid(apiRepository: apiRepository)
           else if (selectedPage == 'exercises' && searchQuery.isNotEmpty)
@@ -116,20 +141,20 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 future: apiRepository.getSearchedExercises(searchQuery),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Text('No data found');
+                    return const Center(child: Text('No exercises found'));
                   }
-
-                  final exercises = snapshot.data!;
-                  return CustomExercisesGrid(exercises: exercises);
+                  return CustomExercisesGrid(exercises: snapshot.data!);
                 },
               ),
             ),
 
-          if (selectedPage == 'Workouts') WorkoutsExplore(),
+          // Workouts section
+          if (selectedPage == 'workouts')
+            WorkoutsExplore(searchQuery: searchQuery),
         ],
       ),
     );
@@ -149,11 +174,11 @@ class BodyPartsGrid extends StatelessWidget {
         future: apiRepository.getTargetBodyParts(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Text('No data found');
+            return const Center(child: Text('No body parts found'));
           }
 
           final targets = snapshot.data!;
@@ -192,7 +217,7 @@ class BodyPartsGrid extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         targets[index].toUpperCase(),
                         style: Theme.of(context).textTheme.bodyMedium,
@@ -210,67 +235,91 @@ class BodyPartsGrid extends StatelessWidget {
 }
 
 class WorkoutsExplore extends ConsumerWidget {
-  const WorkoutsExplore({super.key});
+  final String searchQuery;
+  const WorkoutsExplore({required this.searchQuery, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mediaQuery = MediaQuery.of(context);
+    final theme = Theme.of(context);
 
     double height = mediaQuery.size.height;
     double width = mediaQuery.size.width;
 
     WorkoutsRepository workoutsRep = WorkoutsRepository();
 
-    final theme = Theme.of(context);
+    if (searchQuery.isNotEmpty) {
+      final searchedWorkoutsAsync = ref.watch(
+        searchedWorkoutsProvider(searchQuery),
+      );
+      return Expanded(
+        child: searchedWorkoutsAsync.when(
+          data: (workouts) {
+            if (workouts.isEmpty) {
+              return const Center(child: Text("No workouts found"));
+            }
+            return ListView.builder(
+              padding: EdgeInsets.symmetric(
+                horizontal: width * 0.05,
+                vertical: height * 0.02,
+              ),
+              itemCount: workouts.length,
+              itemBuilder: (context, index) {
+                final workout = workouts[index];
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: height * 0.01),
+                  child: WorkoutCard(
+                    workout: workout,
+                    index: index,
+                    showButtomSheet: () {},
+                    type: 'public',
+                  ),
+                );
+              },
+            );
+          },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (err, _) => Center(child: Text('Error: $err')),
+        ),
+      );
+    }
+
     return Expanded(
       child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: width * 0.05,
-          vertical: height * 0.03,
-        ),
+        padding: EdgeInsets.symmetric(horizontal: width * 0.05),
         child: ListView(
           children: [
             Text("Popular Workouts", style: theme.textTheme.headlineMedium),
-            FutureBuilder(
+            FutureBuilder<List<WorkoutModel>>(
               future: workoutsRep.getPopularWorkouts(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: height * 0.4),
-                      child: CircularProgressIndicator(),
+                      child: const CircularProgressIndicator(),
                     ),
                   );
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Text('No data found');
+                  return const Text('No workouts found');
                 }
 
                 final workouts = snapshot.data!;
                 return ListView.builder(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  scrollDirection: Axis.vertical,
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: workouts.length,
                   itemBuilder: (context, index) {
                     WorkoutModel workout = workouts[index];
-                    final starsAsync = ref.watch(
-                      staredCountProvider(workout.id ?? 0),
-                    );
                     return Padding(
                       padding: EdgeInsets.symmetric(vertical: height * 0.01),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.secondary,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: WorkoutCard(
-                          workout: workout,
-                          index: index,
-                          showButtomSheet: () {},
-                          type: 'public',
-                        ),
+                      child: WorkoutCard(
+                        workout: workout,
+                        index: index,
+                        showButtomSheet: () {},
+                        type: 'public',
                       ),
                     );
                   },

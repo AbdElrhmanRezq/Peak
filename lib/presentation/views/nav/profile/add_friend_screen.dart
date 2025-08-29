@@ -178,9 +178,8 @@ class AddFriendScreen extends ConsumerWidget {
                                               return IconButton(
                                                 icon: Icon(
                                                   isFollowed
-                                                      ? Icons.done_outline_sharp
-                                                      : Icons
-                                                            .group_add_outlined,
+                                                      ? Icons.check
+                                                      : Icons.person_add,
                                                   color: Theme.of(
                                                     context,
                                                   ).primaryColor,

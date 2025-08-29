@@ -191,4 +191,28 @@ class WorkoutsRepository {
       throw e;
     }
   }
+
+  Future<List<WorkoutModel>> searchWorkouts(String searchText) async {
+    try {
+      return await _service.searchWorkouts(searchText);
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
+
+  Future<void> addSet(int exerciseId) async {
+    try {
+      await _service.addSet(exerciseId);
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
 }

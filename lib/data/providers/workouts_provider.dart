@@ -38,3 +38,14 @@ final staredCountProvider = FutureProvider.family<int, int>((
       .watch(workoutsRepositoryProvider)
       .getWorkoutStaredCount(workoutId);
 });
+
+final searchedWorkoutsProvider =
+    FutureProvider.family<List<WorkoutModel>, String>((ref, searchText) async {
+      final currentUser = ref.watch(currentUserProvider);
+
+      if (currentUser == null) return [];
+
+      return await ref
+          .watch(workoutsRepositoryProvider)
+          .searchWorkouts(searchText);
+    });

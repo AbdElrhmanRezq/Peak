@@ -239,7 +239,7 @@ class SupabaseService {
   }
 
   Future<List<WorkoutModel>> getPopularWorkouts({
-    int limit = 5,
+    int limit = 10,
     int page = 1,
   }) async {
     try {
@@ -411,6 +411,37 @@ class SupabaseService {
           .from('workouts')
           .update({'image_url': imageURL})
           .eq('id', workoutId);
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
+
+  Future<List<WorkoutModel>> searchWorkouts(String searchText) {
+    List<WorkoutModel> workouts = [];
+    try {
+      return supabase
+          .from('workouts')
+          .select()
+          .ilike('title', '%$searchText%')
+          .then((workoutsData) {
+            workouts = workoutsData
+                .map((w) => WorkoutModel.fromJson(w))
+                .toList();
+            return workouts;
+          });
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
+
+  Future<void> addSet(int exerciseId) async {
+    try {
+      await supabase.from('sets').insert({'e_id': exerciseId});
     } on PostgrestException catch (e) {
       print('PostgrestException: ${e.message}');
       throw e;

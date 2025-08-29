@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repx/data/models/workout_model.dart';
 import 'package:repx/data/providers/workouts_provider.dart';
+import 'package:repx/presentation/widgets/workout_card.dart';
 
 class UserWorkoutsScreen extends ConsumerWidget {
   static const String id = 'user_workouts_screen';
@@ -43,70 +44,11 @@ class UserWorkoutsScreen extends ConsumerWidget {
 
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: height * 0.01),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.secondary,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: ListTile(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(
-                          'public_workout_screen',
-                          arguments: {'workout': workout},
-                        );
-                      },
-                      leading: Container(
-                        width: width * 0.15,
-                        height: width * 0.15,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: workout.imageUrl != null
-                              ? DecorationImage(
-                                  image: NetworkImage(workout.imageUrl!),
-                                  fit: BoxFit.cover,
-                                )
-                              : null,
-                        ),
-                        child: workout.imageUrl == null
-                            ? Icon(
-                                Icons.fitness_center,
-                                size: height * 0.04,
-                                color: theme.primaryColor,
-                              )
-                            : null,
-                      ),
-                      title: Text(
-                        workout.title,
-                        style: theme.textTheme.headlineMedium,
-                      ),
-                      subtitle: Text(
-                        workout.description ?? '',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.star, color: theme.primaryColor),
-                          SizedBox(width: 6),
-                          starsAsync.when(
-                            data: (stars) => Text(
-                              '$stars',
-                              style: theme.textTheme.bodyMedium,
-                            ),
-                            loading: () => SizedBox(
-                              width: 16,
-                              height: 16,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            ),
-                            error: (e, _) => Icon(
-                              Icons.error,
-                              color: theme.colorScheme.error,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                  child: WorkoutCard(
+                    workout: workout,
+                    index: index,
+                    showButtomSheet: () {},
+                    type: 'public',
                   ),
                 );
               },

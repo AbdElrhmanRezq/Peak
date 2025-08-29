@@ -301,6 +301,18 @@ class WorkoutDetailsScreen extends ConsumerWidget {
               ),
               ListTile(
                 onTap: () async {
+                  await workoutRep.addSet(exercise.supaId as int);
+                  ref.invalidate(workoutsProvider);
+                  Navigator.of(context).pop();
+                },
+                leading: Icon(Icons.cancel_outlined, color: Colors.white),
+                title: Text(
+                  "Add set",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+              ListTile(
+                onTap: () async {
                   // await workoutRep.deleteExercise(exerciseId);
                   // ref.invalidate(workoutsProvider);
                   exercise.sets.forEach((s) {

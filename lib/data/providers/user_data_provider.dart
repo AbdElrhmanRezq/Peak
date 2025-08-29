@@ -72,22 +72,24 @@ final profileUserProvider = FutureProvider.family<UserModel, String?>((
     return user;
   }
 });
-
 final friendsProvider = FutureProvider.family<List<UserModel>, String>((
   ref,
   userId,
 ) async {
   final userRepo = ref.watch(userRepositoryProvider);
+
   final userFollowers = await userRepo.getUserFollowers(userId);
   final userFollowings = await userRepo.getUserFollowings(userId);
 
-  Set<UserModel> friends = {};
-  friends.addAll(userFollowers);
-  friends.addAll(userFollowings);
+  final allFriends = [...userFollowers, ...userFollowings];
 
-  if (friends.isEmpty) {
+  final uniqueFriends = {
+    for (var user in allFriends) user.id: user,
+  }.values.toList();
+
+  if (uniqueFriends.isEmpty) {
     throw Exception('No friends found');
   }
 
-  return friends.toList();
+  return uniqueFriends;
 });

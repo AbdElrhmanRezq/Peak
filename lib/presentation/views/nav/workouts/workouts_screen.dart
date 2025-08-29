@@ -91,16 +91,6 @@ class WorkoutsScreen extends ConsumerWidget {
                             );
                           },
                         ),
-                        /*
-                        showButtomSheetCustom(
-                                            ref,
-                                            context,
-                                            width,
-                                            height,
-                                            workoutsRep,
-                                            workout.id as int,
-                                          );
-                        */
                       );
                     },
                   ),

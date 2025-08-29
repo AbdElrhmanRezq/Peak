@@ -129,7 +129,15 @@ class PublicWorkoutScreen extends ConsumerWidget {
                           height: height * 0.05,
                           child: Row(
                             children: [
-                              CustomUserPhoto(user: user),
+                              CircleAvatar(
+                                backgroundImage: user.profilePictureUrl != null
+                                    ? NetworkImage(user.profilePictureUrl!)
+                                    : const AssetImage(
+                                            'assets/images/profile/pro4.jpeg',
+                                          )
+                                          as ImageProvider,
+                              ),
+                              SizedBox(width: width * 0.03),
                               Text(
                                 user.name ?? '',
                                 style: theme.textTheme.bodyMedium,

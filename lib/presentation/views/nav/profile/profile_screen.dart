@@ -4,6 +4,7 @@ import 'package:repx/data/providers/auth_providers.dart';
 import 'package:repx/data/providers/user_data_provider.dart';
 import 'package:repx/data/providers/workouts_provider.dart';
 import 'package:repx/presentation/widgets/bubble_row.dart';
+import 'package:repx/presentation/widgets/workout_card.dart';
 
 class ProfileScreen extends ConsumerWidget {
   static const String id = 'profile_screen';
@@ -312,6 +313,79 @@ class ProfileScreen extends ConsumerWidget {
                       error: (err, stack) => Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Text('Error: $err'),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: height * 0.02),
+                      child: Text(
+                        "Workouts",
+                        style: theme.textTheme.headlineMedium,
+                      ),
+                    ),
+                    workoutsAsync.when(
+                      data: (workouts) {
+                        if (workouts.isEmpty) {
+                          return Text("No workouts yet.");
+                        }
+
+                        return SizedBox(
+                          height: height * 0.18,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: workouts.length > 3
+                                ? 4
+                                : workouts.length,
+                            itemBuilder: (context, index) {
+                              final workout = workouts[index];
+                              return index == 3
+                                  ? Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: width * 0.02,
+                                      ),
+                                      child: CircleAvatar(
+                                        backgroundColor: theme.primaryColor,
+                                        child: IconButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pushNamed(
+                                              'user_workouts_screen',
+                                              arguments: workouts,
+                                            );
+                                          },
+                                          icon: Icon(Icons.arrow_forward),
+                                        ),
+                                      ),
+                                    )
+                                  : Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: width * 0.01,
+                                        vertical: height * 0.005,
+                                      ),
+                                      child: Container(
+                                        width: width * 0.8,
+                                        child: WorkoutCard(
+                                          workout: workout,
+                                          index: index,
+                                          type: 'public',
+                                          showButtomSheet: () {},
+                                        ),
+                                      ),
+                                    );
+                            },
+                          ),
+                        );
+                      },
+                      loading: () => const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                      error: (err, stack) => Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'Error: $err',
+                          style: theme.textTheme.bodyMedium,
+                        ),
                       ),
                     ),
                   ],
