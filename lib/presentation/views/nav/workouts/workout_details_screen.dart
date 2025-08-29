@@ -71,13 +71,7 @@ class WorkoutDetailsScreen extends ConsumerWidget {
                     arguments: {'workoutReady': true, 'workoutId': workout.id},
                   );
                 },
-                icon: Icon(
-                  Icons.add,
-
-                  color: changedSets.isNotEmpty
-                      ? Theme.of(context).colorScheme.primary
-                      : Colors.white,
-                ),
+                icon: Icon(Icons.add, color: Colors.white),
               ),
               IconButton(
                 onPressed: () async {

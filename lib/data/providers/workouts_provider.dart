@@ -49,3 +49,7 @@ final searchedWorkoutsProvider =
           .watch(workoutsRepositoryProvider)
           .searchWorkouts(searchText);
     });
+
+final timerProvider = StateProvider.autoDispose<int>((ref) {
+  return 0;
+});

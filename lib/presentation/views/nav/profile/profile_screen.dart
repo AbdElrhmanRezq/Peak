@@ -196,7 +196,14 @@ class ProfileScreen extends ConsumerWidget {
                             Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Text(userData.streak.toString()),
+                                Text(
+                                  userData.streak.toString(),
+                                  style: TextStyle(
+                                    color: userData.streak > 0
+                                        ? theme.primaryColor
+                                        : Colors.white,
+                                  ),
+                                ),
                                 Row(
                                   children: [
                                     Image.asset(
@@ -233,11 +240,7 @@ class ProfileScreen extends ConsumerWidget {
                                   Text(workouts.length.toString()),
                                   Text(
                                     "Workouts",
-                                    style: TextStyle(
-                                      color: userData.streak > 0
-                                          ? theme.primaryColor
-                                          : Colors.white,
-                                    ),
+                                    style: TextStyle(color: Colors.white),
                                   ),
                                 ],
                               ),

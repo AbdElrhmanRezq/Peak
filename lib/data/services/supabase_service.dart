@@ -450,4 +450,24 @@ class SupabaseService {
       throw e;
     }
   }
+
+  Future<void> updateStreak(int newStreak, DateTime newLastActivity) async {
+    final currentUser = supabase.auth.currentUser;
+    if (currentUser == null) return; // no logged-in user
+    try {
+      await supabase
+          .from('users')
+          .update({
+            'streak': newStreak,
+            'last_activity': newLastActivity.toIso8601String(),
+          })
+          .eq('id', currentUser.id);
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
 }

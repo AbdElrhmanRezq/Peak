@@ -216,4 +216,42 @@ class WorkoutsRepository {
       throw e;
     }
   }
+
+  Future<void> updateStreak(UserModel user) async {
+    try {
+      final currentStreak = user.streak ?? 0;
+      final lastActivity = user.lastActivity; // assuming DateTime?
+      final today = DateTime.now();
+      final todayDate = DateTime(today.year, today.month, today.day);
+
+      int newStreak = 1;
+      DateTime newLastActivity = todayDate;
+
+      if (lastActivity != null) {
+        final lastDate = DateTime(
+          lastActivity.year,
+          lastActivity.month,
+          lastActivity.day,
+        );
+
+        if (lastDate.isAtSameMomentAs(todayDate)) {
+          return;
+        } else if (lastDate
+            .add(const Duration(days: 1))
+            .isAtSameMomentAs(todayDate)) {
+          newStreak = currentStreak + 1;
+        } else {
+          newStreak = 1;
+        }
+      }
+
+      await _service.updateStreak(newStreak, newLastActivity);
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
 }

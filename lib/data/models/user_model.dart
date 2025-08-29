@@ -11,6 +11,7 @@ class UserModel {
   final String? profilePictureUrl;
   final String? phoneNumber;
   final String? name;
+  final DateTime? lastActivity;
 
   UserModel({
     required this.id,
@@ -25,6 +26,7 @@ class UserModel {
     this.profilePictureUrl,
     this.phoneNumber,
     this.name,
+    this.lastActivity,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -43,6 +45,9 @@ class UserModel {
       profilePictureUrl: json['profile_picture_url'],
       phoneNumber: json['phone_number'],
       name: json['name'],
+      lastActivity: json['last_activity'] != null
+          ? DateTime.parse(json['last_activity'])
+          : null,
     );
   }
 
@@ -89,6 +94,7 @@ class UserModel {
       'profile_picture_url': profilePictureUrl,
       'phone_number': phoneNumber,
       'name': name,
+      'last_activity': lastActivity?.toIso8601String(),
     };
   }
 }
