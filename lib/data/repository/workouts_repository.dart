@@ -57,8 +57,9 @@ class WorkoutsRepository {
     }
   }
 
-  Future<void> deleteSet(int setId) async {
+  Future<void> deleteSet(ExerciseModel exercise) async {
     try {
+      final int setId = exercise.sets.last.id!;
       return await _service.deleteSet(setId);
     } on PostgrestException catch (e) {
       print('PostgrestException: ${e.message}');

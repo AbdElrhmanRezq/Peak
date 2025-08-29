@@ -287,6 +287,31 @@ class WorkoutDetailsScreen extends ConsumerWidget {
                   thickness: 5,
                 ),
               ),
+
+              ListTile(
+                onTap: () async {
+                  await workoutRep.addSet(exercise.supaId as int);
+                  ref.invalidate(workoutsProvider);
+                  Navigator.of(context).pop();
+                },
+                leading: Icon(Icons.add, color: Colors.white),
+                title: Text(
+                  "Add set",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+              ListTile(
+                onTap: () async {
+                  await workoutRep.deleteSet(exercise);
+                  ref.invalidate(workoutsProvider);
+                  Navigator.of(context).pop();
+                },
+                leading: Icon(Icons.remove, color: Colors.white),
+                title: Text(
+                  "Delete set",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
               ListTile(
                 onTap: () async {
                   await workoutRep.deleteExercise(exercise.supaId as int);
@@ -296,18 +321,6 @@ class WorkoutDetailsScreen extends ConsumerWidget {
                 leading: Icon(Icons.cancel_outlined, color: Colors.white),
                 title: Text(
                   "Delete exercise",
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ),
-              ListTile(
-                onTap: () async {
-                  await workoutRep.addSet(exercise.supaId as int);
-                  ref.invalidate(workoutsProvider);
-                  Navigator.of(context).pop();
-                },
-                leading: Icon(Icons.cancel_outlined, color: Colors.white),
-                title: Text(
-                  "Add set",
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
