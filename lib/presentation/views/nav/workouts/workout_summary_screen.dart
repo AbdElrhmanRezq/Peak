@@ -10,20 +10,37 @@ class WorkoutSummaryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final userData = ref.watch(userDataProvider);
     final changedSets = ref.watch(changedSetsProvider);
-    final elapsedSeconds = ref.watch(timerProvider); // int
+    final elapsedSeconds = ref.watch(timerProvider);
+    final userAsync = ref.watch(userDataProvider);
+    final uniqueExerciseIds = changedSets
+        .map((set) => set.e_id)
+        .toSet()
+        .toList();
 
     final theme = Theme.of(context);
+
+    final MediaQueryData mediaQuery = MediaQuery.of(context);
+
+    final double width = mediaQuery.size.width;
+    final double height = mediaQuery.size.height;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text("Workout Summary"),
         leading: IconButton(
-          onPressed: () {
+          onPressed: () async {
+            final user = await ref.read(userDataProvider.future);
+
             ref.invalidate(changedSetsProvider);
             ref.invalidate(userDataProvider);
-            //Don't need to invalidate as the workouts provider data changed
             //ref.invalidate(workoutsProvider);
+
+            if (context.mounted) {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            }
           },
           icon: const Icon(Icons.arrow_back),
         ),
@@ -45,28 +62,70 @@ class WorkoutSummaryScreen extends ConsumerWidget {
             const Divider(height: 32),
 
             /// Sets done
-            Text("Completed Sets", style: theme.textTheme.headlineLarge),
+            Text("Summary", style: theme.textTheme.headlineLarge),
             const SizedBox(height: 8),
             Expanded(
               child: changedSets.isEmpty
                   ? const Center(child: Text("No sets recorded"))
-                  : ListView.separated(
-                      itemCount: changedSets.length,
-                      separatorBuilder: (_, __) => const Divider(),
-                      itemBuilder: (context, index) {
-                        final set = changedSets[index];
-                        return ListTile(
-                          leading: CircleAvatar(child: Text("${index + 1}")),
+                  : ListView(
+                      children: [
+                        ListTile(
+                          leading: Icon(
+                            Icons.fitness_center,
+                            color: Colors.white,
+                            size: width * 0.1,
+                          ),
+
                           title: Text(
-                            "${set.weight ?? 0} KG × ${set.reps ?? 0} reps",
+                            "Exercises",
                             style: theme.textTheme.bodyMedium,
                           ),
                           subtitle: Text(
-                            "Previous: ${set.prev ?? "-"}",
+                            "Played ${uniqueExerciseIds.length.toString()} exercises",
                             style: theme.textTheme.titleMedium,
                           ),
-                        );
-                      },
+                        ),
+                        ListTile(
+                          leading: Icon(
+                            Icons.straighten_sharp,
+                            color: Colors.white,
+                            size: width * 0.1,
+                          ),
+                          title: Text(
+                            "Sets",
+                            style: theme.textTheme.bodyMedium,
+                          ),
+                          subtitle: Text(
+                            "Played ${changedSets.length.toString()} sets",
+                            style: theme.textTheme.titleMedium,
+                          ),
+                        ),
+                        ListTile(
+                          leading: Container(
+                            width: width * 0.1,
+                            height: height * 0.1,
+                            child: Image.asset(
+                              'assets/icons/burn.png',
+                              color: Colors.white,
+                            ),
+                          ),
+                          title: Text(
+                            "Streak",
+                            style: theme.textTheme.bodyMedium,
+                          ),
+                          subtitle: userAsync.when(
+                            data: (user) => Text(
+                              "Current streak: ${user.streak} days",
+                              style: theme.textTheme.titleMedium,
+                            ),
+                            loading: () => CircularProgressIndicator(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            error: (e, _) =>
+                                Icon(Icons.error, color: Colors.red),
+                          ),
+                        ),
+                      ],
                     ),
             ),
 

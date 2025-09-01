@@ -120,7 +120,7 @@ class PeopleList extends ConsumerWidget {
                         image: follower?.profilePictureUrl != null
                             ? NetworkImage(follower!.profilePictureUrl!)
                             : const AssetImage(
-                                    'assets/images/profile/pro4.jpeg',
+                                    'assets/images/profile/profile.jpeg',
                                   )
                                   as ImageProvider,
                         fit: BoxFit.fitHeight,

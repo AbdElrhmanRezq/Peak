@@ -133,7 +133,7 @@ class PublicWorkoutScreen extends ConsumerWidget {
                                 backgroundImage: user.profilePictureUrl != null
                                     ? NetworkImage(user.profilePictureUrl!)
                                     : const AssetImage(
-                                            'assets/images/profile/pro4.jpeg',
+                                            'assets/images/profile/profile.jpeg',
                                           )
                                           as ImageProvider,
                               ),

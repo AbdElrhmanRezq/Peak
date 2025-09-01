@@ -247,7 +247,7 @@ class HomeScreen extends ConsumerWidget {
                                                         '${friend.profilePictureUrl!}?v=${DateTime.now().millisecondsSinceEpoch}',
                                                       )
                                                     : const AssetImage(
-                                                        'assets/images/profile/pro4.jpeg',
+                                                        'assets/images/profile/profile.jpeg',
                                                       ),
                                                 fit: BoxFit.cover,
                                                 alignment: Alignment.topCenter,

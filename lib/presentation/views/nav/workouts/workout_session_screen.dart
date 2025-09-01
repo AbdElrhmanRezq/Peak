@@ -182,6 +182,7 @@ class _WorkoutSessionScreenState extends ConsumerState<WorkoutSessionScreen> {
           ),
           TextButton(
             onPressed: () {
+              ref.read(changedSetsProvider.notifier).clear();
               Navigator.of(context).pop();
               Navigator.of(context).pop();
             },
@@ -394,7 +395,8 @@ class _WorkoutSessionScreenState extends ConsumerState<WorkoutSessionScreen> {
           labelStyle: theme.textTheme.bodySmall,
           isDense: true,
           filled: true,
-          fillColor: theme.colorScheme.surfaceContainerHighest, // ✅ subtle difference
+          fillColor:
+              theme.colorScheme.surfaceContainerHighest, // ✅ subtle difference
           contentPadding: const EdgeInsets.symmetric(
             vertical: 10,
             horizontal: 12,

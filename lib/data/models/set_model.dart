@@ -6,6 +6,7 @@ class SetModel {
   int? repRangeMax;
   String type;
   int? id;
+  int? e_id;
 
   SetModel({
     this.prev,
@@ -15,6 +16,7 @@ class SetModel {
     this.repRangeMax = 12,
     this.type = "Reps",
     this.id,
+    this.e_id,
   });
 
   SetModel copyWith({
@@ -32,6 +34,8 @@ class SetModel {
       repRangeMin: repRangeMin ?? this.repRangeMin,
       repRangeMax: repRangeMax ?? this.repRangeMax,
       type: type ?? this.type,
+      e_id: e_id ?? this.e_id,
+      id: id ?? this.id,
     );
   }
 
@@ -43,6 +47,8 @@ class SetModel {
       'repRangeMin': repRangeMin,
       'repRangeMax': repRangeMax,
       'type': type,
+      'id': id,
+      'e_id': e_id,
     };
   }
 
@@ -55,6 +61,7 @@ class SetModel {
       repRangeMax: json['repRangeMax'] as int?,
       type: json['type'] as String? ?? "Reps",
       id: json['id'] as int,
+      e_id: json['e_id'] as int?,
     );
   }
 }
