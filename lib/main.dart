@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:repx/core/theme/app_theme.dart';
+import 'package:repx/presentation/views/auth/age_screen.dart';
+import 'package:repx/presentation/views/auth/gender_screen.dart';
+import 'package:repx/presentation/views/auth/height_screen.dart';
 import 'package:repx/presentation/views/auth/login_screen.dart';
 import 'package:repx/presentation/views/auth/on_board_screen.dart';
 import 'package:repx/presentation/views/auth/signup_screen.dart';
 import 'package:repx/presentation/views/auth/user_data_screen.dart';
+import 'package:repx/presentation/views/auth/weight_screen.dart';
 import 'package:repx/presentation/views/gateway/auth_gate.dart';
 import 'package:repx/presentation/views/nav/explore/exercise_info_screen.dart';
 import 'package:repx/presentation/views/nav/explore/exercises_screen.dart';
@@ -48,7 +52,7 @@ class Repx extends StatelessWidget {
     return MaterialApp(
       title: 'PEAK',
       theme: appTheme,
-      initialRoute: GateWay.id,
+      initialRoute: SignupScreen.id,
       routes: {
         SplashScreen.id: (context) => const SplashScreen(),
         InitialScreen.id: (context) => const InitialScreen(),
@@ -76,6 +80,10 @@ class Repx extends StatelessWidget {
         WorkoutSessionScreen.id: (context) => const WorkoutSessionScreen(),
         WorkoutsScreen.id: (context) => const WorkoutsScreen(),
         WorkoutSummaryScreen.id: (context) => const WorkoutSummaryScreen(),
+        GenderScreen.id: (context) => GenderScreen(),
+        WeightScreen.id: (context) => WeightScreen(),
+        HeightScreen.id: (context) => HeightScreen(),
+        AgeScreen.id: (context) => AgeScreen(),
       },
       debugShowCheckedModeBanner: false,
     );

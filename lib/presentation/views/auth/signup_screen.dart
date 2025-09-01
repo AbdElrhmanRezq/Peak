@@ -46,9 +46,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
     try {
       await auth.signup(email, password, confirmPassword);
-      final user = await auth.login(email, password);
-      ref.read(currentUserProvider.notifier).state = user;
-      ref.invalidate(userDataProvider);
+      // final user = await auth.login(email, password);
+      // ref.read(currentUserProvider.notifier).state = user;
+      // ref.invalidate(userDataProvider);
       Navigator.of(context).pushReplacementNamed('on_board_screen');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

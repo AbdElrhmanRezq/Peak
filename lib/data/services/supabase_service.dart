@@ -27,13 +27,16 @@ class SupabaseService {
 
   Future<void> createUser(UserModel user) async {
     // Implement user creation logic if needed
-    print('id: ${user.id}, email: ${user.email}, username: ${user.username},');
     await supabase.from('users').insert([
       {
         'email': user.email,
         'username': user.username,
         'gender': user.gender,
         'id': user.id,
+        'name': user.name,
+        'weight': user.weight,
+        'height': user.height,
+        'age': user.age,
       },
     ]);
   }

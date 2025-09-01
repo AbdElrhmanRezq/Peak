@@ -91,3 +91,7 @@ final friendsProvider = FutureProvider.family<List<UserModel>, String>((
 
   return uniqueFriends;
 });
+
+final createdUserProvider = StateProvider<UserModel>(
+  (ref) => UserModel(id: ' ', email: ' '),
+);

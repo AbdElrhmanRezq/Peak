@@ -27,7 +27,7 @@ class _UserDataScreenState extends ConsumerState<UserDataScreen> {
 
   Future<void> processData() async {
     final auth = ref.read(authRepositoryProvider);
-    // final name = nameController.text.trim();
+    final name = nameController.text.trim();
     final username = usernameController.text.trim();
     // final weight = weightController.text.trim();
     // final height = heightController.text.trim();
@@ -35,23 +35,24 @@ class _UserDataScreenState extends ConsumerState<UserDataScreen> {
     // final age = ageController.text.trim();
 
     ref.read(loginLoadingProvider.notifier).state = true;
+    print('EMAIL:=========================${auth.currentUser?.email}');
+    print('EMAIL:=========================${auth.currentUser?.id}');
 
     try {
-      await auth.createUser(
-        UserModel(
-          email: auth.currentUser?.email ?? '',
-          username: username,
-          gender: gender,
-          id: auth.currentUser?.id ?? '',
-          // name: name,
-          // weight: int.parse(weight),
-          // height: int.parse(height),
-          // phoneNumber: phoneNumber,
-          // age: int.parse(age),
-        ),
+      ref.watch(createdUserProvider.notifier).state = UserModel(
+        email: auth.currentUser?.email ?? '',
+        username: username,
+        //gender: gender,
+        id: auth.currentUser?.id ?? '',
+        name: name,
+        gender: 'male',
+        weight: 50,
+        height: 170,
+        // phoneNumber: phoneNumber,
+        age: 20,
       );
-      ref.invalidate(userDataProvider);
-      Navigator.of(context).pushReplacementNamed('nav_menu');
+      //ref.invalidate(userDataProvider);
+      Navigator.of(context).pushNamed('gender_screen');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -107,122 +108,23 @@ class _UserDataScreenState extends ConsumerState<UserDataScreen> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: width * 0.05,
-                vertical: height * 0.02,
+                horizontal: width * 0.02,
+                vertical: height * 0.005,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: width * 0.39,
-                    height: height * 0.15,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: gender == "male"
-                            ? Theme.of(context).primaryColor
-                            : Colors.grey,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          gender = "male";
-                        });
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.person, size: height * 0.08),
-                          Text('Male'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: width * 0.39,
-                    height: height * 0.15,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: gender == "Else"
-                            ? Theme.of(context).primaryColor
-                            : Colors.grey,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          gender = "Else";
-                        });
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.people, size: height * 0.08),
-                          Text('Else'),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+              child: CustomTextFormField(
+                labelText: "Nick Name",
+                controller: nameController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your Nick Name';
+                  } else if (value.contains(' ')) {
+                    return "Username shouldn't have spaces";
+                  }
+                  return null;
+                },
               ),
             ),
 
-            // Padding(
-            //   padding: EdgeInsets.symmetric(
-            //     horizontal: width * 0.05,
-            //     vertical: height * 0.005,
-            //   ),
-            //   child: Text(
-            //     'Optional',
-            //     style: Theme.of(context).textTheme.headlineLarge,
-            //   ),
-            // ),
-            // Padding(
-            //   padding: EdgeInsets.symmetric(
-            //     horizontal: width * 0.05,
-            //     vertical: height * 0.015,
-            //   ),
-            //   child: CustomTextField(
-            //     width: width * 0.9,
-            //     labelText: 'Name',
-            //     controller: nameController,
-            //   ),
-            // ),
-            // Padding(
-            //   padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-            //     children: [
-            //       CustomTextField(
-            //         width: width * 0.43,
-            //         labelText: 'Weight (kg)',
-            //         controller: weightController,
-            //       ),
-            //       CustomTextField(
-            //         width: width * 0.43,
-            //         labelText: 'Height (cm)',
-            //         controller: heightController,
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            // SizedBox(height: height * 0.02),
-            // Padding(
-            //   padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     children: [
-            //       CustomTextField(
-            //         width: width * 0.43,
-            //         labelText: 'Age',
-            //         controller: ageController,
-            //       ),
-            //       CustomTextField(
-            //         width: width * 0.43,
-            //         labelText: 'Phone Number',
-            //         controller: phoneNumberController,
-            //       ),
-            //     ],sa
-            //   ),
-            // ),
             Center(
               child: Padding(
                 padding: EdgeInsets.symmetric(
@@ -235,7 +137,7 @@ class _UserDataScreenState extends ConsumerState<UserDataScreen> {
                       )
                     : CustomWideButton(
                         backgroundColor: Theme.of(context).primaryColor,
-                        text: "Sign Up",
+                        text: "Next",
                         onPressed: () {
                           if (_formKey.currentState?.validate() ?? false) {
                             processData();
