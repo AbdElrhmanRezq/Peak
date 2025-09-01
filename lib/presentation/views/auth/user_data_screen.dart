@@ -117,8 +117,6 @@ class _UserDataScreenState extends ConsumerState<UserDataScreen> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your Nick Name';
-                  } else if (value.contains(' ')) {
-                    return "Username shouldn't have spaces";
                   }
                   return null;
                 },

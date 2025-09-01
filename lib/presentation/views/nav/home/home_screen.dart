@@ -220,129 +220,135 @@ class HomeScreen extends ConsumerWidget {
                                   //   width: 2,
                                   // ),
                                 ),
-                                child: Column(
-                                  children: [
-                                    Expanded(
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadiusGeometry.only(
-                                          topLeft: Radius.circular(12),
-                                          topRight: Radius.circular(12),
-                                        ),
-                                        child: Container(
-                                          height: height * 0.4,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image:
-                                                  friend.profilePictureUrl !=
-                                                      null
-                                                  ? NetworkImage(
-                                                      '${friend.profilePictureUrl!}?v=${DateTime.now().millisecondsSinceEpoch}',
-                                                    )
-                                                  : const AssetImage(
-                                                      'assets/images/profile/pro4.jpeg',
-                                                    ),
-                                              fit: BoxFit.cover,
-                                              alignment: Alignment.topCenter,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed(
+                                      'profile_screen',
+                                      arguments: {'userId': friend.id},
+                                    );
+                                  },
+                                  child: Column(
+                                    children: [
+                                      Expanded(
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadiusGeometry.only(
+                                                topLeft: Radius.circular(12),
+                                                topRight: Radius.circular(12),
+                                              ),
+                                          child: Container(
+                                            height: height * 0.4,
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image:
+                                                    friend.profilePictureUrl !=
+                                                        null
+                                                    ? NetworkImage(
+                                                        '${friend.profilePictureUrl!}?v=${DateTime.now().millisecondsSinceEpoch}',
+                                                      )
+                                                    : const AssetImage(
+                                                        'assets/images/profile/pro4.jpeg',
+                                                      ),
+                                                fit: BoxFit.cover,
+                                                alignment: Alignment.topCenter,
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                          bottomLeft: Radius.circular(12),
-                                          bottomRight: Radius.circular(12),
-                                        ),
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.secondary,
-                                      ),
-
-                                      child: ListTile(
-                                        title: Text(
-                                          friend.name?.toUpperCase() ?? 'N/A',
-                                          overflow: TextOverflow.ellipsis,
-                                          style: Theme.of(
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(12),
+                                            bottomRight: Radius.circular(12),
+                                          ),
+                                          color: Theme.of(
                                             context,
-                                          ).textTheme.bodyMedium,
+                                          ).colorScheme.secondary,
                                         ),
-                                        subtitle: Text(
-                                          friend.username?.toUpperCase() ??
-                                              'N/A',
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            color: theme.primaryColor,
+
+                                        child: ListTile(
+                                          title: Text(
+                                            friend.name?.toUpperCase() ?? 'N/A',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodyMedium,
+                                          ),
+                                          subtitle: Text(
+                                            friend.username?.toUpperCase() ??
+                                                'N/A',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              color: theme.primaryColor,
+                                            ),
+                                          ),
+                                          trailing: Consumer(
+                                            builder: (context, ref, _) {
+                                              final followStatus = ref.watch(
+                                                followStatusProvider(friend.id),
+                                              );
+
+                                              return followStatus.when(
+                                                data: (isFollowed) {
+                                                  return IconButton(
+                                                    icon: Icon(
+                                                      isFollowed
+                                                          ? Icons.check
+                                                          : Icons.person_add,
+                                                      color: Theme.of(
+                                                        context,
+                                                      ).primaryColor,
+                                                    ),
+                                                    onPressed: () async {
+                                                      if (isFollowed) {
+                                                        await userRepo
+                                                            .unfollowUser(
+                                                              currentUser?.id ??
+                                                                  '',
+                                                              friend.id,
+                                                            );
+                                                      } else {
+                                                        await userRepo
+                                                            .followUser(
+                                                              currentUser?.id ??
+                                                                  '',
+                                                              friend.id,
+                                                            );
+                                                      }
+
+                                                      // refresh the provider so UI updates
+                                                      ref.invalidate(
+                                                        followStatusProvider(
+                                                          friend.id,
+                                                        ),
+                                                      );
+                                                      ref.invalidate(
+                                                        friendsProvider(
+                                                          currentUser?.id ??
+                                                              ' ',
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                                loading: () =>
+                                                    CircularProgressIndicator(
+                                                      color: Theme.of(
+                                                        context,
+                                                      ).primaryColor,
+                                                    ),
+                                                error: (e, _) => Icon(
+                                                  Icons.error,
+                                                  color: Colors.red,
+                                                ),
+                                              );
+                                            },
                                           ),
                                         ),
-                                        trailing: Consumer(
-                                          builder: (context, ref, _) {
-                                            final followStatus = ref.watch(
-                                              followStatusProvider(friend.id),
-                                            );
-
-                                            return followStatus.when(
-                                              data: (isFollowed) {
-                                                return IconButton(
-                                                  icon: Icon(
-                                                    isFollowed
-                                                        ? Icons.check
-                                                        : Icons.person_add,
-                                                    color: Theme.of(
-                                                      context,
-                                                    ).primaryColor,
-                                                  ),
-                                                  onPressed: () async {
-                                                    if (isFollowed) {
-                                                      await userRepo
-                                                          .unfollowUser(
-                                                            currentUser?.id ??
-                                                                '',
-                                                            friend.id,
-                                                          );
-                                                    } else {
-                                                      await userRepo.followUser(
-                                                        currentUser?.id ?? '',
-                                                        friend.id,
-                                                      );
-                                                    }
-
-                                                    // refresh the provider so UI updates
-                                                    ref.invalidate(
-                                                      followStatusProvider(
-                                                        friend.id,
-                                                      ),
-                                                    );
-                                                    ref.invalidate(
-                                                      friendsProvider(
-                                                        currentUser?.id ?? ' ',
-                                                      ),
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                              loading: () =>
-                                                  CircularProgressIndicator(
-                                                    color: Theme.of(
-                                                      context,
-                                                    ).primaryColor,
-                                                  ),
-                                              error: (e, _) => Icon(
-                                                Icons.error,
-                                                color: Colors.red,
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                        onTap: () {
-                                          Navigator.of(context).pushNamed(
-                                            'profile_screen',
-                                            arguments: {'userId': friend.id},
-                                          );
-                                        },
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             );

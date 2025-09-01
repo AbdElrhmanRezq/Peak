@@ -24,7 +24,7 @@ class AgeScreen extends ConsumerWidget {
       try {
         await auth.createUser(createdUser);
         //await auth.login(createdUser.email, ref.read(passwordProvider));
-        ref.invalidate(passwordProvider);
+        //ref.invalidate(passwordProvider);
         ref.invalidate(userDataProvider);
         ref.invalidate(currentUserProvider);
         Navigator.of(context).pushNamedAndRemoveUntil(

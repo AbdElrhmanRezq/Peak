@@ -42,7 +42,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     final password = passwordController.text.trim();
     final confirmPassword = confirmPasswordController.text.trim();
 
-    ref.watch(passwordProvider.notifier).state = password;
+    //ref.watch(passwordProvider.notifier).state = password;
 
     ref.read(loginLoadingProvider.notifier).state = true;
 
