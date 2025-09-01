@@ -49,6 +49,7 @@ class EditProfileScreen extends ConsumerWidget {
 
         ref.read(isLoadingProvider.notifier).state = false;
         ref.invalidate(userDataProvider);
+        ref.invalidate(profileUserProvider(currentUser.id));
 
         Navigator.pop(context);
       } catch (e) {
