@@ -315,7 +315,25 @@ class ProfileScreen extends ConsumerWidget {
                       ),
                       error: (err, stack) => Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: Text('Error: $err'),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('$err'),
+                            currentUser?.id == userData.id
+                                ? CircleAvatar(
+                                    backgroundColor: theme.primaryColor,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        Navigator.of(
+                                          context,
+                                        ).pushNamed("add_friends_screen");
+                                      },
+                                      icon: Icon(Icons.person_add),
+                                    ),
+                                  )
+                                : SizedBox(),
+                          ],
+                        ),
                       ),
                     ),
                     Padding(

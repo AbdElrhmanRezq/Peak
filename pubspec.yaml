@@ -78,21 +78,15 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/logo.png
-    - assets/images/people/initial_screen.png
     - assets/images/people/
     - assets/images/start.gif
-    - .env
-    - assets/images/people/black_man.png
-    - assets/images/profile/pro4.jpeg
-    - assets/images/profile/pro1.jpeg
-    - assets/icons/burn.png
-    - assets/icons/flash.png
-    - assets/icons/flash2.png
+    - assets/images/workout_start.gif
     - assets/images/body_parts/
     - assets/images/gym/
-    - assets/images/
-    - assets/images/workout_start.gif
     - assets/init_gif.gif
+    - assets/icons/
+    - .env
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

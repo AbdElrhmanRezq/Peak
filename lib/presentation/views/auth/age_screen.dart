@@ -23,6 +23,7 @@ class AgeScreen extends ConsumerWidget {
 
       try {
         await auth.createUser(createdUser);
+        await Supabase.instance.client.auth.refreshSession();
         ref.invalidate(userDataProvider);
         Navigator.of(context).pushNamedAndRemoveUntil(
           'nav_menu',
@@ -61,15 +62,10 @@ class AgeScreen extends ConsumerWidget {
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
               ),
-              IconButton(
-                onPressed: () {
-                  print(user.age);
-                },
-                icon: const Icon(Icons.cake_rounded),
-              ),
+
               Expanded(
                 child: Scroller(
-                  value: user.age ?? 18, // default to 18
+                  value: user.age ?? 18,
                   type: 'age',
                   onChanged: (value) {
                     ref.read(createdUserProvider.notifier).update((state) {

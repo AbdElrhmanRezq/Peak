@@ -86,7 +86,6 @@ class HomeScreen extends ConsumerWidget {
                         image: AssetImage(gymImages[randImage]),
                         fit: BoxFit.cover,
                       ),
-                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: Center(
                       child: GestureDetector(

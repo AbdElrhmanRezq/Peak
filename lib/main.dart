@@ -52,7 +52,7 @@ class Repx extends StatelessWidget {
     return MaterialApp(
       title: 'PEAK',
       theme: appTheme,
-      initialRoute: SignupScreen.id,
+      initialRoute: GateWay.id,
       routes: {
         SplashScreen.id: (context) => const SplashScreen(),
         InitialScreen.id: (context) => const InitialScreen(),

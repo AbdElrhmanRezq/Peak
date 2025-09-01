@@ -34,12 +34,7 @@ class HeightScreen extends ConsumerWidget {
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
               ),
-              IconButton(
-                onPressed: () {
-                  print(user.height);
-                },
-                icon: Icon(Icons.propane_rounded),
-              ),
+
               Expanded(
                 child: Scroller(
                   value: user.height ?? 150,

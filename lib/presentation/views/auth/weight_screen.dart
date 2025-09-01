@@ -34,12 +34,7 @@ class WeightScreen extends ConsumerWidget {
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
               ),
-              IconButton(
-                onPressed: () {
-                  print(user.weight);
-                },
-                icon: Icon(Icons.propane_rounded),
-              ),
+
               Expanded(
                 child: Scroller(
                   value: user.weight ?? 50,
