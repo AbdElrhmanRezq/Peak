@@ -63,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen>
             child: Transform.scale(
               scale: _scaleAnimation.value,
               child: Text(
-                'REPX',
+                'PEAK',
                 style: theme.textTheme.headlineLarge?.copyWith(
                   fontSize: 40,
                   letterSpacing: 2,
