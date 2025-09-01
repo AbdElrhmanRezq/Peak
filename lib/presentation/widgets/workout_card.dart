@@ -115,7 +115,10 @@ class WorkoutCard extends ConsumerWidget {
                       : Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.star, color: theme.primaryColor),
+                            Icon(
+                              Icons.star_rate_rounded,
+                              color: theme.primaryColor,
+                            ),
                             SizedBox(width: 10),
                             starsAsync.when(
                               data: (data) => Text(

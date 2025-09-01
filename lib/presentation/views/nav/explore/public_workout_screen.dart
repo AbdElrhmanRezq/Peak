@@ -64,11 +64,12 @@ class PublicWorkoutScreen extends ConsumerWidget {
                     );
               ref.invalidate(staredStatusProvider(workout.id));
               ref.invalidate(staredCountProvider(workout.id));
+              ref.invalidate(staredWorkoutsProvider);
             },
             icon: Icon(
-              Icons.star,
+              Icons.star_rate_rounded,
               color: isWorkoutStaredAsync.when(
-                data: (data) => data ? Colors.yellow : Colors.grey,
+                data: (data) => data ? theme.primaryColor : Colors.grey,
                 error: (_, __) => Colors.grey, // <-- must be a function
                 loading: () => Colors.grey,
               ),

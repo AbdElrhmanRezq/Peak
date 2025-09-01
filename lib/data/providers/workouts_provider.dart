@@ -54,6 +54,10 @@ final popularWorkoutsProvider = FutureProvider<List<WorkoutModel>>((ref) async {
   return await ref.watch(workoutsRepositoryProvider).getPopularWorkouts();
 });
 
+final staredWorkoutsProvider = FutureProvider<List<WorkoutModel>>((ref) async {
+  return await ref.watch(workoutsRepositoryProvider).getStaredWorkouts();
+});
+
 final timerProvider = StateProvider.autoDispose<int>((ref) {
   return 0;
 });

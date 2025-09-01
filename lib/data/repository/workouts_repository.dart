@@ -243,4 +243,17 @@ class WorkoutsRepository {
       rethrow;
     }
   }
+
+  Future<List<WorkoutModel>> getStaredWorkouts() async {
+    try {
+      List<WorkoutModel> staredWorkouts = await _service.getStarredWorkouts();
+      return staredWorkouts;
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      rethrow;
+    } catch (e) {
+      print('Unknown error: $e');
+      rethrow;
+    }
+  }
 }

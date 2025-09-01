@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:repx/data/models/workout_model.dart';
 import 'package:repx/data/providers/auth_providers.dart';
 import 'package:repx/data/providers/image_provider.dart';
 import 'package:repx/data/providers/user_data_provider.dart';
@@ -55,6 +56,19 @@ class WorkoutsScreen extends ConsumerWidget {
               icon: Icons.add,
               onPressed: () {
                 Navigator.of(context).pushNamed('create_workout_screen');
+              },
+            ),
+            SizedBox(height: height * 0.01),
+            CustomIconTextButton(
+              title: "Stared Workouts",
+              icon: Icons.star_border,
+              onPressed: () async {
+                List<WorkoutModel> staredWorkouts = await ref.read(
+                  staredWorkoutsProvider.future,
+                );
+                Navigator.of(
+                  context,
+                ).pushNamed('user_workouts_screen', arguments: staredWorkouts);
               },
             ),
             Padding(
