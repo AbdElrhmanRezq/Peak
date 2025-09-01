@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:repx/data/providers/auth_providers.dart';
 import 'package:repx/data/providers/user_data_provider.dart';
 
 class FriendsScreen extends ConsumerWidget {
@@ -55,14 +56,17 @@ class FriendsScreen extends ConsumerWidget {
   }
 }
 
-class PeopleList extends StatelessWidget {
+class PeopleList extends ConsumerWidget {
   final AsyncSnapshot snapshot;
   const PeopleList({super.key, required this.snapshot});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
+
+    final userRepo = ref.watch(userRepositoryProvider);
+    final currentUser = ref.watch(currentUserProvider);
 
     if (snapshot.connectionState != ConnectionState.done) {
       return Center(
@@ -131,6 +135,48 @@ class PeopleList extends StatelessWidget {
                 subtitle: Text(
                   follower.username ?? 'N/A',
                   style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                trailing: Consumer(
+                  builder: (context, ref, _) {
+                    final followStatus = ref.watch(
+                      followStatusProvider(follower.id),
+                    );
+
+                    return followStatus.when(
+                      data: (isFollowed) {
+                        return IconButton(
+                          icon: Icon(
+                            isFollowed ? Icons.check : Icons.person_add,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          onPressed: () async {
+                            if (isFollowed) {
+                              await userRepo.unfollowUser(
+                                currentUser?.id ?? ' ',
+                                follower.id,
+                              );
+                            } else {
+                              await userRepo.followUser(
+                                currentUser?.id ?? ' ',
+                                follower.id,
+                              );
+                            }
+
+                            // refresh the provider so UI updates
+                            ref.invalidate(followStatusProvider(follower.id));
+                            ref.invalidate(
+                              friendsProvider(currentUser?.id ?? ' '),
+                            );
+                            ref.invalidate(suggestedFriendsProvider);
+                          },
+                        );
+                      },
+                      loading: () => CircularProgressIndicator(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      error: (e, _) => Icon(Icons.error, color: Colors.red),
+                    );
+                  },
                 ),
               ),
             );

@@ -1,7 +1,9 @@
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:repx/data/providers/auth_providers.dart';
 import 'package:repx/data/providers/user_data_provider.dart';
 import 'package:repx/data/providers/workouts_provider.dart';
 import 'package:repx/presentation/widgets/workout_card.dart';
@@ -43,6 +45,9 @@ class HomeScreen extends ConsumerWidget {
     int randImage = Random().nextInt(3);
 
     final workoutsAsync = ref.watch(popularWorkoutsProvider);
+    final suggestedFriendsAsync = ref.watch(suggestedFriendsProvider);
+    final userRepo = ref.watch(userRepositoryProvider);
+    final currentUser = ref.watch(currentUserProvider);
 
     return userAsync.when(
       data: (user) {
@@ -157,6 +162,195 @@ class HomeScreen extends ConsumerWidget {
                       ),
                     );
                   },
+                  loading: () => Center(
+                    child: Container(
+                      height: height * 0.18,
+                      alignment: Alignment.center, // centers child
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+
+                  error: (err, stack) => Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: width * 0.03,
+                      vertical: height * 0.01,
+                    ),
+                    child: Text(
+                      'Error: $err',
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: width * 0.06,
+                    vertical: height * 0.01,
+                  ),
+                  child: Text(
+                    "People to follow",
+                    style: theme.textTheme.headlineMedium,
+                  ),
+                ),
+                suggestedFriendsAsync.when(
+                  data: (suggestedFriends) {
+                    return Container(
+                      height: height * 0.25,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: width * 0.06,
+                          vertical: height * 0.01,
+                        ),
+                        child: ListView.builder(
+                          itemCount: suggestedFriends.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            final friend = suggestedFriends[index];
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: width * 0.02,
+                              ),
+                              child: Container(
+                                width: width * 0.4,
+                                height: height * 0.1,
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.secondary,
+                                  borderRadius: BorderRadius.circular(12),
+                                  // border: Border.all(
+                                  //   color: Colors.white,
+                                  //   width: 2,
+                                  // ),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadiusGeometry.only(
+                                          topLeft: Radius.circular(12),
+                                          topRight: Radius.circular(12),
+                                        ),
+                                        child: Container(
+                                          height: height * 0.4,
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image:
+                                                  friend.profilePictureUrl !=
+                                                      null
+                                                  ? NetworkImage(
+                                                      '${friend.profilePictureUrl!}?v=${DateTime.now().millisecondsSinceEpoch}',
+                                                    )
+                                                  : const AssetImage(
+                                                      'assets/images/profile/pro4.jpeg',
+                                                    ),
+                                              fit: BoxFit.cover,
+                                              alignment: Alignment.topCenter,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                          bottomLeft: Radius.circular(12),
+                                          bottomRight: Radius.circular(12),
+                                        ),
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.secondary,
+                                      ),
+
+                                      child: ListTile(
+                                        title: Text(
+                                          friend.name?.toUpperCase() ?? 'N/A',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.bodyMedium,
+                                        ),
+                                        subtitle: Text(
+                                          friend.username?.toUpperCase() ??
+                                              'N/A',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: theme.primaryColor,
+                                          ),
+                                        ),
+                                        trailing: Consumer(
+                                          builder: (context, ref, _) {
+                                            final followStatus = ref.watch(
+                                              followStatusProvider(friend.id),
+                                            );
+
+                                            return followStatus.when(
+                                              data: (isFollowed) {
+                                                return IconButton(
+                                                  icon: Icon(
+                                                    isFollowed
+                                                        ? Icons.check
+                                                        : Icons.person_add,
+                                                    color: Theme.of(
+                                                      context,
+                                                    ).primaryColor,
+                                                  ),
+                                                  onPressed: () async {
+                                                    if (isFollowed) {
+                                                      await userRepo
+                                                          .unfollowUser(
+                                                            currentUser?.id ??
+                                                                '',
+                                                            friend.id,
+                                                          );
+                                                    } else {
+                                                      await userRepo.followUser(
+                                                        currentUser?.id ?? '',
+                                                        friend.id,
+                                                      );
+                                                    }
+
+                                                    // refresh the provider so UI updates
+                                                    ref.invalidate(
+                                                      followStatusProvider(
+                                                        friend.id,
+                                                      ),
+                                                    );
+                                                    ref.invalidate(
+                                                      friendsProvider(
+                                                        currentUser?.id ?? ' ',
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              loading: () =>
+                                                  CircularProgressIndicator(
+                                                    color: Theme.of(
+                                                      context,
+                                                    ).primaryColor,
+                                                  ),
+                                              error: (e, _) => Icon(
+                                                Icons.error,
+                                                color: Colors.red,
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        onTap: () {
+                                          Navigator.of(context).pushNamed(
+                                            'profile_screen',
+                                            arguments: {'userId': friend.id},
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  },
                   loading: () => const Center(
                     child: Padding(
                       padding: EdgeInsets.all(16.0),
@@ -171,29 +365,29 @@ class HomeScreen extends ConsumerWidget {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: width * 0.06,
-                    vertical: height * 0.01,
-                  ),
-                  child: Text(
-                    "Your Analytics",
-                    style: theme.textTheme.headlineMedium,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: height * 0.02),
-                  child: Container(
-                    height: height * 0.5,
-                    color: theme.colorScheme.secondary,
-                    child: Center(
-                      child: Text(
-                        "Insert analytics later",
-                        style: theme.textTheme.headlineMedium,
-                      ),
-                    ),
-                  ),
-                ),
+                // Padding(
+                //   padding: EdgeInsets.symmetric(
+                //     horizontal: width * 0.06,
+                //     vertical: height * 0.01,
+                //   ),
+                //   child: Text(
+                //     "Your Analytics",
+                //     style: theme.textTheme.headlineMedium,
+                //   ),
+                // ),
+                // Padding(
+                //   padding: EdgeInsets.symmetric(vertical: height * 0.02),
+                //   child: Container(
+                //     height: height * 0.5,
+                //     color: theme.colorScheme.secondary,
+                //     child: Center(
+                //       child: Text(
+                //         "Insert analytics later",
+                //         style: theme.textTheme.headlineMedium,
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

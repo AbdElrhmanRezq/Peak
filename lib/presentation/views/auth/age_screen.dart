@@ -23,8 +23,10 @@ class AgeScreen extends ConsumerWidget {
 
       try {
         await auth.createUser(createdUser);
-        await Supabase.instance.client.auth.refreshSession();
+        //await auth.login(createdUser.email, ref.read(passwordProvider));
+        ref.invalidate(passwordProvider);
         ref.invalidate(userDataProvider);
+        ref.invalidate(currentUserProvider);
         Navigator.of(context).pushNamedAndRemoveUntil(
           'nav_menu',
           (route) => false, // remove all previous routes

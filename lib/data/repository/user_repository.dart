@@ -1,8 +1,10 @@
 import 'package:repx/data/models/user_model.dart';
+import 'package:repx/data/services/supabase_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseUserRepository {
   final supabase = Supabase.instance.client;
+  SupabaseService _service = SupabaseService();
 
   Future<UserModel?> getUserByEmail(String email) async {
     try {
@@ -91,7 +93,7 @@ class SupabaseUserRepository {
           followers.add(user);
         }
       }
-        } on PostgrestException catch (e) {
+    } on PostgrestException catch (e) {
       print('PostgrestException: ${e.message}');
     } catch (e) {
       print('Unknown error: $e');
@@ -113,7 +115,7 @@ class SupabaseUserRepository {
           followings.add(user);
         }
       }
-        } on PostgrestException catch (e) {
+    } on PostgrestException catch (e) {
       print('PostgrestException: ${e.message}');
     } catch (e) {
       print('Unknown error: $e');
@@ -167,6 +169,18 @@ class SupabaseUserRepository {
           .eq('followed_id', followedId);
 
       print('Deleted User');
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
+
+  Future<List<UserModel>> getSuggestedFriends() async {
+    try {
+      return await _service.getSuggestedFriends();
     } on PostgrestException catch (e) {
       print('PostgrestException: ${e.message}');
       throw e;

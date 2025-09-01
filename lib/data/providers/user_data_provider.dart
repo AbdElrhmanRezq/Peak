@@ -95,3 +95,10 @@ final friendsProvider = FutureProvider.family<List<UserModel>, String>((
 final createdUserProvider = StateProvider<UserModel>(
   (ref) => UserModel(id: ' ', email: ' '),
 );
+final passwordProvider = StateProvider<String>((ref) => ' ');
+
+final suggestedFriendsProvider = FutureProvider<List<UserModel>>((ref) async {
+  final repo = ref.watch(userRepositoryProvider);
+  final suggestedFriends = await repo.getSuggestedFriends();
+  return suggestedFriends;
+});

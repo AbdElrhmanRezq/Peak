@@ -511,4 +511,38 @@ class SupabaseService {
       throw e;
     }
   }
+
+  Future<List<UserModel>> getSuggestedFriends() async {
+    final userId = supabase.auth.currentUser?.id;
+    if (userId == null) throw Exception('No logged in user');
+
+    try {
+      final followsResponse = await supabase
+          .from('follows')
+          .select('followed_id')
+          .eq('follower_id', userId);
+
+      final followedIds = (followsResponse as List)
+          .map((f) => f['followed_id'])
+          .toList();
+
+      followedIds.add(userId);
+
+      final suggestedFriendsResponse = await supabase
+          .from('users')
+          .select()
+          .not('id', 'in', followedIds)
+          .limit(10);
+
+      return (suggestedFriendsResponse as List)
+          .map((u) => UserModel.fromJson(u))
+          .toList();
+    } on PostgrestException catch (e) {
+      print('PostgrestException: ${e.message}');
+      throw e;
+    } catch (e) {
+      print('Unknown error: $e');
+      throw e;
+    }
+  }
 }

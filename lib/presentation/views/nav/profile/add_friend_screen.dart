@@ -50,11 +50,11 @@ class AddFriendScreen extends ConsumerWidget {
         ),
         child: ListView(
           children: [
-            CustomIconTextButton(
-              title: "Choose From Contacts",
-              icon: Icons.contacts,
-              onPressed: () {},
-            ),
+            // CustomIconTextButton(
+            //   title: "Choose From Contacts",
+            //   icon: Icons.contacts,
+            //   onPressed: () {},
+            // ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: height * 0.02),
               child: Row(

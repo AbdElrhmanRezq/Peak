@@ -65,10 +65,15 @@ class ProfileScreen extends ConsumerWidget {
                                 context,
                               ).pushNamed('profile_settings_screen');
                             },
-                            icon: const Icon(
-                              Icons.settings,
-                              size: 36,
-                              color: Colors.white,
+                            icon: CircleAvatar(
+                              backgroundColor: theme.scaffoldBackgroundColor
+                                  .withOpacity(0.1),
+                              child: const Icon(
+                                Icons.settings,
+
+                                size: 36,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         )
@@ -81,10 +86,14 @@ class ProfileScreen extends ConsumerWidget {
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            icon: const Icon(
-                              Icons.arrow_back,
-                              size: 36,
-                              color: Colors.white,
+                            icon: CircleAvatar(
+                              backgroundColor: theme.scaffoldBackgroundColor
+                                  .withOpacity(0.1),
+                              child: const Icon(
+                                Icons.arrow_back,
+                                size: 36,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         )
@@ -318,7 +327,7 @@ class ProfileScreen extends ConsumerWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('$err'),
+                            Text('No friends found'),
                             currentUser?.id == userData.id
                                 ? CircleAvatar(
                                     backgroundColor: theme.primaryColor,
