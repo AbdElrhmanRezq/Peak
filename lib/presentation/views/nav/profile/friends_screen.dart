@@ -34,7 +34,7 @@ class FriendsScreen extends ConsumerWidget {
             labelPadding: EdgeInsets.symmetric(vertical: height * 0.02),
             labelStyle: Theme.of(context).textTheme.bodyMedium,
             indicatorColor: Colors.white,
-            overlayColor: MaterialStateProperty.all(Colors.transparent),
+            overlayColor: WidgetStateProperty.all(Colors.transparent),
             tabs: const [Text("Followers"), Text("Following")],
           ),
         ),

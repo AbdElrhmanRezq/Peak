@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:repx/data/models/user_model.dart';
 import 'package:repx/data/providers/auth_providers.dart';
 import 'package:repx/data/providers/user_data_provider.dart';
 import 'package:repx/presentation/widgets/custom_app_bar.dart';
-import 'package:repx/presentation/widgets/custom_icon_button.dart';
 import 'package:repx/presentation/widgets/custom_icon_text_button.dart';
 import 'package:repx/presentation/widgets/custom_text_field.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

@@ -188,7 +188,7 @@ class CustomExpansionTile extends ConsumerWidget {
         maxLines: 1,
       ),
       subtitle: Text(
-        "Sets: ${exercise.sets?.length.toString() as String}",
+        "Sets: ${exercise.sets.length.toString()}",
         style: Theme.of(context).textTheme.titleSmall,
       ),
       leading: Container(
@@ -265,7 +265,7 @@ class CustomExpansionTile extends ConsumerWidget {
                       onTap: () {
                         ref
                             .read(selectedExercisesProvider.notifier)
-                            .removeExercise(exercise as ExerciseModel);
+                            .removeExercise(exercise);
                         Navigator.of(context).pop();
                       },
                       leading: Icon(Icons.cancel_outlined, color: Colors.white),
@@ -294,8 +294,8 @@ class CustomExpansionTile extends ConsumerWidget {
                   DataColumn(label: Text('Reps')),
                   //DataColumn(label: Text('Previous')),
                 ],
-                rows: List.generate(exercise.sets?.length as int, (index) {
-                  final set = exercise.sets?[index];
+                rows: List.generate(exercise.sets.length, (index) {
+                  final set = exercise.sets[index];
                   return DataRow(
                     cells: [
                       DataCell(Text((index + 1).toString())),
@@ -303,7 +303,7 @@ class CustomExpansionTile extends ConsumerWidget {
                       // Weight
                       DataCell(
                         TextFormField(
-                          initialValue: set?.weight?.toString() ?? '',
+                          initialValue: set.weight.toString() ?? '',
                           decoration: const InputDecoration(hintText: 'kg'),
                           style: Theme.of(context).textTheme.bodyMedium,
                           keyboardType: const TextInputType.numberWithOptions(
@@ -316,7 +316,7 @@ class CustomExpansionTile extends ConsumerWidget {
                           ],
                           onChanged: (val) {
                             final trimmed = val.trim();
-                            set?.weight = trimmed.isEmpty
+                            set.weight = trimmed.isEmpty
                                 ? 0
                                 : double.tryParse(trimmed) ?? 0;
                           },
@@ -326,7 +326,7 @@ class CustomExpansionTile extends ConsumerWidget {
                       // Reps
                       DataCell(
                         TextFormField(
-                          initialValue: set?.reps?.toString() ?? '',
+                          initialValue: set.reps?.toString() ?? '',
                           decoration: const InputDecoration(hintText: 'reps'),
                           style: Theme.of(context).textTheme.bodyMedium,
                           keyboardType: TextInputType.number,
@@ -335,7 +335,7 @@ class CustomExpansionTile extends ConsumerWidget {
                           ],
                           onChanged: (val) {
                             final trimmed = val.trim();
-                            set?.reps = trimmed.isEmpty
+                            set.reps = trimmed.isEmpty
                                 ? 0
                                 : int.tryParse(trimmed) ?? 0;
                           },
@@ -363,8 +363,8 @@ class CustomExpansionTile extends ConsumerWidget {
                   DataColumn(label: Text('Max')),
                   //DataColumn(label: Text('Previous')),
                 ],
-                rows: List.generate(exercise.sets?.length as int, (index) {
-                  final set = exercise.sets?[index];
+                rows: List.generate(exercise.sets.length, (index) {
+                  final set = exercise.sets[index];
                   return DataRow(
                     cells: [
                       DataCell(Text((index + 1).toString())),
@@ -372,7 +372,7 @@ class CustomExpansionTile extends ConsumerWidget {
                       // Weight
                       DataCell(
                         TextFormField(
-                          initialValue: set?.weight?.toString() ?? '',
+                          initialValue: set.weight.toString() ?? '',
                           decoration: const InputDecoration(hintText: 'kg'),
                           style: Theme.of(context).textTheme.bodyMedium,
                           keyboardType: const TextInputType.numberWithOptions(
@@ -385,7 +385,7 @@ class CustomExpansionTile extends ConsumerWidget {
                           ],
                           onChanged: (val) {
                             final trimmed = val.trim();
-                            set?.weight = trimmed.isEmpty
+                            set.weight = trimmed.isEmpty
                                 ? 0
                                 : double.tryParse(trimmed) ?? 0;
                           },
@@ -395,7 +395,7 @@ class CustomExpansionTile extends ConsumerWidget {
                       // Reps
                       DataCell(
                         TextFormField(
-                          initialValue: set?.repRangeMin?.toString() ?? '',
+                          initialValue: set.repRangeMin?.toString() ?? '',
                           decoration: const InputDecoration(hintText: 'Min'),
                           style: Theme.of(context).textTheme.bodyMedium,
                           keyboardType: TextInputType.number,
@@ -404,7 +404,7 @@ class CustomExpansionTile extends ConsumerWidget {
                           ],
                           onChanged: (val) {
                             final trimmed = val.trim();
-                            set?.repRangeMin = trimmed.isEmpty
+                            set.repRangeMin = trimmed.isEmpty
                                 ? 0
                                 : int.tryParse(trimmed) ?? 0;
                           },
@@ -412,7 +412,7 @@ class CustomExpansionTile extends ConsumerWidget {
                       ),
                       DataCell(
                         TextFormField(
-                          initialValue: set?.repRangeMax?.toString() ?? '',
+                          initialValue: set.repRangeMax?.toString() ?? '',
                           decoration: const InputDecoration(hintText: 'Max'),
                           style: Theme.of(context).textTheme.bodyMedium,
                           keyboardType: TextInputType.number,
@@ -421,7 +421,7 @@ class CustomExpansionTile extends ConsumerWidget {
                           ],
                           onChanged: (val) {
                             final trimmed = val.trim();
-                            set?.repRangeMax = trimmed.isEmpty
+                            set.repRangeMax = trimmed.isEmpty
                                 ? 0
                                 : int.tryParse(trimmed) ?? 0;
                           },

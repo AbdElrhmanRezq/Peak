@@ -1,5 +1,4 @@
 import 'package:repx/data/models/exercise_model.dart';
-import 'package:repx/data/models/user_model.dart';
 import 'package:repx/data/services/api_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 

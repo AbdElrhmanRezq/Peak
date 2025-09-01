@@ -64,7 +64,7 @@ class SupabaseUserRepository {
       final updatedUser = await supabase
           .from('users')
           .update(user.toJson())
-          .eq('email', user.email as String)
+          .eq('email', user.email)
           .select();
 
       print('Updated user: $updatedUser');
@@ -85,15 +85,13 @@ class SupabaseUserRepository {
           .select()
           .eq('followed_id', id);
 
-      if (data != null) {
-        for (var item in data) {
-          final user = await getUserById(item['follower_id']);
-          if (user != null) {
-            followers.add(user);
-          }
+      for (var item in data) {
+        final user = await getUserById(item['follower_id']);
+        if (user != null) {
+          followers.add(user);
         }
       }
-    } on PostgrestException catch (e) {
+        } on PostgrestException catch (e) {
       print('PostgrestException: ${e.message}');
     } catch (e) {
       print('Unknown error: $e');
@@ -109,15 +107,13 @@ class SupabaseUserRepository {
           .select()
           .eq('follower_id', id);
 
-      if (data != null) {
-        for (var item in data) {
-          final user = await getUserById(item['followed_id']);
-          if (user != null) {
-            followings.add(user);
-          }
+      for (var item in data) {
+        final user = await getUserById(item['followed_id']);
+        if (user != null) {
+          followings.add(user);
         }
       }
-    } on PostgrestException catch (e) {
+        } on PostgrestException catch (e) {
       print('PostgrestException: ${e.message}');
     } catch (e) {
       print('Unknown error: $e');

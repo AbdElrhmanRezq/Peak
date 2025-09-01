@@ -2,8 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repx/data/models/user_model.dart';
 import 'package:repx/data/providers/auth_providers.dart';
 import 'package:repx/data/repository/user_repository.dart';
-import 'package:repx/data/services/supabase_service.dart';
-import 'package:repx/data/repository/auth_repository.dart';
 
 final userDataProvider = FutureProvider<UserModel>((ref) async {
   final currentUser = ref.watch(currentUserProvider);

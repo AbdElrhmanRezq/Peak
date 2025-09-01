@@ -82,11 +82,6 @@ class SupabaseService {
   }
 
   Future<List<WorkoutModel>> getWorkoutsByUserId(String userId) async {
-    if (userId == null) {
-      print("No logged-in user");
-      return [];
-    }
-
     try {
       final workoutsData = await supabase
           .from('workouts')
@@ -123,8 +118,6 @@ class SupabaseService {
       print('Fetched workouts: $workouts');
       print('Fetched exercises for w1: ${workouts[0].exercises}');
       print('Fetched exercises for w1 e1: ${workouts[0].exercises[0].name}');
-
-      if (workouts == null) return [];
 
       return workouts;
     } on PostgrestException catch (e) {
@@ -276,8 +269,6 @@ class SupabaseService {
         }
         workout.exercises.addAll(exercises);
       }
-
-      if (workouts == null) return [];
 
       return workouts;
     } on PostgrestException catch (e) {
@@ -459,7 +450,7 @@ class SupabaseService {
           .from('users')
           .update({
             'streak': newStreak,
-            'last_activity': newLastActivity.toIso8601String(),
+            'last_activity': newLastActivity.toIso8601String().split('T').first,
           })
           .eq('id', currentUser.id);
     } on PostgrestException catch (e) {

@@ -16,7 +16,7 @@ class SelectedExercisesNotifier extends StateNotifier<List<ExerciseModel>> {
     state = [
       for (final ex in state)
         if (ex.id == exerciseId)
-          ex.copyWith(sets: [...?ex.sets, newSet]) // create new list
+          ex.copyWith(sets: [...ex.sets, newSet]) // create new list
         else
           ex,
     ];

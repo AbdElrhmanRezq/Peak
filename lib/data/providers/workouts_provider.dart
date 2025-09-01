@@ -50,6 +50,10 @@ final searchedWorkoutsProvider =
           .searchWorkouts(searchText);
     });
 
+final popularWorkoutsProvider = FutureProvider<List<WorkoutModel>>((ref) async {
+  return await ref.watch(workoutsRepositoryProvider).getPopularWorkouts();
+});
+
 final timerProvider = StateProvider.autoDispose<int>((ref) {
   return 0;
 });

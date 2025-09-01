@@ -132,11 +132,6 @@ class WorkoutsRepository {
   Future<void> starWorkout(int workoutId, UserModel currentUser) async {
     final userId = currentUser.id;
 
-    if (userId == null) {
-      print("No logged-in user");
-      return;
-    }
-
     try {
       return await _service.starWorkout(workoutId, userId);
     } on PostgrestException catch (e) {
@@ -150,11 +145,6 @@ class WorkoutsRepository {
 
   Future<void> unstarWorkout(int workoutId, UserModel currentUser) async {
     final userId = currentUser.id;
-
-    if (userId == null) {
-      print("No logged-in user");
-      return;
-    }
 
     try {
       return await _service.unstarWorkout(workoutId, userId);
@@ -220,7 +210,7 @@ class WorkoutsRepository {
   Future<void> updateStreak(UserModel user) async {
     try {
       final currentStreak = user.streak ?? 0;
-      final lastActivity = user.lastActivity; // assuming DateTime?
+      final lastActivity = user.lastActivity;
       final today = DateTime.now();
       final todayDate = DateTime(today.year, today.month, today.day);
 
@@ -234,11 +224,10 @@ class WorkoutsRepository {
           lastActivity.day,
         );
 
-        if (lastDate.isAtSameMomentAs(todayDate)) {
+        if (lastDate == todayDate) {
+          // already updated today
           return;
-        } else if (lastDate
-            .add(const Duration(days: 1))
-            .isAtSameMomentAs(todayDate)) {
+        } else if (lastDate.add(const Duration(days: 1)) == todayDate) {
           newStreak = currentStreak + 1;
         } else {
           newStreak = 1;
@@ -248,10 +237,10 @@ class WorkoutsRepository {
       await _service.updateStreak(newStreak, newLastActivity);
     } on PostgrestException catch (e) {
       print('PostgrestException: ${e.message}');
-      throw e;
+      rethrow;
     } catch (e) {
       print('Unknown error: $e');
-      throw e;
+      rethrow;
     }
   }
 }

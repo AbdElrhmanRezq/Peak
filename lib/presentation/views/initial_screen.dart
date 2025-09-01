@@ -14,7 +14,7 @@ class InitialScreen extends StatelessWidget {
       body: Stack(
         children: [
           Positioned.fill(
-            child: Image.asset('assets/images/start.gif', fit: BoxFit.cover),
+            child: Image.asset('assets/init_gif.gif', fit: BoxFit.cover),
           ),
 
           SafeArea(

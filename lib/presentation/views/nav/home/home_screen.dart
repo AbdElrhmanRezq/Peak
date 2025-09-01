@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:repx/data/providers/auth_providers.dart';
 import 'package:repx/data/providers/user_data_provider.dart';
-import 'package:repx/presentation/widgets/custom_wide_button.dart';
+import 'package:repx/data/providers/workouts_provider.dart';
+import 'package:repx/presentation/widgets/workout_card.dart';
 
 class HomeScreen extends ConsumerWidget {
   static const String id = 'home_screen';
@@ -33,7 +33,16 @@ class HomeScreen extends ConsumerWidget {
       "Consistency creates transformation.",
     ];
 
+    List<String> gymImages = [
+      'assets/images/gym/gym1.jpeg',
+      'assets/images/gym/gym2.jpeg',
+      'assets/images/gym/gym3.jpeg',
+    ];
+
     int rand = Random().nextInt(10);
+    int randImage = Random().nextInt(3);
+
+    final workoutsAsync = ref.watch(popularWorkoutsProvider);
 
     return userAsync.when(
       data: (user) {
@@ -72,7 +81,13 @@ class HomeScreen extends ConsumerWidget {
                   padding: EdgeInsets.symmetric(vertical: height * 0.02),
                   child: Container(
                     height: height * 0.25,
-                    color: theme.colorScheme.secondary,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(gymImages[randImage]),
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     child: Center(
                       child: GestureDetector(
                         onTap: () {
@@ -81,49 +96,79 @@ class HomeScreen extends ConsumerWidget {
                             arguments: {'choosing': true},
                           );
                         },
-                        child: Container(
-                          width: width * 0.8,
-                          height: height * 0.15,
-                          decoration: BoxDecoration(
+                        child: Center(
+                          child: ClipRRect(
                             borderRadius: BorderRadius.circular(12),
-                            color: theme.scaffoldBackgroundColor,
-                          ),
-                          child: Center(
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: width * 0.45,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "Today's workout",
-                                        style: TextStyle(
-                                          color: theme.primaryColor,
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                      Text(
-                                        "Workout",
-                                        style: theme.textTheme.bodyMedium,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: Image.asset(
-                                    height: height * 0.15,
-                                    width: width * 0.35,
-                                    'assets/images/start.gif',
-                                    fit: BoxFit.fitWidth,
-                                  ),
-                                ),
-                              ],
+                            child: Image.asset(
+                              height: height * 0.15,
+                              'assets/images/workout_start.gif',
+                              fit: BoxFit.fitHeight,
                             ),
                           ),
                         ),
                       ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: width * 0.06,
+                    vertical: height * 0.01,
+                  ),
+                  child: Text(
+                    "Popular Workouts",
+                    style: theme.textTheme.headlineMedium,
+                  ),
+                ),
+                workoutsAsync.when(
+                  data: (workouts) {
+                    if (workouts.isEmpty) {
+                      return Text("No workouts yet.");
+                    }
+
+                    return Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: width * 0.03,
+                        vertical: height * 0.01,
+                      ),
+                      child: SizedBox(
+                        height: height * 0.18,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: workouts.length > 3 ? 4 : workouts.length,
+                          itemBuilder: (context, index) {
+                            final workout = workouts[index];
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: width * 0.01,
+                                vertical: height * 0.005,
+                              ),
+                              child: Container(
+                                width: width * 0.8,
+                                child: WorkoutCard(
+                                  workout: workout,
+                                  index: index,
+                                  type: 'public',
+                                  showButtomSheet: () {},
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                  loading: () => const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                  error: (err, stack) => Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      'Error: $err',
+                      style: theme.textTheme.bodyMedium,
                     ),
                   ),
                 ),

@@ -4,9 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repx/data/models/set_model.dart';
-import 'package:repx/data/models/user_model.dart';
 import 'package:repx/data/models/workout_model.dart';
-import 'package:repx/data/providers/auth_providers.dart';
 import 'package:repx/data/providers/exercises_provider.dart';
 import 'package:repx/data/providers/sets_provider.dart';
 import 'package:repx/data/providers/user_data_provider.dart';
@@ -272,7 +270,7 @@ class _WorkoutSessionScreenState extends ConsumerState<WorkoutSessionScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 _buildNumberField(
-                  initial: set.weight?.toString() ?? '',
+                  initial: set.weight.toString() ?? '',
                   label: "kg",
                   width: 60,
                   onChanged: (val) =>
@@ -396,7 +394,7 @@ class _WorkoutSessionScreenState extends ConsumerState<WorkoutSessionScreen> {
           labelStyle: theme.textTheme.bodySmall,
           isDense: true,
           filled: true,
-          fillColor: theme.colorScheme.surfaceVariant, // ✅ subtle difference
+          fillColor: theme.colorScheme.surfaceContainerHighest, // ✅ subtle difference
           contentPadding: const EdgeInsets.symmetric(
             vertical: 10,
             horizontal: 12,

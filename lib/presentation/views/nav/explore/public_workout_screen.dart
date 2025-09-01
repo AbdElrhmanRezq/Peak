@@ -9,7 +9,6 @@ import 'package:repx/data/providers/user_data_provider.dart';
 import 'package:repx/data/providers/workouts_provider.dart';
 import 'package:repx/data/repository/workouts_repository.dart';
 import 'package:repx/data/services/custom_image_getter.dart';
-import 'package:repx/presentation/widgets/custom_user_photo.dart';
 
 class PublicWorkoutScreen extends ConsumerWidget {
   static const String id = 'public_workout_screen';
@@ -213,7 +212,7 @@ class _SetsTableReadOnly extends StatelessWidget {
           return DataRow(
             cells: [
               DataCell(Text("$idx")),
-              DataCell(Text(set.weight?.toString() ?? '-')),
+              DataCell(Text(set.weight.toString() ?? '-')),
               DataCell(
                 set.type == "Reps"
                     ? Text(set.reps?.toString() ?? '-')

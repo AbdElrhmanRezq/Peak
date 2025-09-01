@@ -248,6 +248,8 @@ class WorkoutsExplore extends ConsumerWidget {
 
     WorkoutsRepository workoutsRep = WorkoutsRepository();
 
+    final workoutsAsync = ref.watch(popularWorkoutsProvider);
+
     if (searchQuery.isNotEmpty) {
       final searchedWorkoutsAsync = ref.watch(
         searchedWorkoutsProvider(searchQuery),
@@ -290,29 +292,18 @@ class WorkoutsExplore extends ConsumerWidget {
         child: ListView(
           children: [
             Text("Popular Workouts", style: theme.textTheme.headlineMedium),
-            FutureBuilder<List<WorkoutModel>>(
-              future: workoutsRep.getPopularWorkouts(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: height * 0.4),
-                      child: const CircularProgressIndicator(),
-                    ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            workoutsAsync.when(
+              data: (workouts) {
+                if (workouts.isEmpty) {
                   return const Text('No workouts found');
                 }
 
-                final workouts = snapshot.data!;
                 return ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: workouts.length,
                   itemBuilder: (context, index) {
-                    WorkoutModel workout = workouts[index];
+                    final workout = workouts[index];
                     return Padding(
                       padding: EdgeInsets.symmetric(vertical: height * 0.01),
                       child: WorkoutCard(
@@ -325,6 +316,13 @@ class WorkoutsExplore extends ConsumerWidget {
                   },
                 );
               },
+              loading: () => Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: height * 0.4),
+                  child: const CircularProgressIndicator(),
+                ),
+              ),
+              error: (error, stack) => Text('Error: $error'),
             ),
           ],
         ),
