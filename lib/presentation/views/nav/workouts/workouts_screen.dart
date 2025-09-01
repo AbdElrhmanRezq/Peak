@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:repx/data/providers/auth_providers.dart';
 import 'package:repx/data/providers/image_provider.dart';
+import 'package:repx/data/providers/user_data_provider.dart';
 import 'package:repx/data/providers/workouts_provider.dart';
 import 'package:repx/data/repository/images_repository.dart';
 import 'package:repx/data/repository/workouts_repository.dart';
@@ -88,6 +89,7 @@ class WorkoutsScreen extends ConsumerWidget {
                               height,
                               workoutsRep,
                               workout.id as int,
+                              currentUser?.id ?? '',
                             );
                           },
                         ),
@@ -120,6 +122,7 @@ class WorkoutsScreen extends ConsumerWidget {
     height,
     WorkoutsRepository workoutRep,
     int workoutId,
+    String currentUserId,
   ) {
     showModalBottomSheet(
       context: context,
@@ -153,7 +156,7 @@ class WorkoutsScreen extends ConsumerWidget {
                     final croppedImage = await imageHelper.crop(file: file);
                     if (croppedImage != null) {
                       await uploadImage(croppedImage, workoutId);
-                      ref.invalidate(workoutsProvider);
+                      ref.invalidate(workoutsProvider(currentUserId));
                     }
                   }
                   Navigator.of(context).pop();

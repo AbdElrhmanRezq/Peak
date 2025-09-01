@@ -51,7 +51,8 @@ class ProfileSettingsScreen extends ConsumerWidget {
                   final croppedImage = await imageHelper.crop(file: file);
                   if (croppedImage != null) {
                     await uploadImage(croppedImage);
-                    ref.invalidate(userDataProvider);
+                    //ref.invalidate(userDataProvider);
+                    ref.watch(profileUserProvider(auth.currentUser?.id));
                   }
                 }
               },
@@ -66,7 +67,6 @@ class ProfileSettingsScreen extends ConsumerWidget {
                 ref.invalidate(userDataProvider);
                 ref.invalidate(isLoadingProvider);
                 ref.invalidate(searchedUserProvider);
-
                 ref.invalidate(currentUserProvider);
 
                 Navigator.of(

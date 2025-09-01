@@ -86,6 +86,7 @@ flutter:
     - assets/init_gif.gif
     - assets/icons/
     - .env
+    - assets/images/profile/pro4.jpeg
 
 
 
