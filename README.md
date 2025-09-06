@@ -2,8 +2,6 @@
 
 ![Flutter](https://img.shields.io/badge/Flutter-3.8.1-blue?logo=flutter)
 ![Supabase](https://img.shields.io/badge/Supabase-Backend-brightgreen?logo=supabase)
-![License](https://img.shields.io/badge/License-MIT-yellow)
-![Made with ❤️](https://img.shields.io/badge/Made%20with-%F0%9F%92%9C-red)
 
 PEAK is a **fitness and workout tracking mobile application** built with **Flutter**.  
 It helps users plan workouts, track progress, connect with friends, and stay motivated with personalized routines and summaries.  
@@ -22,8 +20,7 @@ The app integrates with **Supabase** for authentication and backend services, an
   - Track workouts with live sessions  
   - Save and view summaries  
 - 📊 **Progress Tracking**  
-  - Streaks calendar (via Heatmap)  
-  - Workout history and stats  
+  - Streaks indicators
 - 🔍 **Explore Section**  
   - Discover exercises  
   - View public workouts  
@@ -45,7 +42,6 @@ The app integrates with **Supabase** for authentication and backend services, an
 **Frontend**  
 - [Flutter](https://flutter.dev/) (Dart SDK ^3.8.1)  
 - [Riverpod](https://riverpod.dev/) for state management  
-- [Material Design](https://m3.material.io/) with custom themes  
 
 **Backend & Services**  
 - [Supabase](https://supabase.com/) for authentication & database  
@@ -96,8 +92,8 @@ flutter run
 
 ---
 
-## 📸 Screenshots (Optional)  
-_Add screenshots or GIFs of your app here to showcase UI._  
+## 📸 Screenshots 
+![App Screenshot](post.png)
 
 ---
 
