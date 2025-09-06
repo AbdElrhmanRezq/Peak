@@ -322,27 +322,24 @@ class ProfileScreen extends ConsumerWidget {
                           child: CircularProgressIndicator(),
                         ),
                       ),
-                      error: (err, stack) => Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('No friends found'),
-                            currentUser?.id == userData.id
-                                ? CircleAvatar(
-                                    backgroundColor: theme.primaryColor,
-                                    child: IconButton(
-                                      onPressed: () {
-                                        Navigator.of(
-                                          context,
-                                        ).pushNamed("add_friends_screen");
-                                      },
-                                      icon: Icon(Icons.person_add),
-                                    ),
-                                  )
-                                : SizedBox(),
-                          ],
-                        ),
+                      error: (err, stack) => Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('No friends found'),
+                          currentUser?.id == userData.id
+                              ? CircleAvatar(
+                                  backgroundColor: theme.primaryColor,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      Navigator.of(
+                                        context,
+                                      ).pushNamed("add_friends_screen");
+                                    },
+                                    icon: Icon(Icons.person_add),
+                                  ),
+                                )
+                              : SizedBox(),
+                        ],
                       ),
                     ),
                     Padding(

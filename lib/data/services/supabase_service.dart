@@ -44,7 +44,6 @@ class SupabaseService {
   Future<void> saveWorkout(WorkoutModel workout) async {
     final userId = supabase.auth.currentSession?.user.id;
 
-    // 1. Insert workout
     final workoutRes = await supabase
         .from('workouts')
         .insert({
@@ -57,7 +56,6 @@ class SupabaseService {
 
     final workoutId = workoutRes['id'];
 
-    // 2. Insert exercises
     for (final exercise in workout.exercises) {
       final exerciseRes = await supabase
           .from('exercises')
@@ -65,13 +63,11 @@ class SupabaseService {
           .select()
           .single();
 
-      final eId =
-          exerciseRes['s_id']; // Primary key from workout_exercises table
+      final eId = exerciseRes['s_id'];
 
-      // 3. Insert sets for this exercise
       final setsData = exercise.sets.map((set) {
         return {
-          'e_id': eId, // foreign key to this exercise
+          'e_id': eId,
           'weight': set.weight,
           'reps': set.reps,
           'repRangeMin': set.repRangeMin,

@@ -15,27 +15,28 @@ class BubbleRow extends StatelessWidget {
         CircleAvatar(
           backgroundImage: friends[0].profilePictureUrl != null
               ? NetworkImage(friends[0].profilePictureUrl ?? '')
-              : AssetImage('assets/images/profile/pro4.jpeg') as ImageProvider,
+              : AssetImage('assets/images/profile/profile.jpeg')
+                    as ImageProvider,
         ),
         if (friends.length > 1)
           CircleAvatar(
             backgroundImage: friends[1].profilePictureUrl != null
                 ? NetworkImage(friends[1].profilePictureUrl ?? '')
-                : AssetImage('assets/images/profile/pro4.jpeg')
+                : AssetImage('assets/images/profile/profile.jpeg')
                       as ImageProvider,
           ),
         if (friends.length > 2)
           CircleAvatar(
             backgroundImage: friends[2].profilePictureUrl != null
                 ? NetworkImage(friends[2].profilePictureUrl ?? '')
-                : AssetImage('assets/images/profile/pro4.jpeg')
+                : AssetImage('assets/images/profile/profile.jpeg')
                       as ImageProvider,
           ),
         if (friends.length > 3)
           CircleAvatar(
             backgroundImage: friends[3].profilePictureUrl != null
                 ? NetworkImage(friends[3].profilePictureUrl ?? '')
-                : AssetImage('assets/images/profile/pro4.jpeg')
+                : AssetImage('assets/images/profile/profile.jpeg')
                       as ImageProvider,
           ),
         if (friends.length > 4)

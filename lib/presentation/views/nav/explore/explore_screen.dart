@@ -207,13 +207,14 @@ class BodyPartsGrid extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Flexible(
+                        fit: FlexFit.tight,
                         flex: 1,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
                           child: Image.asset(
                             'assets/images/body_parts/${targets[index]}.jpg',
                             width: double.infinity,
-                            fit: BoxFit.cover,
+                            fit: BoxFit.fill,
                           ),
                         ),
                       ),

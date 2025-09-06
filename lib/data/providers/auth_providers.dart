@@ -14,6 +14,8 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
 
 final loginLoadingProvider = StateProvider<bool>((ref) => false);
 
+final obsecureProvider = StateProvider<bool>((ref) => false);
+
 final currentUserProvider = StateProvider<UserModel?>((ref) {
   final auth = ref.read(authRepositoryProvider);
   return auth.currentUser;
