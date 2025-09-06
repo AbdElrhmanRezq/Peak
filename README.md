@@ -93,7 +93,7 @@ flutter run
 ---
 
 ## 📸 Screenshots 
-![App Screenshot](post.png)
+![App Screenshot](Post.png)
 
 ---
 
