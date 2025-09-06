@@ -79,10 +79,15 @@ cd peak
 flutter pub get
 ```
 
-3. Create a `.env` file in the project root and add your Supabase credentials  
+3. Create a `.env` file in the project root and add your Supabase and api credentials  
 ```
+ExercisesDB: https://rapidapi.com/justin-WFnsXH_t6/api/exercisedb
+
 SUPABASE_URL=your_supabase_url
 SUPABASE_ANON_KEY=your_supabase_anon_key
+
+RAPIDAPI_HOST=the_api_url
+RAPIDAPI_KEY=your_api_key
 ```
 
 4. Run the app  
